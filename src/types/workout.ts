@@ -31,6 +31,7 @@ export interface UserPlan {
   startDate: string;       // ISO date string 'YYYY-MM-DD' (NOT a Date object)
   currentWeek: number;     // 1-based
   currentDay: number;      // 1-based
+  schedule: (string | null)[]; // length 7, index 0=Sunday … 6=Saturday; element = workout id or null (Rest Day)
 }
 
 export type SetType = 'Normal' | 'Drop Set' | 'Rest-Pause' | 'Failure' | 'Partials';

@@ -65,3 +65,39 @@
   height: 100%;
   background: var(--color-primary);
 }
+
+.schedule-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.schedule-day {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 16px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.schedule-day__label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.schedule-day__workout {
+  font-size: 13px;
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.schedule-day__rest {
+  font-size: 13px;
+  color: var(--color-text-muted);
+}

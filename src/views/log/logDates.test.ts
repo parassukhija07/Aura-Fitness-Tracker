@@ -36,6 +36,7 @@ const PLAN: UserPlan = {
   startDate: '2026-06-15',
   currentWeek: 1,
   currentDay: 1,
+  schedule: [null, null, null, null, null, null, null],
 };
 
 // helper: local-midnight date constructor (matches parseIsoDate/startOfDay semantics)

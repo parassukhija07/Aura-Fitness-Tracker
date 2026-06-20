@@ -64,4 +64,5 @@ export const SEED_USER_PLAN: UserPlan = {
   startDate: '2026-06-20',
   currentWeek: 1,
   currentDay: 1,
+  schedule: [null, null, null, null, null, null, null],
 };

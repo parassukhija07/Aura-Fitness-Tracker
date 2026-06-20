@@ -30,6 +30,7 @@ interface WorkoutDataState {
   updateSetField: (exerciseIndex: number, setIndex: number, field: 'weight' | 'reps', value: number) => void;
   updateSetType: (exerciseIndex: number, setIndex: number, setType: SetType) => void;
   saveCustomWorkout: (name: string, exercises: CustomWorkoutExercise[]) => void;
+  assignWorkoutToDay: (dayIndex: number, workoutId: string | null) => void;
 }
 
 // ─── Store ────────────────────────────────────────────────────────────────────
@@ -167,11 +168,28 @@ export const useWorkoutDataStore = create<WorkoutDataState>()(
             createdAt: new Date().toISOString(),
           });
         }),
+
+      assignWorkoutToDay: (dayIndex, workoutId) =>
+        set((state) => {
+          if (!state.userPlan) return;
+          if (!Number.isInteger(dayIndex)) return;
+          if (dayIndex < 0 || dayIndex > 6) return;
+          if (!Array.isArray(state.userPlan.schedule) || state.userPlan.schedule.length !== 7) {
+            state.userPlan.schedule = [null, null, null, null, null, null, null];
+          }
+          state.userPlan.schedule[dayIndex] = workoutId;
+        }),
     })),
     {
       name: 'aura-workout-data',
       storage: createJSONStorage(() => capacitorStorage),
-      version: 1,
+      version: 2,
+      migrate: (persistedState: any, fromVersion: number) => {
+        if (persistedState?.userPlan && !Array.isArray(persistedState.userPlan.schedule)) {
+          persistedState.userPlan.schedule = [null, null, null, null, null, null, null];
+        }
+        return persistedState;
+      },
       partialize: (state) => ({
         exercises: state.exercises,
         programs: state.programs,

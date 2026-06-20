@@ -164,3 +164,51 @@ test('saveCustomWorkout — mutating input array does not affect stored exercise
   input.push({ exerciseId: 'squat', exerciseName: 'Squat', targetSets: 3, targetReps: '5' });
   expect(useWorkoutDataStore.getState().userWorkouts[0].exercises.length).toBe(1);
 });
+
+// ---------------------------------------------------------------------------
+// assignWorkoutToDay tests
+// ---------------------------------------------------------------------------
+
+beforeEach(() => {
+  useWorkoutDataStore.setState({
+    userPlan: {
+      id: 'user-plan-1',
+      activeProgramId: 'full-body-a',
+      startDate: '2026-06-20',
+      currentWeek: 1,
+      currentDay: 1,
+      schedule: [null, null, null, null, null, null, null],
+    },
+  });
+});
+
+test('assignWorkoutToDay — assigns a workout id to the correct day index', () => {
+  useWorkoutDataStore.getState().assignWorkoutToDay(1, 'full-body-a');
+  const { schedule } = useWorkoutDataStore.getState().userPlan!;
+  expect(schedule[1]).toBe('full-body-a');
+  expect(schedule.filter((_, i) => i !== 1).every((v) => v === null)).toBe(true);
+});
+
+test('assignWorkoutToDay — null sets a rest day', () => {
+  useWorkoutDataStore.getState().assignWorkoutToDay(1, 'full-body-a');
+  useWorkoutDataStore.getState().assignWorkoutToDay(1, null);
+  expect(useWorkoutDataStore.getState().userPlan!.schedule[1]).toBeNull();
+});
+
+test('assignWorkoutToDay — out-of-bounds dayIndex (7) is a no-op', () => {
+  const before = [...useWorkoutDataStore.getState().userPlan!.schedule];
+  useWorkoutDataStore.getState().assignWorkoutToDay(7, 'full-body-a');
+  expect(useWorkoutDataStore.getState().userPlan!.schedule).toEqual(before);
+});
+
+test('assignWorkoutToDay — negative dayIndex (-1) is a no-op', () => {
+  const before = [...useWorkoutDataStore.getState().userPlan!.schedule];
+  useWorkoutDataStore.getState().assignWorkoutToDay(-1, 'full-body-a');
+  expect(useWorkoutDataStore.getState().userPlan!.schedule).toEqual(before);
+});
+
+test('assignWorkoutToDay — no-op when userPlan is null', () => {
+  useWorkoutDataStore.setState({ userPlan: null });
+  expect(() => useWorkoutDataStore.getState().assignWorkoutToDay(0, 'x')).not.toThrow();
+  expect(useWorkoutDataStore.getState().userPlan).toBeNull();
+});

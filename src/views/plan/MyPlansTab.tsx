@@ -1,36 +1,61 @@
+import { useState } from 'react';
 import { useWorkoutDataStore } from '../../store/workoutDataStore';
+import DayAssignmentModal from './DayAssignmentModal';
 import './plan.css';
 
-function formatStartDate(iso: string): string {
-  const [y, m, d] = iso.split('-').map(Number);
-  const date = new Date(y, m - 1, d);
-  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-}
+const DAY_LABELS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 export default function MyPlansTab() {
+  const programs = useWorkoutDataStore((s) => s.programs);
+  const userWorkouts = useWorkoutDataStore((s) => s.userWorkouts);
   const userPlan = useWorkoutDataStore((s) => s.userPlan);
-  const getActiveProgram = useWorkoutDataStore((s) => s.getActiveProgram);
-  const activeProgram = getActiveProgram();
+  const [editingDay, setEditingDay] = useState<number | null>(null);
 
-  if (userPlan == null || activeProgram == null) {
+  function nameForWorkoutId(id: string | null): string {
+    if (id == null) return 'Rest Day';
+    const prog = programs.find((p) => p.id === id);
+    if (prog) return prog.name;
+    const custom = userWorkouts.find((w) => w.id === id);
+    if (custom) return custom.name;
+    return 'Rest Day';
+  }
+
+  if (userPlan == null) {
     return <div className="plan-empty">No active plan. Pick a program to get started.</div>;
   }
 
+  const schedule = userPlan.schedule ?? [null, null, null, null, null, null, null];
+
   return (
-    <div className="plan-card">
-      <p className="plan-card__name">{activeProgram.name}</p>
-      <p className="plan-card__sub">{activeProgram.description}</p>
-      <div className="plan-progress">
-        <span>Week {userPlan.currentWeek} · Day {userPlan.currentDay} of 7</span>
-        <br />
-        <span>Started {formatStartDate(userPlan.startDate)}</span>
-        <div className="plan-progress__bar">
-          <div
-            className="plan-progress__fill"
-            style={{ width: `${(userPlan.currentDay / 7) * 100}%` }}
-          />
-        </div>
+    <>
+      <div className="schedule-list">
+        {DAY_LABELS.map((label, i) => {
+          const workoutId = schedule[i] ?? null;
+          const isRest = workoutId == null;
+          return (
+            <button
+              key={i}
+              type="button"
+              className="schedule-day"
+              onClick={() => setEditingDay(i)}
+              aria-label={`Edit ${label}`}
+            >
+              <span className="schedule-day__label">{label}</span>
+              <span className={isRest ? 'schedule-day__rest' : 'schedule-day__workout'}>
+                {nameForWorkoutId(workoutId)}
+              </span>
+            </button>
+          );
+        })}
       </div>
-    </div>
+
+      {editingDay != null && (
+        <DayAssignmentModal
+          dayIndex={editingDay}
+          dayLabel={DAY_LABELS[editingDay]}
+          onClose={() => setEditingDay(null)}
+        />
+      )}
+    </>
   );
 }
