@@ -32,3 +32,31 @@ export interface UserPlan {
   currentWeek: number;     // 1-based
   currentDay: number;      // 1-based
 }
+
+export type SetType = 'Normal' | 'Drop Set' | 'Rest-Pause' | 'Failure' | 'Partials';
+
+// A single logged set within an active workout session.
+export interface LoggedSet {
+  reps: number;
+  weight: number;       // weight value as entered (unit-agnostic, number only)
+  setType?: SetType;
+  completed: boolean;   // true once the user marks the set done
+}
+
+// An exercise instance inside an active session. Denormalized snapshot of an
+// Exercise so the session is self-contained even if the source Exercise changes.
+export interface SessionExercise {
+  exerciseId: string;       // FK -> Exercise.id
+  exerciseName: string;     // mirror of Exercise.name (snapshot at session start)
+  muscleGroup: MuscleGroup; // mirror of Exercise.muscleGroup (snapshot)
+  defaultSets: number;      // mirror of Exercise.defaultSets (target set count)
+  sets: LoggedSet[];        // the actual logged sets for this exercise
+}
+
+// The full state of a workout currently in progress.
+export interface ActiveSessionState {
+  workoutId: string;        // FK -> WorkoutProgram.id (the program being run)
+  startTime: string;        // ISO datetime string (NOT a Date object)
+  exercises: SessionExercise[];
+  elapsedTime: number;      // elapsed seconds since session start
+}

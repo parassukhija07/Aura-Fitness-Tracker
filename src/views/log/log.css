@@ -1,0 +1,411 @@
+/* Log tab — BEM, theme tokens only */
+
+.log-view {
+  padding: 16px;
+}
+
+.log-view__title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+/* ── Week calendar bar ───────────────────────────────────────────── */
+
+.log-week {
+  margin-bottom: 12px;
+}
+
+.log-week__header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.log-week__nav {
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: 28px;
+  line-height: 1;
+  padding: 4px 8px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.log-week__label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.log-week__strip {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 8px 0;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+
+.log-week__strip::-webkit-scrollbar {
+  display: none;
+}
+
+.log-week__day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  padding: 8px 4px;
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0;
+}
+
+.log-week__day--active {
+  background: var(--color-primary);
+  color: var(--color-text);
+  border-color: var(--color-primary);
+}
+
+.log-week__day--today {
+  border-color: var(--color-primary);
+}
+
+.log-week__dow {
+  font-size: 11px;
+  color: inherit;
+  margin-bottom: 4px;
+}
+
+.log-week__date {
+  font-size: 16px;
+  font-weight: 600;
+  color: inherit;
+}
+
+/* ── Return to Today pill ────────────────────────────────────────── */
+
+.log-today-btn {
+  display: block;
+  margin: 8px auto;
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(168, 85, 247, 0.15);
+  color: var(--color-primary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Overview section ────────────────────────────────────────────── */
+
+.log-overview {
+  margin-bottom: 16px;
+}
+
+.log-overview__title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.log-overview__sub {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin-bottom: 12px;
+}
+
+/* ── Card ────────────────────────────────────────────────────────── */
+
+.log-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.log-exercise {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.log-exercise:last-child {
+  border-bottom: none;
+}
+
+.log-exercise__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.log-exercise__name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.log-exercise__meta {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.log-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: rgba(168, 85, 247, 0.15);
+  color: var(--color-primary);
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ── Empty states ────────────────────────────────────────────────── */
+
+.log-empty {
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+/* ── Action buttons ──────────────────────────────────────────────── */
+
+.log-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.log-actions__btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.log-actions__btn--primary {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.log-actions__btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Active Workout — Header ─────────────────────────────────────── */
+
+.aw-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  position: sticky;
+  top: 0;
+  background: var(--color-bg);
+  padding: 8px 0;
+  border-bottom: 1px solid var(--color-border);
+  z-index: 2;
+}
+
+.aw-header__back {
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: 15px;
+  min-height: 40px;
+  padding: 0 8px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.aw-header__center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.aw-header__timer {
+  font-size: 20px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-primary);
+}
+
+.aw-header__title {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.aw-header__end {
+  margin-left: auto;
+  background: rgba(168, 85, 247, 0.15);
+  color: var(--color-primary);
+  border-radius: 8px;
+  padding: 8px 12px;
+  border: none;
+  min-height: 40px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Active Workout — Exercise List ─────────────────────────────── */
+
+.aw-list {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 12px;
+}
+
+.aw-list__row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--color-border);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.aw-list__row:last-child {
+  border-bottom: none;
+}
+
+/* ── Active Workout — Exercise Logger ───────────────────────────── */
+
+.aw-logger {
+  margin-top: 12px;
+}
+
+.aw-logger__title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--color-text);
+}
+
+.aw-logger__head {
+  display: grid;
+  grid-template-columns: 28px 1fr 48px 64px 56px 28px 24px;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0 8px;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 11px;
+  color: var(--color-text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.aw-logger__add {
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px dashed var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 40px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Active Workout — Set Row ───────────────────────────────────── */
+
+.aw-set {
+  display: grid;
+  grid-template-columns: 28px 1fr 48px 64px 56px 28px 24px;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.aw-set--done {
+  opacity: 0.6;
+}
+
+.aw-set__num {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.aw-set__type {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-size: 12px;
+  padding: 4px;
+  min-height: 40px;
+  width: 100%;
+}
+
+.aw-set__prev {
+  color: var(--color-text-muted);
+  font-size: 12px;
+  text-align: center;
+}
+
+.aw-set__input {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 8px 6px;
+  font-size: 14px;
+  width: 100%;
+  text-align: center;
+  min-height: 40px;
+}
+
+.aw-set__input:focus {
+  border-color: var(--color-primary);
+  outline: none;
+}
+
+.aw-set__delete {
+  background: transparent;
+  color: var(--color-text-muted);
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  min-height: 40px;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
