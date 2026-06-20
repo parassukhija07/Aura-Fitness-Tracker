@@ -1,14 +1,16 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
-import type { Exercise, WorkoutProgram, UserPlan } from '../types/workout';
+import type { Exercise, WorkoutProgram, UserPlan, SessionExercise, ActiveSessionState } from '../types/workout';
 import { SEED_EXERCISES, SEED_PROGRAMS, SEED_USER_PLAN } from './seedData';
+import { capacitorStorage } from './capacitorStorage';
 
 // ─── State + Actions ───────────────────────────────────────────────────────────
 interface WorkoutDataState {
   exercises: Exercise[];
   programs: WorkoutProgram[];
   userPlan: UserPlan | null;
+  activeSession: ActiveSessionState | null;
 
   // selectors-as-helpers (pure reads; keep minimal)
   getActiveProgram: () => WorkoutProgram | undefined;
@@ -18,6 +20,10 @@ interface WorkoutDataState {
   setActiveProgram: (programId: string) => void;
   advanceDay: () => void;       // increments currentDay; rolls over at 7 -> resets to 1 and increments currentWeek
   resetToSeed: () => void;      // restores SEED_* values
+  startSession: (program: WorkoutProgram, exercises: SessionExercise[]) => void;
+  endSession: () => void;
+  updateElapsedTime: (seconds: number) => void;
+  completeSet: (exerciseIndex: number, setIndex: number) => void;
 }
 
 // ─── Store ────────────────────────────────────────────────────────────────────
@@ -28,6 +34,7 @@ export const useWorkoutDataStore = create<WorkoutDataState>()(
       exercises: SEED_EXERCISES,
       programs: SEED_PROGRAMS,
       userPlan: SEED_USER_PLAN,
+      activeSession: null,
 
       // ─── Selectors ───────────────────────────────────────────────────────
       getActiveProgram: () =>
@@ -64,11 +71,47 @@ export const useWorkoutDataStore = create<WorkoutDataState>()(
           state.programs = SEED_PROGRAMS;
           state.userPlan = SEED_USER_PLAN;
         }),
+
+      startSession: (program, exercises) =>
+        set((state) => {
+          state.activeSession = {
+            workoutId: program.id,
+            startTime: new Date().toISOString(),
+            exercises,
+            elapsedTime: 0,
+          };
+        }),
+
+      endSession: () =>
+        set((state) => {
+          state.activeSession = null;
+        }),
+
+      updateElapsedTime: (seconds) =>
+        set((state) => {
+          if (state.activeSession) {
+            state.activeSession.elapsedTime = seconds;
+          }
+        }),
+
+      completeSet: (exerciseIndex, setIndex) =>
+        set((state) => {
+          const set_ = state.activeSession?.exercises[exerciseIndex]?.sets[setIndex];
+          if (set_) {
+            set_.completed = true;
+          }
+        }),
     })),
     {
       name: 'aura-workout-data',
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(() => capacitorStorage),
       version: 1,
+      partialize: (state) => ({
+        exercises: state.exercises,
+        programs: state.programs,
+        userPlan: state.userPlan,
+        activeSession: state.activeSession,
+      }),
     }
   )
 );
