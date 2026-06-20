@@ -1,4 +1,5 @@
 import { getWeekDays, isSameDay } from './logDates';
+import { useUserPreferencesStore } from '../../store/userPreferencesStore';
 
 interface WeekCalendarBarProps {
   weekOffset: number;
@@ -8,7 +9,8 @@ interface WeekCalendarBarProps {
   onWeekChange: (delta: number) => void;
 }
 
-const DOW_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const MON_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const SUN_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 export default function WeekCalendarBar({
   weekOffset,
@@ -17,7 +19,9 @@ export default function WeekCalendarBar({
   onSelectDate,
   onWeekChange,
 }: WeekCalendarBarProps) {
-  const days = getWeekDays(today, weekOffset);
+  const calendarStartOnMonday = useUserPreferencesStore((s) => s.calendarStartOnMonday);
+  const dowLabels = calendarStartOnMonday ? MON_LABELS : SUN_LABELS;
+  const days = getWeekDays(today, weekOffset, calendarStartOnMonday);
   const monthYearLabel = days[0].toLocaleDateString('en-US', {
     month: 'long',
     year: 'numeric',
@@ -59,7 +63,7 @@ export default function WeekCalendarBar({
               className={cls}
               onClick={() => onSelectDate(date)}
             >
-              <span className="log-week__dow">{DOW_LABELS[i]}</span>
+              <span className="log-week__dow">{dowLabels[i]}</span>
               <span className="log-week__date">{date.getDate()}</span>
             </button>
           );

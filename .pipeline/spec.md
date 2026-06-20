@@ -1,151 +1,255 @@
 # IMPLEMENTATION SPEC
 
 ## ⚠️ OPEN QUESTIONS
-None. All decisions are locked below.
+None.
 
 ## 🏗️ ARCHITECTURE & PATTERNS
 - **Existing Patterns to Match:**
-  - `src/components/BottomNav.tsx` — default-exported function component, BEM class names (`block__element--modifier`), co-located `.css` import at top of file.
-  - `src/components/BottomNav.css` — plain CSS file, uses theme CSS variables (`var(--color-surface)` etc.), `-webkit-tap-highlight-color: transparent` for mobile tap flash, `env(safe-area-inset-bottom)` awareness.
-  - `src/store/workoutDataStore.ts` — consumed via `useWorkoutDataStore((s) => s.field)` selector calls. Helper selectors `getActiveProgram()` / `getExerciseById(id)` are functions stored ON state; call them as `useWorkoutDataStore((s) => s.getActiveProgram)()` or pull the function then invoke.
-  - `src/types/workout.ts` — import all types via `import type`.
-  - `src/index.css` — theme tokens: `--color-bg #0D0D0D`, `--color-surface #1A1A1A`, `--color-primary #A855F7`, `--color-text #FFFFFF`, `--color-text-muted #888888`, `--color-border #2A2A2A`. NOTE: the variable is named `--color-bg` (NOT `--color-background`). Use `--color-bg`.
+  - `src/store/navStore.ts` — closest template for the new preferences store: `create()` + `persist(immer(...))`, simple boolean/enum state, persisted under a `name` key. COPY THIS STRUCTURE.
+  - `src/store/workoutDataStore.ts` — reference for using the Capacitor storage engine: `storage: createJSONStorage(() => capacitorStorage)` (lines 148-158). Use this engine (NOT `localStorage`) per the feature request.
+  - `src/store/capacitorStorage.ts` — the persistence engine to import (`capacitorStorage`).
+  - `src/views/log/WeekCalendarBar.tsx` — consumer of `getWeekDays`; DOW labels live here (line 11). DO NOT rewrite this component (boundary rule), but it is affected — see note in FILES TO MODIFY.
+  - `src/views/LogView.tsx` — example of reading from a Zustand store via selectors and a view's outer `<section className="view ...">` wrapper.
+  - `src/views/log/log.css` — BEM + theme-token CSS convention. Match this style in the new `profile.css`.
+  - `src/index.css` — defines the CSS variable palette on `:root`. Dark mode toggling hooks here.
+  - `src/store/workoutDataStore.test.ts` (lines 1-12) — pattern for mocking `@capacitor/preferences` in Jest. Reuse if writing a store test.
 
-- **Core Strategy:** Replace the `PlanView.tsx` stub entirely. `PlanView` owns sub-tab state via local React `useState` (a tab index — NOT nested routes, NOT react-router). It renders a horizontal sub-tab bar and conditionally mounts one of four presentational sub-views. Each sub-view reads directly from `useWorkoutDataStore`. No editing, no mutations — display + sub-tab switching only.
+- **Core Strategy:** Add a new persisted Zustand store `userPreferencesStore` holding two booleans. A small effect in `RootLayout` reads `darkMode` and toggles a `dark-theme` class on `<html>`. The CSS palette is refactored so light is the `:root` default and `.dark-theme` is the override (defaulting `darkMode` to `true` preserves today's appearance). `getWeekDays`/`startOfWeek` gain an optional `startOnMonday` parameter that the calendar passes through from the preference.
 
-- **Hard Rules for the Coder:**
-  1. No Tailwind. No CSS-in-JS / styled-components. No inline `style={{}}` objects except for one allowed dynamic case noted below. Use plain `.css` files with BEM classes.
-  2. All TypeScript. All components are `export default function`.
-  3. Do NOT modify the store, types, or seed data. Read-only consumption.
-  4. Do NOT add react-router routes for sub-tabs.
+---
 
 ## 📝 FILES TO MODIFY
 
-### `src/views/PlanView.tsx`
-- **Changes:** Replace the entire file contents (currently a 7-line stub).
-- New behavior:
-  - `import './PlanView.css';`
-  - Define a local const array:
+### `src/views/log/logDates.ts`
+- **`startOfWeek` (lines 39-43):** add a second parameter `startOnMonday: boolean = true`. Compute the offset based on the preference.
+  - BEFORE:
     ```
-    const SUB_TABS = ['My Plans', 'Programs', 'Workouts', 'Exercises'] as const;
-    type SubTab = typeof SUB_TABS[number];
+    export function startOfWeek(d: Date): Date {
+      const base = startOfDay(d);
+      const mondayOffset = (base.getDay() + 6) % 7;
+      return new Date(base.getFullYear(), base.getMonth(), base.getDate() - mondayOffset);
+    }
     ```
-  - `const [activeSubTab, setActiveSubTab] = useState<SubTab>('My Plans');`
-  - Render structure:
+  - AFTER (logic, not final code style — Coder writes it):
     ```
-    <section className="view plan-view">
-      <h1 className="plan-view__title">Plan</h1>
-      <nav className="plan-tabs" role="tablist">
-        {SUB_TABS.map(tab => (
-          <button
-            key={tab}
-            type="button"
-            role="tab"
-            className={tab === activeSubTab ? 'plan-tabs__tab plan-tabs__tab--active' : 'plan-tabs__tab'}
-            onClick={() => setActiveSubTab(tab)}
-          >{tab}</button>
-        ))}
-      </nav>
-      <div className="plan-view__content">
-        {activeSubTab === 'My Plans' && <MyPlansTab />}
-        {activeSubTab === 'Programs' && <ProgramsTab />}
-        {activeSubTab === 'Workouts' && <WorkoutsTab />}
-        {activeSubTab === 'Exercises' && <ExercisesTab />}
-      </div>
-    </section>
+    export function startOfWeek(d: Date, startOnMonday: boolean = true): Date {
+      const base = startOfDay(d);
+      // getDay(): Sun=0..Sat=6
+      const offset = startOnMonday
+        ? (base.getDay() + 6) % 7   // Mon=0..Sun=6
+        : base.getDay();            // Sun=0..Sat=6
+      return new Date(base.getFullYear(), base.getMonth(), base.getDate() - offset);
+    }
     ```
-  - Import the four tab components from `./plan/`.
-  - Keep the existing `className="view"` on the section (other views use it) and add `plan-view`.
+- **`getWeekDays` (lines 47-55):** add a third parameter `startOnMonday: boolean = true` and forward it to `startOfWeek`.
+  - AFTER (logic):
+    ```
+    export function getWeekDays(today: Date, weekOffset: number, startOnMonday: boolean = true): Date[] {
+      const base = startOfWeek(today, startOnMonday);
+      const days: Date[] = [];
+      for (let i = 0; i < 7; i++) {
+        const offset = weekOffset * 7 + i;
+        days.push(new Date(base.getFullYear(), base.getMonth(), base.getDate() + offset));
+      }
+      return days;
+    }
+    ```
+- **DO NOT** touch `getDayWorkout`, `parseIsoDate`, `startOfDay`, or `isSameDay`.
+- **NOTE on defaults:** Both new params default to `true` (Monday start), preserving every existing call site and the current `logDates.test.ts` expectations. Do not change existing tests.
+
+### `src/views/log/WeekCalendarBar.tsx`
+- This component is the bridge that supplies `startOnMonday` to `getWeekDays`. Per the boundary rule, make only the MINIMAL changes below — do not restructure the component.
+  - **Add an import:** `import { useUserPreferencesStore } from '../../store/userPreferencesStore';`
+  - **Read the preference** inside the component body:
+    ```
+    const calendarStartOnMonday = useUserPreferencesStore((s) => s.calendarStartOnMonday);
+    ```
+  - **Update line 20** to pass it through:
+    ```
+    const days = getWeekDays(today, weekOffset, calendarStartOnMonday);
+    ```
+  - **Update `DOW_LABELS` (line 11)** so labels follow the chosen start. Replace the single hardcoded constant with two arrays + a derived selection:
+    ```
+    const MON_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const SUN_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    // inside component:
+    const dowLabels = calendarStartOnMonday ? MON_LABELS : SUN_LABELS;
+    ```
+    Then in the `.map` (line 62) use `dowLabels[i]` instead of `DOW_LABELS[i]`.
+
+### `src/layouts/RootLayout.tsx`
+- Add the dark-mode class-toggling effect here (this is the single global mount point wrapping all routed views).
+  - **Add import:** `import { useUserPreferencesStore } from '../store/userPreferencesStore';`
+  - **Inside `RootLayout`, read the value:**
+    ```
+    const darkMode = useUserPreferencesStore((s) => s.darkMode);
+    ```
+  - **Add a second `useEffect`** (keep the existing nav-sync effect untouched):
+    ```
+    useEffect(() => {
+      const root = document.documentElement; // the <html> element
+      if (darkMode) root.classList.add('dark-theme');
+      else root.classList.remove('dark-theme');
+    }, [darkMode]);
+    ```
+  - This effect re-runs whenever the toggle flips, and also runs again after the store hydrates from Capacitor storage.
+
+### `src/views/ProfileView.tsx`
+- Replace the current 7-line placeholder entirely with the full settings UI (see exact structure in FILES TO CREATE → ProfileView structure below). It already exists and is already routed at `/profile` in `src/router.tsx` (line 19) — DO NOT touch the router.
+
+### `src/index.css`
+- Refactor the palette so dark is a class override rather than the hardcoded default. The four routed views currently render correctly on the dark palette; defaulting `darkMode` to `true` keeps that behavior, while a user can toggle to light.
+  - **Change the `:root` block (lines 2-10)** to hold the LIGHT palette:
+    ```
+    :root {
+      --color-bg: #FFFFFF;
+      --color-surface: #F2F2F2;
+      --color-primary: #A855F7;
+      --color-text: #111111;
+      --color-text-muted: #666666;
+      --color-border: #DDDDDD;
+      --bottom-nav-height: 60px;
+    }
+    ```
+  - **Add a new `.dark-theme` block immediately after** holding the existing dark values (these are the CURRENT `:root` values — preserve them exactly):
+    ```
+    .dark-theme {
+      --color-bg: #0D0D0D;
+      --color-surface: #1A1A1A;
+      --color-primary: #A855F7;
+      --color-text: #FFFFFF;
+      --color-text-muted: #888888;
+      --color-border: #2A2A2A;
+    }
+    ```
+  - Leave everything else in the file unchanged. The `dark-theme` class is applied to `<html>` (`document.documentElement`), so the override cascades to `body` and `#root`.
+  - The leading comment `/* Keep in sync with src/constants/theme.ts */` still applies; `theme.ts` mirrors the DARK values — leave `theme.ts` unchanged (it is not imported by any of the affected files).
+
+---
 
 ## 📄 FILES TO CREATE
 
-All new component files live under `src/views/plan/`. One shared CSS file `src/views/plan/plan.css` holds card/grid/list styles reused across sub-tabs. `PlanView.css` lives next to `PlanView.tsx` and holds only the sub-tab bar + layout styles.
+### `src/store/userPreferencesStore.ts`
+- **Purpose:** Persisted global store for user UI preferences. Persists through the Capacitor `Preferences` engine.
+- **Exact implementation (model on `src/store/navStore.ts`, but use `capacitorStorage`):**
+  ```ts
+  import { create } from 'zustand';
+  import { persist, createJSONStorage } from 'zustand/middleware';
+  import { immer } from 'zustand/middleware/immer';
+  import { capacitorStorage } from './capacitorStorage';
 
-### `src/views/PlanView.css`
-- **Purpose:** Styles for the Plan view title, sub-tab bar, and content wrapper.
-- **Required classes & rules:**
-  - `.plan-view` → `padding: 16px;`
-  - `.plan-view__title` → `font-size: 24px; font-weight: 700; margin-bottom: 16px;`
-  - `.plan-tabs` → `display: flex; gap: 4px; margin-bottom: 16px; overflow-x: auto; -webkit-overflow-scrolling: touch;` (horizontal scroll so 4 tabs never overflow on narrow phones).
-  - `.plan-tabs__tab` → `flex: 0 0 auto; padding: 8px 14px; border: 1px solid var(--color-border); border-radius: 999px; background: var(--color-surface); color: var(--color-text-muted); font-size: 13px; font-weight: 500; white-space: nowrap; cursor: pointer; -webkit-tap-highlight-color: transparent;`
-  - `.plan-tabs__tab--active` → `background: var(--color-primary); color: var(--color-text); border-color: var(--color-primary);`
-  - `.plan-view__content` → `display: block;`
-
-### `src/views/plan/plan.css`
-- **Purpose:** Shared catalog/card/list/empty-state styles for all four sub-tabs.
-- **Required classes & rules:**
-  - `.plan-card` → `background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 16px;`
-  - `.plan-card__name` → `font-size: 16px; font-weight: 600; margin-bottom: 4px;`
-  - `.plan-card__sub` → `font-size: 13px; color: var(--color-text-muted); line-height: 1.4;`
-  - `.plan-grid` → `display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;`
-  - `.plan-list` → `display: flex; flex-direction: column; gap: 12px;`
-  - `.plan-badge` → `display: inline-block; margin-top: 8px; padding: 2px 8px; border-radius: 6px; background: rgba(168, 85, 247, 0.15); color: var(--color-primary); font-size: 11px; font-weight: 600;`
-  - `.plan-empty` → `padding: 32px 16px; text-align: center; color: var(--color-text-muted); font-size: 14px;`
-  - `.plan-progress` → `margin-top: 12px; font-size: 13px; color: var(--color-text);`
-  - `.plan-progress__bar` → `margin-top: 6px; height: 6px; border-radius: 3px; background: var(--color-border); overflow: hidden;`
-  - `.plan-progress__fill` → `height: 100%; background: var(--color-primary);` (width set inline — see allowed dynamic style below).
-
-### `src/views/plan/MyPlansTab.tsx`
-- **Purpose:** Shows the active user plan as a single card.
-- **Data flow:**
-  - `const userPlan = useWorkoutDataStore((s) => s.userPlan);`
-  - `const getActiveProgram = useWorkoutDataStore((s) => s.getActiveProgram);` then `const activeProgram = getActiveProgram();`
-  - `import '../plan/plan.css';` (or `./plan.css` since same dir — use `./plan.css`).
-- **Render:**
-  - If `userPlan == null` OR `activeProgram == null` → render `<div className="plan-empty">No active plan. Pick a program to get started.</div>`.
-  - Else render one `.plan-card`:
-    - `.plan-card__name` = `activeProgram.name`
-    - `.plan-card__sub` = `activeProgram.description`
-    - A `.plan-progress` block:
-      - Line text: `Week {userPlan.currentWeek} · Day {userPlan.currentDay} of 7`
-      - Sub line: `Started {formatStartDate(userPlan.startDate)}` (see helper below).
-      - `.plan-progress__bar` containing `.plan-progress__fill` with **allowed inline style** `style={{ width: `${(userPlan.currentDay / 7) * 100}%` }}`. This is the single permitted inline style in the spec (dynamic width).
-- **Helper (define locally in this file):**
-  ```
-  function formatStartDate(iso: string): string {
-    // iso is 'YYYY-MM-DD'. Render as 'Jun 20, 2026'. Parse manually to avoid TZ shift.
-    const [y, m, d] = iso.split('-').map(Number);
-    const date = new Date(y, m - 1, d);
-    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+  interface UserPreferencesState {
+    darkMode: boolean;
+    calendarStartOnMonday: boolean;
+    toggleDarkMode: () => void;
+    toggleCalendarStartOnMonday: () => void;
+    setDarkMode: (value: boolean) => void;
+    setCalendarStartOnMonday: (value: boolean) => void;
   }
+
+  export const useUserPreferencesStore = create<UserPreferencesState>()(
+    persist(
+      immer((set) => ({
+        // Defaults: dark on (preserves current app appearance),
+        // week starts Monday (preserves current calendar behavior).
+        darkMode: true,
+        calendarStartOnMonday: true,
+
+        toggleDarkMode: () =>
+          set((state) => { state.darkMode = !state.darkMode; }),
+        toggleCalendarStartOnMonday: () =>
+          set((state) => { state.calendarStartOnMonday = !state.calendarStartOnMonday; }),
+        setDarkMode: (value) =>
+          set((state) => { state.darkMode = value; }),
+        setCalendarStartOnMonday: (value) =>
+          set((state) => { state.calendarStartOnMonday = value; }),
+      })),
+      {
+        name: 'aura-user-preferences',
+        storage: createJSONStorage(() => capacitorStorage),
+        version: 1,
+        partialize: (state) => ({
+          darkMode: state.darkMode,
+          calendarStartOnMonday: state.calendarStartOnMonday,
+        }),
+      }
+    )
+  );
   ```
-  Note: parse via the numeric `new Date(y, m-1, d)` form (local time) — do NOT pass the raw ISO string to `new Date()` (that parses as UTC and can shift the day backward on negative-offset timezones).
+- **Hydration note:** `capacitorStorage` is async, so on first render the store shows the in-memory defaults (`darkMode: true`, `calendarStartOnMonday: true`), then re-renders with persisted values once hydration resolves. The `RootLayout` effect and `WeekCalendarBar` selector both react to that update automatically. No manual `onRehydrateStorage` handling is required.
 
-### `src/views/plan/ProgramsTab.tsx`
-- **Purpose:** Grid of all programs.
-- **Data flow:** `const programs = useWorkoutDataStore((s) => s.programs);`
-- **Render:**
-  - If `programs.length === 0` → `.plan-empty` with text `No programs yet.`
-  - Else `<div className="plan-grid">` mapping each `program` (key=`program.id`) to a `.plan-card`:
-    - `.plan-card__name` = `program.name`
-    - `.plan-card__sub` = `program.description`
-    - `.plan-badge` = `${program.exercises.length} exercises`
+### `src/views/profile/profile.css`
+- **Purpose:** BEM-styled settings-list using theme tokens only (match `src/views/log/log.css` conventions). No hardcoded colors — only `var(--color-*)`, except the knob may use `#fff`.
+- **Required class names + intent:**
+  - `.profile-view` — padding `16px` (match `.log-view`).
+  - `.profile-view__title` — font-size `24px`, font-weight `700`, margin-bottom `16px`.
+  - `.profile-section` — margin-bottom `24px`.
+  - `.profile-section__header` — font-size `13px`, uppercase, letter-spacing, color `var(--color-text-muted)`, margin-bottom `8px`.
+  - `.profile-list` — `background: var(--color-surface)`, border-radius `12px`, overflow hidden.
+  - `.profile-row` — flex row, `justify-content: space-between`, `align-items: center`, padding `14px 16px`, border-bottom `1px solid var(--color-border)`.
+  - `.profile-row:last-child` — `border-bottom: none`.
+  - `.profile-row__label` — font-size `15px`, color `var(--color-text)`.
+  - `.toggle` — switch track: width `48px`, height `28px`, border-radius `999px`, `background: var(--color-border)`, position relative, transition `background .15s`, cursor pointer, border none, padding 0.
+  - `.toggle--on` — `background: var(--color-primary)`.
+  - `.toggle__knob` — `22px` circle, `background: #fff`, border-radius `50%`, position absolute, top `3px`, left `3px`, transition `transform .15s`.
+  - `.toggle--on .toggle__knob` — `transform: translateX(20px)`.
 
-### `src/views/plan/WorkoutsTab.tsx`
-- **Purpose:** Display workout sessions. DECISION: the data model has NO explicit workout-session entity. We synthesize a display from the active program's exercises grouped into days. Locked approach: treat each `ProgramExercise` of the active program as one row in a single "Day 1 — Full Session" list. Do NOT invent multiple days (no day field exists). Render the active program's exercises as a flat session list.
-- **Data flow:**
-  - `const getActiveProgram = useWorkoutDataStore((s) => s.getActiveProgram); const activeProgram = getActiveProgram();`
-  - `const getExerciseById = useWorkoutDataStore((s) => s.getExerciseById);`
-- **Render:**
-  - If `activeProgram == null` OR `activeProgram.exercises.length === 0` → `.plan-empty` with text `No active workout. Select a program first.`
-  - Else:
-    - A small heading row: a `.plan-card__name` element reading `${activeProgram.name} — Session`.
-    - `<div className="plan-list">` mapping each `progEx` (key=`progEx.exerciseId`) to a `.plan-card`:
-      - Resolve `const ex = getExerciseById(progEx.exerciseId);`
-      - `.plan-card__name` = `ex ? ex.name : progEx.exerciseId` (fallback to id if exercise missing).
-      - `.plan-card__sub` = `${progEx.sets} sets × ${progEx.repsMin}–${progEx.repsMax} reps` (use en-dash `–` between reps).
+### `src/views/ProfileView.tsx` (REPLACE existing placeholder)
+- **Purpose:** Profile tab with the "General" settings block bound to `userPreferencesStore`. ONLY the General section — no Account Details, Connected Apps, or Units (boundary rule).
+- **Imports:** the new `./profile/profile.css`, and `useUserPreferencesStore` from `../store/userPreferencesStore`.
+- **Store bindings (read at top of component, use individual selectors like `LogView` does):**
+  ```
+  const darkMode = useUserPreferencesStore((s) => s.darkMode);
+  const calendarStartOnMonday = useUserPreferencesStore((s) => s.calendarStartOnMonday);
+  const toggleDarkMode = useUserPreferencesStore((s) => s.toggleDarkMode);
+  const toggleCalendarStartOnMonday = useUserPreferencesStore((s) => s.toggleCalendarStartOnMonday);
+  ```
+- **Exact UI structure (JSX shape):**
+  ```
+  <section className="view profile-view">
+    <h1 className="profile-view__title">Profile</h1>
 
-### `src/views/plan/ExercisesTab.tsx`
-- **Purpose:** Grid of all 5 exercises.
-- **Data flow:** `const exercises = useWorkoutDataStore((s) => s.exercises);`
-- **Render:**
-  - If `exercises.length === 0` → `.plan-empty` with text `No exercises in catalog.`
-  - Else `<div className="plan-grid">` mapping each `ex` (key=`ex.id`) to a `.plan-card`:
-    - `.plan-card__name` = `ex.name`
-    - `.plan-card__sub` = `ex.muscleGroup`
-    - `.plan-badge` = `${ex.defaultSets} × ${ex.defaultRepsMin}–${ex.defaultRepsMax}`
+    <div className="profile-section">
+      <h2 className="profile-section__header">General</h2>
+      <div className="profile-list">
+
+        <div className="profile-row">
+          <span className="profile-row__label">Dark Mode</span>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={darkMode}
+            aria-label="Dark Mode"
+            className={darkMode ? 'toggle toggle--on' : 'toggle'}
+            onClick={toggleDarkMode}
+          >
+            <span className="toggle__knob" />
+          </button>
+        </div>
+
+        <div className="profile-row">
+          <span className="profile-row__label">Start Week on Monday</span>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={calendarStartOnMonday}
+            aria-label="Start Week on Monday"
+            className={calendarStartOnMonday ? 'toggle toggle--on' : 'toggle'}
+            onClick={toggleCalendarStartOnMonday}
+          >
+            <span className="toggle__knob" />
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  ```
+
+---
 
 ## 🛡️ EDGE CASES TO HANDLE
-- **Null active program / null userPlan:** `getActiveProgram()` returns `WorkoutProgram | undefined` and `userPlan` can be `null`. MyPlansTab and WorkoutsTab MUST render the `.plan-empty` fallback rather than crash on property access. Use `== null` checks (covers both `null` and `undefined`).
-- **Orphaned exercise reference:** A `ProgramExercise.exerciseId` may not resolve via `getExerciseById` (returns `undefined`). WorkoutsTab must fall back to displaying the raw `exerciseId` string, never `undefined.name`.
-- **Sub-tab bar overflow on narrow phones:** Four pill tabs can exceed a 320px viewport. `.plan-tabs` MUST be horizontally scrollable (`overflow-x: auto`, `flex: 0 0 auto` on tabs, `white-space: nowrap`) so tabs never wrap or get clipped. Content area must not shift the fixed bottom nav (the parent `.app-content` already reserves `--bottom-nav-height`).
+- **Async hydration flash:** Capacitor `Preferences` is async, so the first paint uses in-memory defaults. Because defaults are `darkMode: true` / `calendarStartOnMonday: true` (identical to today's behavior), there is no visible flash on the common path. Do NOT block rendering on hydration and do NOT add a loading spinner; the reactive selectors in `RootLayout` and `WeekCalendarBar` update the UI automatically when hydration completes.
+- **DOW labels must match the start day:** When `calendarStartOnMonday` is `false`, the weekday header labels in `WeekCalendarBar` MUST switch to the Sunday-first array (`SUN_LABELS`) so headers line up with the dates from `getWeekDays`. Forgetting this produces an off-by-one mislabeled calendar — the highest-risk correctness bug in this feature.
+- **Class toggle cleanup / idempotency:** Use `classList.add` / `classList.remove` on `document.documentElement` (never `className = '...'`) so the effect never clobbers other classes and is safe to run repeatedly. The `else` branch MUST remove `dark-theme` so toggling to light mode actually reverts the palette.
+- **Existing tests must stay green:** `src/views/log/logDates.test.ts` calls `startOfWeek`/`getWeekDays` with no extra arg. Keeping the new params optional with a `true` default preserves Monday-start behavior so those tests pass unchanged. Do not modify that test file.

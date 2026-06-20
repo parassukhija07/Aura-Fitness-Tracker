@@ -36,16 +36,18 @@ export function isSameDay(a: Date, b: Date): boolean {
 
 // Monday-anchored start of the week containing `d`. Mon = index 0.
 // JS getDay(): Sun=0..Sat=6. Convert: mondayOffset = (getDay()+6)%7.
-export function startOfWeek(d: Date): Date {
+export function startOfWeek(d: Date, startOnMonday: boolean = true): Date {
   const base = startOfDay(d);
-  const mondayOffset = (base.getDay() + 6) % 7;
-  return new Date(base.getFullYear(), base.getMonth(), base.getDate() - mondayOffset);
+  const offset = startOnMonday
+    ? (base.getDay() + 6) % 7
+    : base.getDay();
+  return new Date(base.getFullYear(), base.getMonth(), base.getDate() - offset);
 }
 
 // Build the 7 visible day Dates for a given base week + offset.
 // base = startOfWeek(today); result[i] = base + (weekOffset*7 + i) days, i=0..6 (Mon..Sun)
-export function getWeekDays(today: Date, weekOffset: number): Date[] {
-  const base = startOfWeek(today);
+export function getWeekDays(today: Date, weekOffset: number, startOnMonday: boolean = true): Date[] {
+  const base = startOfWeek(today, startOnMonday);
   const days: Date[] = [];
   for (let i = 0; i < 7; i++) {
     const offset = weekOffset * 7 + i;

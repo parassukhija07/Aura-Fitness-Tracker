@@ -1,20 +1,20 @@
 # IMPLEMENTATION SUMMARY
 
 ## WHAT CHANGED
-Replaced the `PlanView.tsx` stub with a full sub-tab implementation that renders four read-only catalog views (My Plans, Programs, Workouts, Exercises) driven by `useWorkoutDataStore`, with a horizontally-scrollable pill tab bar.
+Added a persisted `userPreferencesStore` with dark mode and calendar start-day toggles. The dark mode preference drives a `dark-theme` class on `<html>` via a `RootLayout` effect, and the calendar preference flows through `WeekCalendarBar` to `getWeekDays`/`startOfWeek`.
 
 ## MODIFIED FILES
-- `src/views/PlanView.tsx`: Replaced 7-line stub with full component — local `SUB_TABS` const, `useState<SubTab>` for active tab, renders sub-tab nav and conditionally mounts the four sub-view components.
+- `src/views/log/logDates.ts`: Added optional `startOnMonday: boolean = true` parameter to `startOfWeek` and `getWeekDays`, forwarded through the call chain.
+- `src/views/log/WeekCalendarBar.tsx`: Imported `useUserPreferencesStore`, reads `calendarStartOnMonday` selector, uses it in `getWeekDays` call, and selects `dowLabels` from `MON_LABELS`/`SUN_LABELS` arrays instead of a single hardcoded constant.
+- `src/layouts/RootLayout.tsx`: Imported `useUserPreferencesStore`, reads `darkMode` selector, added a second `useEffect` that adds/removes the `dark-theme` class on `document.documentElement`.
+- `src/views/ProfileView.tsx`: Replaced the 7-line placeholder with the full settings UI — a "General" section containing Dark Mode and Start Week on Monday toggle rows bound to `userPreferencesStore`.
+- `src/index.css`: Refactored `:root` to the light palette and added a `.dark-theme` block with the original dark values.
 
 ## NEW FILES
-- `src/views/PlanView.css`: Sub-tab bar and plan-view layout styles (`.plan-view`, `.plan-tabs`, `.plan-tabs__tab`, `.plan-tabs__tab--active`, `.plan-view__content`).
-- `src/views/plan/plan.css`: Shared card/grid/list/badge/empty/progress styles reused across all four sub-tabs.
-- `src/views/plan/MyPlansTab.tsx`: Reads `userPlan` and `getActiveProgram()` from the store; renders a single progress card or empty state; includes local `formatStartDate` helper that parses ISO dates in local time to avoid UTC timezone shift.
-- `src/views/plan/ProgramsTab.tsx`: Reads `programs` array from the store and renders a 2-column grid of program cards with exercise-count badges.
-- `src/views/plan/WorkoutsTab.tsx`: Reads the active program's exercises via `getActiveProgram()` and resolves each exercise name via `getExerciseById()`; renders a flat session list with sets/reps details and a raw-id fallback for orphaned references.
-- `src/views/plan/ExercisesTab.tsx`: Reads `exercises` array from the store and renders a 2-column grid of exercise catalog cards with default-set/rep badges.
+- `src/store/userPreferencesStore.ts`: Persisted Zustand store (immer + capacitorStorage) holding `darkMode` and `calendarStartOnMonday` booleans with toggle/set actions; defaults to `true` for both to preserve current app appearance.
+- `src/views/profile/profile.css`: BEM-styled CSS for the profile settings list using only theme tokens, covering `.profile-view`, `.profile-section`, `.profile-list`, `.profile-row`, and `.toggle` / `.toggle--on` switch styles.
 
 ## TESTER FOCUS AREAS
-- Verify `MyPlansTab` renders the `.plan-empty` fallback when `userPlan` is `null` or `getActiveProgram()` returns `undefined`, and that the progress bar `width` style reflects `(currentDay / 7) * 100%` correctly.
-- Verify `WorkoutsTab` falls back to displaying the raw `exerciseId` string (never crashes) when `getExerciseById` returns `undefined` for an orphaned reference.
-- Verify the sub-tab bar in `PlanView` switches content correctly on click and that the active tab receives the `plan-tabs__tab--active` class while the others do not.
+- Verify that toggling Dark Mode in ProfileView adds/removes the `dark-theme` class on `document.documentElement` and that the palette visually switches between light and dark.
+- Verify that toggling "Start Week on Monday" to false causes `WeekCalendarBar` to display Sunday as the first column with the `SUN_LABELS` header row correctly aligned to the date cells returned by `getWeekDays`.
+- Verify that existing `logDates.test.ts` tests pass without modification — `startOfWeek` and `getWeekDays` called with no third argument must still return Monday-anchored weeks.

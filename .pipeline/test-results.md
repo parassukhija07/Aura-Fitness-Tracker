@@ -1,53 +1,63 @@
-# Test Results
+# TEST EXECUTION REPORT
 
-## Status: PASS
+## STATUS
+PASS
 
-## Checks
-- [PASS] Build succeeds
-- [PASS] TypeScript compiles
-- [PASS] PlanView.tsx has sub-tab logic
-- [PASS] All 4 sub-tab components exist
-- [PASS] CSS files exist
-- [PASS] Store is consumed in Plan views
-- [PASS] No files outside src/views/ modified
-- [PASS] MyPlansTab uses safe date parsing
+## TESTS IMPLEMENTED
 
-## Failures (if any)
+- `src/store/userPreferencesStore.test.ts`:
+  - Initial state: darkMode defaults to true
+  - Initial state: calendarStartOnMonday defaults to true
+  - toggleDarkMode flips darkMode from true to false
+  - toggleDarkMode flips darkMode back to true on second call
+  - toggleCalendarStartOnMonday flips calendarStartOnMonday from true to false
+  - setDarkMode sets darkMode to an explicit value (true and false)
+  - setCalendarStartOnMonday sets calendarStartOnMonday to an explicit value
+  - Store is persisted under the key "aura-user-preferences" (via persist.getOptions().name)
+
+- `src/views/log/logDates.sundayStart.test.ts`:
+  - getWeekDays(startOnMonday=false): Sunday input returns same Sunday as day[0]
+  - getWeekDays(startOnMonday=false): Wednesday input starts on the preceding Sunday
+  - getWeekDays(startOnMonday=false): consecutive days are +1 apart
+  - getWeekDays(startOnMonday=false): weekOffset=1 shifts window by 7 days
+  - getWeekDays(startOnMonday=false): Monday input starts on the preceding Sunday
+  - getWeekDays(no third arg): still Monday-anchored (backward compatibility)
+
+- `src/views/ProfileView.test.tsx`:
+  - Renders the "Profile" h1 heading
+  - Renders the "General" h2 section header
+  - Renders Dark Mode toggle switch (role=switch)
+  - Renders Start Week on Monday toggle switch (role=switch)
+  - Dark Mode toggle has aria-checked=true and toggle--on class when darkMode=true
+  - Start Week on Monday toggle has aria-checked=true and toggle--on class when calendarStartOnMonday=true
+  - Clicking Dark Mode toggle calls toggleDarkMode action
+  - Clicking Start Week on Monday toggle calls toggleCalendarStartOnMonday action
+  - Dark Mode toggle has aria-checked=false and no toggle--on class when darkMode=false
+  - Start Week on Monday toggle has no toggle--on class when calendarStartOnMonday=false
+
+- `src/layouts/RootLayout.test.tsx`:
+  - Adds dark-theme class to document.documentElement when darkMode is true
+  - Does not add dark-theme class when darkMode is false
+  - Removes pre-existing dark-theme class when darkMode is false
+
+## EXECUTION LOG
+```
+PASS src/store/userPreferencesStore.test.ts (10.87 s)
+PASS src/store/workoutDataStore.test.ts (11.052 s)
+PASS src/views/log/logDates.sundayStart.test.ts (11.959 s)
+PASS src/views/log/logDates.test.ts (11.687 s)
+PASS src/views/progression/LifetimeStatsCards.test.tsx (11.932 s)
+PASS src/views/progression/ConsistencyHeatmap.test.tsx (12.377 s)
+PASS src/layouts/RootLayout.test.tsx (12.22 s)
+PASS src/views/ProgressionView.test.tsx (12.97 s)
+PASS src/views/ProfileView.test.tsx (13.219 s)
+
+Test Suites: 9 passed, 9 total
+Tests:       60 passed, 60 total
+Snapshots:   0 total
+Time:        18.2 s, estimated 27 s
+Ran all test suites.
+```
+
+## BLOCKERS (If Failed)
 None.
-
----
-
-## Detail
-
-### Build
-`npm run build` produced zero errors. 57 modules transformed, bundle output written to `dist/`.
-
-### TypeScript
-`npx tsc --noEmit` exited with no output (clean compile).
-
-### PlanView.tsx sub-tab logic
-File at `src/views/PlanView.tsx` (36 lines). Contains:
-- `SUB_TABS` const array `['My Plans', 'Programs', 'Workouts', 'Exercises'] as const`
-- `useState<SubTab>('My Plans')` for active tab
-- `<nav role="tablist">` mapping tabs to buttons with conditional `plan-tabs__tab--active` class
-- Conditional rendering of all four sub-view components
-
-### Sub-tab components
-All four confirmed present under `src/views/plan/`:
-- `MyPlansTab.tsx`
-- `ProgramsTab.tsx`
-- `WorkoutsTab.tsx`
-- `ExercisesTab.tsx`
-
-### CSS files
-- `src/views/PlanView.css` — present
-- `src/views/plan/plan.css` — present
-
-### Store consumption
-`useWorkoutDataStore` called in all four sub-tab files (10 total selector calls across the 4 files). No store consumption added to PlanView.tsx itself — data is read directly in each sub-tab as specified.
-
-### Files outside src/views/ not modified
-Store files (`workoutDataStore.ts`, `navStore.ts`, `seedData.ts`), types (`workout.ts`), and other views (`LogView.tsx`, `ProgressionView.tsx`, `ProfileView.tsx`) contain no references to plan-tab class names or the new components. The `.claude/` agent config files show modifications but those are pipeline infrastructure, not application code.
-
-### Safe date parsing in MyPlansTab
-`formatStartDate` splits the ISO string manually and calls `new Date(y, m - 1, d)` (local-time constructor). No raw `new Date(isoString)` call found — UTC timezone shift bug is not present.
