@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
-import type { Exercise, WorkoutProgram, UserPlan, SessionExercise, ActiveSessionState } from '../types/workout';
+import type { Exercise, WorkoutProgram, UserPlan, SessionExercise, ActiveSessionState, LoggedSet, SetType } from '../types/workout';
 import { SEED_EXERCISES, SEED_PROGRAMS, SEED_USER_PLAN } from './seedData';
 import { capacitorStorage } from './capacitorStorage';
 
@@ -24,6 +24,10 @@ interface WorkoutDataState {
   endSession: () => void;
   updateElapsedTime: (seconds: number) => void;
   completeSet: (exerciseIndex: number, setIndex: number) => void;
+  addSet: (exerciseIndex: number) => void;
+  deleteSet: (exerciseIndex: number, setIndex: number) => void;
+  updateSetField: (exerciseIndex: number, setIndex: number, field: 'weight' | 'reps', value: number) => void;
+  updateSetType: (exerciseIndex: number, setIndex: number, setType: SetType) => void;
 }
 
 // ─── Store ────────────────────────────────────────────────────────────────────
@@ -96,10 +100,49 @@ export const useWorkoutDataStore = create<WorkoutDataState>()(
 
       completeSet: (exerciseIndex, setIndex) =>
         set((state) => {
-          const set_ = state.activeSession?.exercises[exerciseIndex]?.sets[setIndex];
-          if (set_) {
-            set_.completed = true;
-          }
+          const ex = state.activeSession?.exercises[exerciseIndex];
+          if (!ex) return;
+          const set_ = ex.sets[setIndex];
+          if (!set_) return;
+          set_.completed = true;
+          // auto-cleanup: drop fully-empty, uncompleted sets, but always keep >= 1 row
+          const cleaned = ex.sets.filter(
+            (s: LoggedSet) => s.completed || s.reps !== 0 || s.weight !== 0
+          );
+          ex.sets = cleaned.length > 0 ? cleaned : ex.sets;
+        }),
+
+      addSet: (exerciseIndex) =>
+        set((state) => {
+          const ex = state.activeSession?.exercises[exerciseIndex];
+          if (!ex) return;
+          ex.sets.push({ reps: 0, weight: 0, setType: 'Normal', completed: false });
+        }),
+
+      deleteSet: (exerciseIndex, setIndex) =>
+        set((state) => {
+          const ex = state.activeSession?.exercises[exerciseIndex];
+          if (!ex) return;
+          if (ex.sets.length <= 1) return;
+          ex.sets.splice(setIndex, 1);
+        }),
+
+      updateSetField: (exerciseIndex, setIndex, field, value) =>
+        set((state) => {
+          const ex = state.activeSession?.exercises[exerciseIndex];
+          if (!ex) return;
+          const set_ = ex.sets[setIndex];
+          if (!set_) return;
+          set_[field] = value;
+        }),
+
+      updateSetType: (exerciseIndex, setIndex, setType) =>
+        set((state) => {
+          const ex = state.activeSession?.exercises[exerciseIndex];
+          if (!ex) return;
+          const set_ = ex.sets[setIndex];
+          if (!set_) return;
+          set_.setType = setType;
         }),
     })),
     {
