@@ -60,3 +60,17 @@ export interface ActiveSessionState {
   exercises: SessionExercise[];
   elapsedTime: number;      // elapsed seconds since session start
 }
+
+export interface CustomWorkoutExercise {
+  exerciseId: string;
+  exerciseName: string;
+  targetSets: number;
+  targetReps: string;
+}
+
+export interface CustomWorkout {
+  id: string;
+  name: string;
+  exercises: CustomWorkoutExercise[];
+  createdAt: string;
+}

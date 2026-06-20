@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
-import type { Exercise, WorkoutProgram, UserPlan, SessionExercise, ActiveSessionState, LoggedSet, SetType } from '../types/workout';
+import type { Exercise, WorkoutProgram, UserPlan, SessionExercise, ActiveSessionState, LoggedSet, SetType, CustomWorkout, CustomWorkoutExercise } from '../types/workout';
 import { SEED_EXERCISES, SEED_PROGRAMS, SEED_USER_PLAN } from './seedData';
 import { capacitorStorage } from './capacitorStorage';
 
@@ -11,6 +11,7 @@ interface WorkoutDataState {
   programs: WorkoutProgram[];
   userPlan: UserPlan | null;
   activeSession: ActiveSessionState | null;
+  userWorkouts: CustomWorkout[];
 
   // selectors-as-helpers (pure reads; keep minimal)
   getActiveProgram: () => WorkoutProgram | undefined;
@@ -28,6 +29,7 @@ interface WorkoutDataState {
   deleteSet: (exerciseIndex: number, setIndex: number) => void;
   updateSetField: (exerciseIndex: number, setIndex: number, field: 'weight' | 'reps', value: number) => void;
   updateSetType: (exerciseIndex: number, setIndex: number, setType: SetType) => void;
+  saveCustomWorkout: (name: string, exercises: CustomWorkoutExercise[]) => void;
 }
 
 // ─── Store ────────────────────────────────────────────────────────────────────
@@ -39,6 +41,7 @@ export const useWorkoutDataStore = create<WorkoutDataState>()(
       programs: SEED_PROGRAMS,
       userPlan: SEED_USER_PLAN,
       activeSession: null,
+      userWorkouts: [],
 
       // ─── Selectors ───────────────────────────────────────────────────────
       getActiveProgram: () =>
@@ -74,6 +77,7 @@ export const useWorkoutDataStore = create<WorkoutDataState>()(
           state.exercises = SEED_EXERCISES;
           state.programs = SEED_PROGRAMS;
           state.userPlan = SEED_USER_PLAN;
+          state.userWorkouts = [];
         }),
 
       startSession: (program, exercises) =>
@@ -144,6 +148,25 @@ export const useWorkoutDataStore = create<WorkoutDataState>()(
           if (!set_) return;
           set_.setType = setType;
         }),
+
+      saveCustomWorkout: (name, exercises) =>
+        set((state) => {
+          const trimmed = name.trim();
+          if (trimmed.length === 0) return;
+          if (exercises.length === 0) return;
+          const id = `custom-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+          state.userWorkouts.push({
+            id,
+            name: trimmed,
+            exercises: exercises.map((e) => ({
+              exerciseId: e.exerciseId,
+              exerciseName: e.exerciseName,
+              targetSets: e.targetSets,
+              targetReps: e.targetReps,
+            })),
+            createdAt: new Date().toISOString(),
+          });
+        }),
     })),
     {
       name: 'aura-workout-data',
@@ -154,6 +177,7 @@ export const useWorkoutDataStore = create<WorkoutDataState>()(
         programs: state.programs,
         userPlan: state.userPlan,
         activeSession: state.activeSession,
+        userWorkouts: state.userWorkouts,
       }),
     }
   )

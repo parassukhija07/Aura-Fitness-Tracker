@@ -106,3 +106,61 @@ test('completeSet — out-of-range setIndex is a no-op', () => {
   useWorkoutDataStore.getState().completeSet(0, 9);
   expect(useWorkoutDataStore.getState().activeSession!.exercises[0].sets.every(s => !s.completed)).toBe(true);
 });
+
+// ---------------------------------------------------------------------------
+// saveCustomWorkout tests
+// ---------------------------------------------------------------------------
+
+import type { CustomWorkoutExercise } from '../types/workout';
+
+const SAMPLE_EXERCISE: CustomWorkoutExercise = {
+  exerciseId: 'barbell-bench-press',
+  exerciseName: 'Barbell Bench Press',
+  targetSets: 3,
+  targetReps: '8-12',
+};
+
+beforeEach(() => {
+  useWorkoutDataStore.setState({ userWorkouts: [] });
+});
+
+test('saveCustomWorkout — adds a workout with correct fields', () => {
+  useWorkoutDataStore.getState().saveCustomWorkout('Push Day', [SAMPLE_EXERCISE]);
+  const { userWorkouts } = useWorkoutDataStore.getState();
+  expect(userWorkouts.length).toBe(1);
+  expect(userWorkouts[0].name).toBe('Push Day');
+  expect(userWorkouts[0].exercises.length).toBe(1);
+  expect(userWorkouts[0].exercises[0].targetReps).toBe('8-12');
+});
+
+test('saveCustomWorkout — generates id starting with custom- and valid createdAt', () => {
+  useWorkoutDataStore.getState().saveCustomWorkout('Push Day', [SAMPLE_EXERCISE]);
+  const w = useWorkoutDataStore.getState().userWorkouts[0];
+  expect(w.id.startsWith('custom-')).toBe(true);
+  expect(Number.isNaN(Date.parse(w.createdAt))).toBe(false);
+});
+
+test('saveCustomWorkout — two saves produce two distinct ids', () => {
+  useWorkoutDataStore.getState().saveCustomWorkout('Push Day', [SAMPLE_EXERCISE]);
+  useWorkoutDataStore.getState().saveCustomWorkout('Pull Day', [SAMPLE_EXERCISE]);
+  const { userWorkouts } = useWorkoutDataStore.getState();
+  expect(userWorkouts.length).toBe(2);
+  expect(userWorkouts[0].id).not.toBe(userWorkouts[1].id);
+});
+
+test('saveCustomWorkout — whitespace-only name does not add workout', () => {
+  useWorkoutDataStore.getState().saveCustomWorkout('   ', [SAMPLE_EXERCISE]);
+  expect(useWorkoutDataStore.getState().userWorkouts.length).toBe(0);
+});
+
+test('saveCustomWorkout — empty exercises array does not add workout', () => {
+  useWorkoutDataStore.getState().saveCustomWorkout('Push Day', []);
+  expect(useWorkoutDataStore.getState().userWorkouts.length).toBe(0);
+});
+
+test('saveCustomWorkout — mutating input array does not affect stored exercises', () => {
+  const input: CustomWorkoutExercise[] = [{ ...SAMPLE_EXERCISE }];
+  useWorkoutDataStore.getState().saveCustomWorkout('Push Day', input);
+  input.push({ exerciseId: 'squat', exerciseName: 'Squat', targetSets: 3, targetReps: '5' });
+  expect(useWorkoutDataStore.getState().userWorkouts[0].exercises.length).toBe(1);
+});
