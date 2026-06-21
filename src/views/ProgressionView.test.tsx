@@ -31,8 +31,8 @@ jest.mock('recharts', () => {
 });
 jest.mock('../store/statsDataStore');
 jest.mock('../store/bodyDataStore', () => ({
-  useBodyDataStore: (selector: (s: { logs: unknown[] }) => unknown) =>
-    selector({ logs: [] }),
+  useBodyDataStore: (selector: (s: { logs: unknown[]; photos: unknown[]; addPhoto: () => void; deletePhoto: () => void }) => unknown) =>
+    selector({ logs: [], photos: [], addPhoto: () => {}, deletePhoto: () => {} }),
 }));
 
 // userPreferencesStore is used by NutritionTab; mock it so no Capacitor I/O occurs.

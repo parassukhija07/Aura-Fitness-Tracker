@@ -114,8 +114,11 @@ export const BodyMeasurementSchema = z.object({
   bodyFatPercentage: z.number().optional(),
   measurements: z
     .object({
+      neck: z.number().optional(),
+      shoulders: z.number().optional(),
       chest: z.number().optional(),
       waist: z.number().optional(),
+      hips: z.number().optional(),
       arms: z.number().optional(),
       thighs: z.number().optional(),
     })
@@ -123,9 +126,16 @@ export const BodyMeasurementSchema = z.object({
   notes: z.string().optional(),
 });
 
-// Mirrors bodyDataStore partialize: { logs }. Action functions are NOT backed up.
+export const ProgressPhotoSchema = z.object({
+  id: z.string(),
+  date: z.string(),
+  dataUrl: z.string(),
+});
+
+// Mirrors bodyDataStore partialize: { logs, photos }. Action functions are NOT backed up.
 export const BodyDataSchema = z.object({
   logs: z.array(BodyMeasurementSchema),
+  photos: z.array(ProgressPhotoSchema).optional(),
 });
 
 // ─── Backup Payload ──────────────────────────────────────────────────────────

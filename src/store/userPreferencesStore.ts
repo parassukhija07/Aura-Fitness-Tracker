@@ -3,6 +3,12 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import { capacitorStorage } from './capacitorStorage';
 
+function clampInt(value: number, min: number, max: number, fallback: number): number {
+  const n = Math.round(Number(value));
+  if (Number.isNaN(n)) return fallback;
+  return Math.min(max, Math.max(min, n));
+}
+
 export type ActivityLevel = 'sedentary' | 'light' | 'moderate' | 'active' | 'very_active';
 
 interface UserPreferencesState {
@@ -141,13 +147,13 @@ export const useUserPreferencesStore = create<UserPreferencesState>()(
       toggleShowPrsDuringWorkout: () =>
         set((state) => { state.showPrsDuringWorkout = !state.showPrsDuringWorkout; }),
       setDefaultSets: (value) =>
-        set((state) => { state.defaultSets = value; }),
+        set((state) => { state.defaultSets = clampInt(value, 1, 10, state.defaultSets); }),
       setDefaultRepsRange: (value) =>
         set((state) => { state.defaultRepsRange = value; }),
       setDefaultRestBetweenSetsSec: (value) =>
-        set((state) => { state.defaultRestBetweenSetsSec = value; }),
+        set((state) => { state.defaultRestBetweenSetsSec = clampInt(value, 10, 600, state.defaultRestBetweenSetsSec); }),
       setDefaultRestBetweenExercisesSec: (value) =>
-        set((state) => { state.defaultRestBetweenExercisesSec = value; }),
+        set((state) => { state.defaultRestBetweenExercisesSec = clampInt(value, 10, 600, state.defaultRestBetweenExercisesSec); }),
       toggleAutoRestTimer: () =>
         set((state) => { state.autoRestTimer = !state.autoRestTimer; }),
       toggleAutoPlayVideo: () =>

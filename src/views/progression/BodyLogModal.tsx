@@ -19,8 +19,11 @@ export default function BodyLogModal({ onClose }: BodyLogModalProps) {
   const [weight, setWeight] = useState('');
   const [bodyFat, setBodyFat] = useState('');
   const [showMeasurements, setShowMeasurements] = useState(false);
+  const [neck, setNeck] = useState('');
+  const [shoulders, setShoulders] = useState('');
   const [chest, setChest] = useState('');
   const [waist, setWaist] = useState('');
+  const [hips, setHips] = useState('');
   const [arms, setArms] = useState('');
   const [thighs, setThighs] = useState('');
 
@@ -34,8 +37,11 @@ export default function BodyLogModal({ onClose }: BodyLogModalProps) {
       return Number.isNaN(n) ? undefined : n;
     };
     const measurements: NonNullable<BodyMeasurement['measurements']> = {};
+    if (num(neck) !== undefined) measurements.neck = num(neck);
+    if (num(shoulders) !== undefined) measurements.shoulders = num(shoulders);
     if (num(chest) !== undefined) measurements.chest = num(chest);
     if (num(waist) !== undefined) measurements.waist = num(waist);
+    if (num(hips) !== undefined) measurements.hips = num(hips);
     if (num(arms) !== undefined) measurements.arms = num(arms);
     if (num(thighs) !== undefined) measurements.thighs = num(thighs);
 
@@ -86,12 +92,24 @@ export default function BodyLogModal({ onClose }: BodyLogModalProps) {
           {showMeasurements && (
             <div className="body-modal__collapse">
               <label className="body-modal__field">
+                <span className="body-modal__label">Neck (cm)</span>
+                <input type="number" inputMode="decimal" className="body-modal__input" value={neck} onChange={(e) => setNeck(e.target.value)} />
+              </label>
+              <label className="body-modal__field">
+                <span className="body-modal__label">Shoulders (cm)</span>
+                <input type="number" inputMode="decimal" className="body-modal__input" value={shoulders} onChange={(e) => setShoulders(e.target.value)} />
+              </label>
+              <label className="body-modal__field">
                 <span className="body-modal__label">Chest (cm)</span>
                 <input type="number" inputMode="decimal" className="body-modal__input" value={chest} onChange={(e) => setChest(e.target.value)} />
               </label>
               <label className="body-modal__field">
                 <span className="body-modal__label">Waist (cm)</span>
                 <input type="number" inputMode="decimal" className="body-modal__input" value={waist} onChange={(e) => setWaist(e.target.value)} />
+              </label>
+              <label className="body-modal__field">
+                <span className="body-modal__label">Hips (cm)</span>
+                <input type="number" inputMode="decimal" className="body-modal__input" value={hips} onChange={(e) => setHips(e.target.value)} />
               </label>
               <label className="body-modal__field">
                 <span className="body-modal__label">Arms (cm)</span>

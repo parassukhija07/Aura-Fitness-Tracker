@@ -132,6 +132,31 @@ test('setDefaultSets updates defaultSets', () => {
   expect(useUserPreferencesStore.getState().defaultSets).toBe(5);
 });
 
+test('setDefaultSets clamps out-of-range and NaN', () => {
+  const a = useUserPreferencesStore.getState();
+  a.setDefaultSets(99);
+  expect(useUserPreferencesStore.getState().defaultSets).toBe(10);
+  a.setDefaultSets(0);
+  expect(useUserPreferencesStore.getState().defaultSets).toBe(1);
+  a.setDefaultSets(3);
+  a.setDefaultSets(NaN);
+  expect(useUserPreferencesStore.getState().defaultSets).toBe(3); // fallback to current
+});
+test('setDefaultRestBetweenSetsSec clamps to [10,600]', () => {
+  const a = useUserPreferencesStore.getState();
+  a.setDefaultRestBetweenSetsSec(5);
+  expect(useUserPreferencesStore.getState().defaultRestBetweenSetsSec).toBe(10);
+  a.setDefaultRestBetweenSetsSec(9999);
+  expect(useUserPreferencesStore.getState().defaultRestBetweenSetsSec).toBe(600);
+});
+test('setDefaultRestBetweenExercisesSec clamps to [10,600]', () => {
+  const a = useUserPreferencesStore.getState();
+  a.setDefaultRestBetweenExercisesSec(1);
+  expect(useUserPreferencesStore.getState().defaultRestBetweenExercisesSec).toBe(10);
+  a.setDefaultRestBetweenExercisesSec(1000);
+  expect(useUserPreferencesStore.getState().defaultRestBetweenExercisesSec).toBe(600);
+});
+
 test('setDefaultRepsRange updates defaultRepsRange', () => {
   useUserPreferencesStore.getState().setDefaultRepsRange('8-12');
   expect(useUserPreferencesStore.getState().defaultRepsRange).toBe('8-12');
@@ -217,114 +242,59 @@ test('resetPreferences resets all new fields to their defaults', () => {
 // NEW TESTS — Migration logic (v1→v3 and v2→v3)
 // ---------------------------------------------------------------------------
 
-test('migration v1→v3: adds biometric fields with null defaults and all new settings fields', () => {
-  // Simulate the cumulative migrate function logic from the store
-  let s: Record<string, unknown> = { darkMode: false, calendarStartOnMonday: false };
+// Access the store's real migrate function via the persist API.
+const migrate = (useUserPreferencesStore as unknown as {
+  persist: { getOptions: () => { migrate: (s: unknown, v: number) => unknown } };
+}).persist.getOptions().migrate;
 
-  // version < 2
-  s = { ...s, ageYears: null, weightKg: null, heightCm: null, sex: null, activityLevel: 'moderate' };
-
-  // version < 3
-  s = {
-    ...s,
-    logScoreDisplay: 'both',
-    showRepsTimeFirst: true,
-    showPrsDuringWorkout: true,
-    defaultSets: 3,
-    defaultRepsRange: '6-10',
-    defaultRestBetweenSetsSec: 60,
-    defaultRestBetweenExercisesSec: 90,
-    autoRestTimer: true,
-    autoPlayVideo: false,
-    firstName: '',
-    lastName: '',
-    phone: '',
-    birthday: '',
-    gender: null,
-    country: '',
-    city: '',
-    stateRegion: '',
-    weightUnit: 'kg',
-    lengthUnit: 'cm',
-    notificationsEnabled: false,
-    restTimerSound: 'ding',
-  };
-
-  expect(s.ageYears).toBeNull();
-  expect(s.weightKg).toBeNull();
-  expect(s.heightCm).toBeNull();
-  expect(s.sex).toBeNull();
-  expect(s.activityLevel).toBe('moderate');
-  expect(s.logScoreDisplay).toBe('both');
-  expect(s.showRepsTimeFirst).toBe(true);
-  expect(s.defaultSets).toBe(3);
-  expect(s.defaultRepsRange).toBe('6-10');
-  expect(s.defaultRestBetweenSetsSec).toBe(60);
-  expect(s.defaultRestBetweenExercisesSec).toBe(90);
-  expect(s.autoRestTimer).toBe(true);
-  expect(s.autoPlayVideo).toBe(false);
-  expect(s.firstName).toBe('');
-  expect(s.gender).toBeNull();
-  expect(s.weightUnit).toBe('kg');
-  expect(s.lengthUnit).toBe('cm');
-  expect(s.notificationsEnabled).toBe(false);
-  expect(s.restTimerSound).toBe('ding');
-  // Existing values preserved
-  expect(s.darkMode).toBe(false);
-  expect(s.calendarStartOnMonday).toBe(false);
+test('migration v1→v3: real migrate adds biometric + all settings defaults, preserves existing', () => {
+  const v1State = { darkMode: false, calendarStartOnMonday: false };
+  const result = migrate(v1State, 1) as Record<string, unknown>;
+  // biometrics (added by version < 2)
+  expect(result.ageYears).toBeNull();
+  expect(result.weightKg).toBeNull();
+  expect(result.heightCm).toBeNull();
+  expect(result.sex).toBeNull();
+  expect(result.activityLevel).toBe('moderate');
+  // settings (added by version < 3)
+  expect(result.logScoreDisplay).toBe('both');
+  expect(result.showRepsTimeFirst).toBe(true);
+  expect(result.defaultSets).toBe(3);
+  expect(result.defaultRepsRange).toBe('6-10');
+  expect(result.defaultRestBetweenSetsSec).toBe(60);
+  expect(result.defaultRestBetweenExercisesSec).toBe(90);
+  expect(result.autoRestTimer).toBe(true);
+  expect(result.autoPlayVideo).toBe(false);
+  expect(result.firstName).toBe('');
+  expect(result.gender).toBeNull();
+  expect(result.weightUnit).toBe('kg');
+  expect(result.lengthUnit).toBe('cm');
+  expect(result.notificationsEnabled).toBe(false);
+  expect(result.restTimerSound).toBe('ding');
+  // existing preserved
+  expect(result.darkMode).toBe(false);
+  expect(result.calendarStartOnMonday).toBe(false);
 });
 
-test('migration v2→v3: adds new settings fields without overwriting existing biometrics', () => {
-  const v2State: Record<string, unknown> = {
-    darkMode: true,
-    calendarStartOnMonday: false,
-    ageYears: 30,
-    weightKg: 75,
-    heightCm: 180,
-    sex: 'male',
-    activityLevel: 'active',
+test('migration v2→v3: real migrate adds settings without overwriting biometrics', () => {
+  const v2State = {
+    darkMode: true, calendarStartOnMonday: false,
+    ageYears: 30, weightKg: 75, heightCm: 180, sex: 'male', activityLevel: 'active',
   };
-
-  // Only version < 3 runs
-  const s: Record<string, unknown> = {
-    ...v2State,
-    logScoreDisplay: 'both',
-    showRepsTimeFirst: true,
-    showPrsDuringWorkout: true,
-    defaultSets: 3,
-    defaultRepsRange: '6-10',
-    defaultRestBetweenSetsSec: 60,
-    defaultRestBetweenExercisesSec: 90,
-    autoRestTimer: true,
-    autoPlayVideo: false,
-    firstName: '',
-    lastName: '',
-    phone: '',
-    birthday: '',
-    gender: null,
-    country: '',
-    city: '',
-    stateRegion: '',
-    weightUnit: 'kg',
-    lengthUnit: 'cm',
-    notificationsEnabled: false,
-    restTimerSound: 'ding',
-  };
-
-  // Biometrics preserved exactly
-  expect(s.ageYears).toBe(30);
-  expect(s.weightKg).toBe(75);
-  expect(s.heightCm).toBe(180);
-  expect(s.sex).toBe('male');
-  expect(s.activityLevel).toBe('active');
-
-  // New fields have correct defaults
-  expect(s.logScoreDisplay).toBe('both');
-  expect(s.defaultSets).toBe(3);
-  expect(s.autoRestTimer).toBe(true);
-  expect(s.notificationsEnabled).toBe(false);
-  expect(s.weightUnit).toBe('kg');
-  expect(s.restTimerSound).toBe('ding');
+  const result = migrate(v2State, 2) as Record<string, unknown>;
+  // biometrics preserved exactly (version < 2 block must NOT run)
+  expect(result.ageYears).toBe(30);
+  expect(result.weightKg).toBe(75);
+  expect(result.heightCm).toBe(180);
+  expect(result.sex).toBe('male');
+  expect(result.activityLevel).toBe('active');
+  // settings defaults applied
+  expect(result.logScoreDisplay).toBe('both');
+  expect(result.defaultSets).toBe(3);
+  expect(result.autoRestTimer).toBe(true);
+  expect(result.notificationsEnabled).toBe(false);
+  expect(result.weightUnit).toBe('kg');
+  expect(result.restTimerSound).toBe('ding');
 });
 
 // ---------------------------------------------------------------------------
