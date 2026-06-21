@@ -1,0 +1,92 @@
+.prog-lib-detail {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.prog-lib-detail__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.prog-lib-detail__back {
+  background: none;
+  border: none;
+  color: var(--color-text);
+  font-size: 28px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.prog-lib-detail__title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.prog-lib-detail__desc {
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.prog-lib-detail__goal {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: rgba(168, 85, 247, 0.15);
+  color: var(--color-primary);
+  font-size: 11px;
+  font-weight: 600;
+  align-self: flex-start;
+}
+
+.prog-lib-detail__workout {
+  margin-top: 8px;
+}
+
+.prog-lib-detail__workout-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-bottom: 6px;
+}
+
+.prog-lib-detail__exercise {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  margin-bottom: 6px;
+}
+
+.prog-lib-detail__exercise-name {
+  font-size: 14px;
+  color: var(--color-text);
+}
+
+.prog-lib-detail__exercise-meta {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.prog-lib-detail__add-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  background: var(--color-primary);
+  color: var(--color-bg);
+  font-weight: 600;
+  border: none;
+  margin-top: 16px;
+  cursor: pointer;
+}
+
+.prog-lib-detail__add-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}

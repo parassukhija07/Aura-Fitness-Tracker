@@ -36,12 +36,15 @@ export interface UserPlan {
 
 export type SetType = 'Normal' | 'Drop Set' | 'Rest-Pause' | 'Failure' | 'Partials';
 
+export type CablePulley = 'single' | 'double';
+
 // A single logged set within an active workout session.
 export interface LoggedSet {
   reps: number;
   weight: number;       // weight value as entered (unit-agnostic, number only)
   setType?: SetType;
   completed: boolean;   // true once the user marks the set done
+  note?: string;        // per-set free-text note
 }
 
 // An exercise instance inside an active session. Denormalized snapshot of an
@@ -52,6 +55,8 @@ export interface SessionExercise {
   muscleGroup: MuscleGroup; // mirror of Exercise.muscleGroup (snapshot)
   defaultSets: number;      // mirror of Exercise.defaultSets (target set count)
   sets: LoggedSet[];        // the actual logged sets for this exercise
+  cablePulley?: CablePulley;     // only set when equipment === 'Cable'
+  supersetGroupId?: string;      // exercises sharing the same id form a superset; undefined = none
 }
 
 // The full state of a workout currently in progress.
@@ -60,6 +65,8 @@ export interface ActiveSessionState {
   startTime: string;        // ISO datetime string (NOT a Date object)
   exercises: SessionExercise[];
   elapsedTime: number;      // elapsed seconds since session start
+  interExerciseRestStartedAt?: string | null; // ISO datetime when 90s inter-exercise rest started; null/undefined = not running
+  sessionNotes?: string;    // saved on the post-workout summary
 }
 
 export interface CustomWorkoutExercise {
@@ -74,4 +81,39 @@ export interface CustomWorkout {
   name: string;
   exercises: CustomWorkoutExercise[];
   createdAt: string;
+}
+
+// ─── Catalog types (read-only seed library, PRD 3.2 / 3.3) ───────────────
+export type ProgramGoal = 'Strength' | 'Hypertrophy' | 'Endurance' | 'Fat Loss';
+
+// A single exercise slot inside a catalog workout (reuses Exercise.id + rep targets).
+export interface CatalogWorkoutExercise {
+  exerciseId: string;   // FK -> Exercise.id (must exist in exercises.json)
+  sets: number;
+  repsMin: number;
+  repsMax: number;
+}
+
+// A standalone workout in the Workout Library (PRD 3.3).
+export interface CatalogWorkout {
+  id: string;                 // stable slug, e.g. 'lib-push-day'
+  name: string;
+  muscleGroup: MuscleGroup;   // primary muscle group for filtering
+  category: string;           // e.g. 'Push', 'Pull', 'Legs', 'Upper', 'Lower', 'Full Body'
+  exercises: CatalogWorkoutExercise[];
+}
+
+// A workout grouping inside a catalog program (PRD 3.2 — "see its workouts and exercises").
+export interface CatalogProgramWorkout {
+  name: string;               // e.g. 'Push Day'
+  exercises: CatalogWorkoutExercise[];
+}
+
+// A full program in the Program Library (PRD 3.2).
+export interface CatalogProgram {
+  id: string;                 // stable slug, e.g. 'lib-ppl'
+  name: string;
+  description: string;
+  goal: ProgramGoal;          // single goal tag for filter chips
+  workouts: CatalogProgramWorkout[];
 }

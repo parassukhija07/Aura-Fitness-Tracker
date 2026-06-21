@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
-import type { Exercise, WorkoutProgram, UserPlan, SessionExercise, ActiveSessionState, LoggedSet, SetType, CustomWorkout, CustomWorkoutExercise } from '../types/workout';
+import type { Exercise, WorkoutProgram, UserPlan, SessionExercise, ActiveSessionState, LoggedSet, SetType, CustomWorkout, CustomWorkoutExercise, CablePulley, CatalogProgram, CatalogWorkout } from '../types/workout';
 import { SEED_EXERCISES, SEED_PROGRAMS, SEED_USER_PLAN } from './seedData';
 import { capacitorStorage } from './capacitorStorage';
 
@@ -37,6 +37,18 @@ interface WorkoutDataState {
   createWorkout: (name: string) => string;
   addExerciseToWorkout: (workoutId: string, exercise: CustomWorkoutExercise) => void;
   updateActiveSchedule: (schedule: (string | null)[]) => void;
+
+  // New actions — Exercise Detail View
+  updateSetNote: (exerciseIndex: number, setIndex: number, note: string) => void;
+  setCablePulley: (exerciseIndex: number, pulley: CablePulley) => void;
+  setSupersetGroup: (exerciseIndices: number[], groupId: string | null) => void;
+  startInterExerciseRest: () => void;
+  clearInterExerciseRest: () => void;
+  setSessionNotes: (notes: string) => void;
+  stripEmptySets: (exerciseIndex: number) => void;
+
+  addCatalogProgramToMyPlans: (program: CatalogProgram) => string; // returns new userProgram id ('' on failure)
+  addCatalogWorkoutToMyPlans: (workout: CatalogWorkout) => string; // returns new userWorkout id ('' on failure)
 }
 
 // ─── Store ────────────────────────────────────────────────────────────────────
@@ -245,6 +257,99 @@ export const useWorkoutDataStore = create<WorkoutDataState>()(
           if (!Array.isArray(schedule) || schedule.length !== 7) return;
           state.userPlan.schedule = schedule.map((v) => (typeof v === 'string' && v.length > 0 ? v : null));
         }),
+
+      updateSetNote: (exerciseIndex, setIndex, note) =>
+        set((state) => {
+          const set_ = state.activeSession?.exercises[exerciseIndex]?.sets[setIndex];
+          if (!set_) return;
+          set_.note = note;
+        }),
+
+      setCablePulley: (exerciseIndex, pulley) =>
+        set((state) => {
+          const ex = state.activeSession?.exercises[exerciseIndex];
+          if (!ex) return;
+          ex.cablePulley = pulley;
+        }),
+
+      setSupersetGroup: (exerciseIndices, groupId) =>
+        set((state) => {
+          if (!state.activeSession) return;
+          for (const idx of exerciseIndices) {
+            const ex = state.activeSession.exercises[idx];
+            if (!ex) continue;
+            ex.supersetGroupId = groupId ?? undefined;
+          }
+        }),
+
+      startInterExerciseRest: () =>
+        set((state) => {
+          if (!state.activeSession) return;
+          state.activeSession.interExerciseRestStartedAt = new Date().toISOString();
+        }),
+
+      clearInterExerciseRest: () =>
+        set((state) => {
+          if (!state.activeSession) return;
+          state.activeSession.interExerciseRestStartedAt = null;
+        }),
+
+      setSessionNotes: (notes) =>
+        set((state) => {
+          if (!state.activeSession) return;
+          state.activeSession.sessionNotes = notes;
+        }),
+
+      stripEmptySets: (exerciseIndex) =>
+        set((state) => {
+          const ex = state.activeSession?.exercises[exerciseIndex];
+          if (!ex) return;
+          const cleaned = ex.sets.filter(
+            (s: LoggedSet) => s.completed || s.reps !== 0 || s.weight !== 0
+          );
+          ex.sets = cleaned.length > 0 ? cleaned : ex.sets.slice(0, 1);
+        }),
+
+      addCatalogProgramToMyPlans: (program) => {
+        let newId = '';
+        set((state) => {
+          if (!program || typeof program.id !== 'string' || program.id.length === 0) return;
+          const already = state.userPrograms.find((p) => p.id === `myplan-${program.id}`);
+          if (already) { newId = already.id; return; }
+          newId = `myplan-${program.id}`;
+          const flat = program.workouts.flatMap((w) =>
+            w.exercises.map((e) => ({
+              exerciseId: e.exerciseId, sets: e.sets, repsMin: e.repsMin, repsMax: e.repsMax,
+            }))
+          );
+          state.userPrograms.push({
+            id: newId, name: program.name, description: program.description, exercises: flat,
+          });
+        });
+        return newId;
+      },
+
+      addCatalogWorkoutToMyPlans: (workout) => {
+        let newId = '';
+        set((state) => {
+          if (!workout || typeof workout.id !== 'string' || workout.id.length === 0) return;
+          const already = state.userWorkouts.find((w) => w.id === `myplan-${workout.id}`);
+          if (already) { newId = already.id; return; }
+          newId = `myplan-${workout.id}`;
+          state.userWorkouts.push({
+            id: newId,
+            name: workout.name,
+            exercises: workout.exercises.map((e) => ({
+              exerciseId: e.exerciseId,
+              exerciseName: '', // resolved at render via getExerciseById; empty is acceptable
+              targetSets: e.sets,
+              targetReps: e.repsMin === e.repsMax ? String(e.repsMin) : `${e.repsMin}-${e.repsMax}`,
+            })),
+            createdAt: new Date().toISOString(),
+          });
+        });
+        return newId;
+      },
     })),
     {
       name: 'aura-workout-data',
