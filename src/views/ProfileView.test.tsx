@@ -7,6 +7,12 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import ProfileView from './ProfileView';
 import { useUserPreferencesStore } from '../store/userPreferencesStore';
 
+jest.mock('../lib/firebase', () => ({
+  auth: { signOut: jest.fn(), onAuthStateChanged: jest.fn() },
+  db: {},
+  app: {}
+}));
+
 // ---------------------------------------------------------------------------
 // Fake store state wired up before each test
 // ---------------------------------------------------------------------------

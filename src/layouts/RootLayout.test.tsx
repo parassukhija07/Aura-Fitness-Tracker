@@ -21,6 +21,12 @@ import { render } from '@testing-library/react';
 import RootLayout from './RootLayout';
 import { useUserPreferencesStore } from '../store/userPreferencesStore';
 
+jest.mock('../lib/firebase', () => ({
+  auth: { signOut: jest.fn(), onAuthStateChanged: jest.fn() },
+  db: {},
+  app: {}
+}));
+
 function mockDarkMode(value: boolean) {
   const state = { darkMode: value, setActiveTab: jest.fn() };
   (useUserPreferencesStore as unknown as jest.Mock).mockImplementation(
