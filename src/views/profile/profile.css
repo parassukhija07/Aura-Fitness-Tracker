@@ -148,3 +148,80 @@
   color: #EF4444;
   margin: 4px 0 0;
 }
+
+/* ── Profile Header ────────────────────────────────────────────────────────── */
+
+.profile-header {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.profile-header__avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  font-size: 22px;
+  font-weight: 700;
+  border: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.profile-header__name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.profile-header__meta {
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+/* ── Profile Inputs & Selects ──────────────────────────────────────────────── */
+
+.profile-input,
+select.profile-select {
+  text-align: right;
+  max-width: 55%;
+  padding: 8px 10px;
+  font-size: 15px;
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  outline: none;
+}
+
+.profile-input:focus,
+select.profile-select:focus {
+  border-color: var(--color-primary);
+}
+
+/* ── Link rows ─────────────────────────────────────────────────────────────── */
+
+.profile-row--link {
+  text-decoration: none;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.profile-row--link::after {
+  content: '›';
+  color: var(--color-text-muted);
+}
+
+/* ── Danger button ─────────────────────────────────────────────────────────── */
+
+.auth-button--danger {
+  background: var(--color-surface);
+  color: var(--color-danger);
+  border-color: var(--color-border);
+}

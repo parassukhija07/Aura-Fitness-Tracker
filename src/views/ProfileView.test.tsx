@@ -2,15 +2,44 @@
  * @jest-environment jsdom
  */
 jest.mock('../store/userPreferencesStore');
+jest.mock('../store/workoutDataStore');
+jest.mock('../store/authStore');
+
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent } from '@testing-library/react';
 import ProfileView from './ProfileView';
 import { useUserPreferencesStore } from '../store/userPreferencesStore';
+import { useWorkoutDataStore } from '../store/workoutDataStore';
+import { useAuthStore } from '../store/authStore';
 
 jest.mock('../lib/firebase', () => ({
-  auth: { signOut: jest.fn(), onAuthStateChanged: jest.fn() },
+  auth: {},
   db: {},
   app: {}
+}));
+
+jest.mock('firebase/auth', () => ({
+  signInWithEmailAndPassword: jest.fn(),
+  createUserWithEmailAndPassword: jest.fn(),
+  signOut: jest.fn().mockResolvedValue(undefined),
+  onAuthStateChanged: jest.fn(() => jest.fn()), // returns unsubscribe fn
+}));
+
+jest.mock('../services/cloudSync', () => ({
+  backupToCloud: jest.fn(),
+  restoreFromCloud: jest.fn(),
+}));
+
+jest.mock('../utils/haptics', () => ({
+  triggerSuccess: jest.fn(),
+}));
+
+jest.mock('framer-motion', () => ({
+  motion: {
+    section: ({ children, ...props }: React.HTMLAttributes<HTMLElement> & { children?: React.ReactNode }) => (
+      <section {...props}>{children}</section>
+    ),
+  },
 }));
 
 // ---------------------------------------------------------------------------
@@ -24,8 +53,54 @@ function buildState(overrides: { darkMode?: boolean; calendarStartOnMonday?: boo
   return {
     darkMode: overrides.darkMode ?? true,
     calendarStartOnMonday: overrides.calendarStartOnMonday ?? true,
+    // New fields with defaults so ProfileView renders without crashing
+    logScoreDisplay: 'both' as const,
+    showRepsTimeFirst: true,
+    showPrsDuringWorkout: true,
+    defaultSets: 3,
+    defaultRepsRange: '6-10',
+    defaultRestBetweenSetsSec: 60,
+    defaultRestBetweenExercisesSec: 90,
+    autoRestTimer: true,
+    autoPlayVideo: false,
+    firstName: '',
+    lastName: '',
+    phone: '',
+    birthday: '',
+    gender: null as null,
+    country: '',
+    city: '',
+    stateRegion: '',
+    weightUnit: 'kg' as const,
+    lengthUnit: 'cm' as const,
+    notificationsEnabled: false,
+    restTimerSound: 'ding' as const,
+    ageYears: null as null,
+    weightKg: null as null,
+    heightCm: null as null,
+    sex: null as null,
+    activityLevel: 'moderate' as const,
+    // actions
     toggleDarkMode,
     toggleCalendarStartOnMonday,
+    setDarkMode: jest.fn(),
+    setCalendarStartOnMonday: jest.fn(),
+    setBiometrics: jest.fn(),
+    setLogScoreDisplay: jest.fn(),
+    toggleShowRepsTimeFirst: jest.fn(),
+    toggleShowPrsDuringWorkout: jest.fn(),
+    setDefaultSets: jest.fn(),
+    setDefaultRepsRange: jest.fn(),
+    setDefaultRestBetweenSetsSec: jest.fn(),
+    setDefaultRestBetweenExercisesSec: jest.fn(),
+    toggleAutoRestTimer: jest.fn(),
+    toggleAutoPlayVideo: jest.fn(),
+    setAccountDetails: jest.fn(),
+    setWeightUnit: jest.fn(),
+    setLengthUnit: jest.fn(),
+    toggleNotificationsEnabled: jest.fn(),
+    setRestTimerSound: jest.fn(),
+    resetPreferences: jest.fn(),
   };
 }
 
@@ -34,6 +109,19 @@ beforeEach(() => {
   const state = buildState();
   (useUserPreferencesStore as unknown as jest.Mock).mockImplementation(
     (selector: (s: typeof state) => unknown) => selector(state)
+  );
+  (useUserPreferencesStore as unknown as { getState: jest.Mock }).getState = jest.fn().mockReturnValue(state);
+
+  (useWorkoutDataStore as unknown as jest.Mock).mockImplementation(
+    (selector: (s: { resetToSeed: jest.Mock }) => unknown) =>
+      selector({ resetToSeed: jest.fn() })
+  );
+  (useWorkoutDataStore as unknown as { getState: jest.Mock }).getState = jest.fn().mockReturnValue({
+    resetToSeed: jest.fn(),
+  });
+
+  (useAuthStore as unknown as jest.Mock).mockImplementation(
+    (selector: (s: { user: null }) => unknown) => selector({ user: null })
   );
 });
 
