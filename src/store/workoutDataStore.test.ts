@@ -212,3 +212,126 @@ test('assignWorkoutToDay — no-op when userPlan is null', () => {
   expect(() => useWorkoutDataStore.getState().assignWorkoutToDay(0, 'x')).not.toThrow();
   expect(useWorkoutDataStore.getState().userPlan).toBeNull();
 });
+
+// ---------------------------------------------------------------------------
+// userPrograms / createProgram / createWorkout / addExerciseToWorkout /
+// addWorkoutToProgram / updateActiveSchedule / getActiveProgram tests
+// ---------------------------------------------------------------------------
+
+beforeEach(() => {
+  useWorkoutDataStore.setState({
+    userPrograms: [],
+    userWorkouts: [],
+    userPlan: {
+      id: 'user-plan-1', activeProgramId: 'full-body-a', startDate: '2026-06-20',
+      currentWeek: 1, currentDay: 1, schedule: [null, null, null, null, null, null, null],
+    },
+  });
+});
+
+test('createProgram — adds a userProgram with correct fields and returns an id starting with program-', () => {
+  const id = useWorkoutDataStore.getState().createProgram('My Program', 'A description');
+  expect(id.startsWith('program-')).toBe(true);
+  const { userPrograms } = useWorkoutDataStore.getState();
+  expect(userPrograms.length).toBe(1);
+  expect(userPrograms[0].name).toBe('My Program');
+  expect(userPrograms[0].description).toBe('A description');
+  expect(userPrograms[0].exercises).toEqual([]);
+});
+
+test('createProgram — whitespace-only name is a no-op and returns empty string', () => {
+  const id = useWorkoutDataStore.getState().createProgram('   ', '');
+  expect(id).toBe('');
+  expect(useWorkoutDataStore.getState().userPrograms.length).toBe(0);
+});
+
+test('createWorkout — adds a userWorkout with correct fields and returns an id starting with custom-', () => {
+  const id = useWorkoutDataStore.getState().createWorkout('Push Day');
+  expect(id.startsWith('custom-')).toBe(true);
+  const { userWorkouts } = useWorkoutDataStore.getState();
+  expect(userWorkouts.length).toBe(1);
+  expect(userWorkouts[0].name).toBe('Push Day');
+  expect(userWorkouts[0].exercises).toEqual([]);
+  expect(Number.isNaN(Date.parse(userWorkouts[0].createdAt))).toBe(false);
+});
+
+test('createWorkout — whitespace-only name is a no-op and returns empty string', () => {
+  const id = useWorkoutDataStore.getState().createWorkout('   ');
+  expect(id).toBe('');
+  expect(useWorkoutDataStore.getState().userWorkouts.length).toBe(0);
+});
+
+test('addExerciseToWorkout — appends a CustomWorkoutExercise to the matching workout', () => {
+  const workoutId = useWorkoutDataStore.getState().createWorkout('Pull Day');
+  const ex: CustomWorkoutExercise = { exerciseId: 'pull-up', exerciseName: 'Pull Up', targetSets: 3, targetReps: '8-12' };
+  useWorkoutDataStore.getState().addExerciseToWorkout(workoutId, ex);
+  const w = useWorkoutDataStore.getState().userWorkouts.find((x) => x.id === workoutId)!;
+  expect(w.exercises.length).toBe(1);
+  expect(w.exercises[0].exerciseName).toBe('Pull Up');
+});
+
+test('addExerciseToWorkout — unknown workoutId is a no-op', () => {
+  const ex: CustomWorkoutExercise = { exerciseId: 'pull-up', exerciseName: 'Pull Up', targetSets: 3, targetReps: '8-12' };
+  expect(() => useWorkoutDataStore.getState().addExerciseToWorkout('nonexistent', ex)).not.toThrow();
+});
+
+test('addWorkoutToProgram — maps exercises, "8-12" => {repsMin:8, repsMax:12}', () => {
+  const programId = useWorkoutDataStore.getState().createProgram('Full Body', '');
+  const workoutId = useWorkoutDataStore.getState().createWorkout('Day A');
+  useWorkoutDataStore.getState().addExerciseToWorkout(workoutId, {
+    exerciseId: 'squat', exerciseName: 'Squat', targetSets: 4, targetReps: '8-12',
+  });
+  useWorkoutDataStore.getState().addWorkoutToProgram(programId, workoutId);
+  const prog = useWorkoutDataStore.getState().userPrograms.find((p) => p.id === programId)!;
+  expect(prog.exercises.length).toBe(1);
+  expect(prog.exercises[0]).toEqual({ exerciseId: 'squat', sets: 4, repsMin: 8, repsMax: 12 });
+});
+
+test('addWorkoutToProgram — single number "5" => {repsMin:5, repsMax:5}', () => {
+  const programId = useWorkoutDataStore.getState().createProgram('Strength', '');
+  const workoutId = useWorkoutDataStore.getState().createWorkout('Day B');
+  useWorkoutDataStore.getState().addExerciseToWorkout(workoutId, {
+    exerciseId: 'deadlift', exerciseName: 'Deadlift', targetSets: 5, targetReps: '5',
+  });
+  useWorkoutDataStore.getState().addWorkoutToProgram(programId, workoutId);
+  const prog = useWorkoutDataStore.getState().userPrograms.find((p) => p.id === programId)!;
+  expect(prog.exercises[0]).toEqual({ exerciseId: 'deadlift', sets: 5, repsMin: 5, repsMax: 5 });
+});
+
+test('addWorkoutToProgram — unknown programId is a no-op', () => {
+  const workoutId = useWorkoutDataStore.getState().createWorkout('Day C');
+  expect(() => useWorkoutDataStore.getState().addWorkoutToProgram('nonexistent', workoutId)).not.toThrow();
+});
+
+test('addWorkoutToProgram — unknown workoutId is a no-op', () => {
+  const programId = useWorkoutDataStore.getState().createProgram('Program X', '');
+  expect(() => useWorkoutDataStore.getState().addWorkoutToProgram(programId, 'nonexistent')).not.toThrow();
+  expect(useWorkoutDataStore.getState().userPrograms.find((p) => p.id === programId)!.exercises.length).toBe(0);
+});
+
+test('updateActiveSchedule — overwrites userPlan.schedule with a length-7 array', () => {
+  const newSchedule = [null, 'prog-1', null, 'prog-1', null, 'prog-1', null];
+  useWorkoutDataStore.getState().updateActiveSchedule(newSchedule);
+  expect(useWorkoutDataStore.getState().userPlan!.schedule).toEqual(newSchedule);
+});
+
+test('updateActiveSchedule — wrong length (5) is a no-op', () => {
+  const before = [...useWorkoutDataStore.getState().userPlan!.schedule];
+  useWorkoutDataStore.getState().updateActiveSchedule([null, null, null, null, null]);
+  expect(useWorkoutDataStore.getState().userPlan!.schedule).toEqual(before);
+});
+
+test('updateActiveSchedule — no-op when userPlan is null, must not throw', () => {
+  useWorkoutDataStore.setState({ userPlan: null });
+  expect(() => useWorkoutDataStore.getState().updateActiveSchedule([null, null, null, null, null, null, null])).not.toThrow();
+  expect(useWorkoutDataStore.getState().userPlan).toBeNull();
+});
+
+test('getActiveProgram — returns a userProgram when activeProgramId matches a userProgram id', () => {
+  const programId = useWorkoutDataStore.getState().createProgram('My User Program', 'desc');
+  useWorkoutDataStore.setState({ userPlan: { id: 'user-plan-1', activeProgramId: programId, startDate: '2026-06-20', currentWeek: 1, currentDay: 1, schedule: [null, null, null, null, null, null, null] } });
+  const active = useWorkoutDataStore.getState().getActiveProgram();
+  expect(active).toBeDefined();
+  expect(active!.id).toBe(programId);
+  expect(active!.name).toBe('My User Program');
+});

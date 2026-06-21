@@ -12,6 +12,7 @@ interface WorkoutDataState {
   userPlan: UserPlan | null;
   activeSession: ActiveSessionState | null;
   userWorkouts: CustomWorkout[];
+  userPrograms: WorkoutProgram[];
 
   // selectors-as-helpers (pure reads; keep minimal)
   getActiveProgram: () => WorkoutProgram | undefined;
@@ -31,6 +32,11 @@ interface WorkoutDataState {
   updateSetType: (exerciseIndex: number, setIndex: number, setType: SetType) => void;
   saveCustomWorkout: (name: string, exercises: CustomWorkoutExercise[]) => void;
   assignWorkoutToDay: (dayIndex: number, workoutId: string | null) => void;
+  createProgram: (name: string, description: string) => string;
+  addWorkoutToProgram: (programId: string, workoutId: string) => void;
+  createWorkout: (name: string) => string;
+  addExerciseToWorkout: (workoutId: string, exercise: CustomWorkoutExercise) => void;
+  updateActiveSchedule: (schedule: (string | null)[]) => void;
 }
 
 // ─── Store ────────────────────────────────────────────────────────────────────
@@ -43,10 +49,13 @@ export const useWorkoutDataStore = create<WorkoutDataState>()(
       userPlan: SEED_USER_PLAN,
       activeSession: null,
       userWorkouts: [],
+      userPrograms: [],
 
       // ─── Selectors ───────────────────────────────────────────────────────
-      getActiveProgram: () =>
-        get().programs.find((p) => p.id === get().userPlan?.activeProgramId),
+      getActiveProgram: () => {
+        const id = get().userPlan?.activeProgramId;
+        return get().programs.find((p) => p.id === id) ?? get().userPrograms.find((p) => p.id === id);
+      },
 
       getExerciseById: (id: string) =>
         get().exercises.find((e) => e.id === id),
@@ -79,6 +88,7 @@ export const useWorkoutDataStore = create<WorkoutDataState>()(
           state.programs = SEED_PROGRAMS;
           state.userPlan = SEED_USER_PLAN;
           state.userWorkouts = [];
+          state.userPrograms = [];
         }),
 
       startSession: (program, exercises) =>
@@ -179,6 +189,62 @@ export const useWorkoutDataStore = create<WorkoutDataState>()(
           }
           state.userPlan.schedule[dayIndex] = workoutId;
         }),
+
+      createProgram: (name, description) => {
+        let id = '';
+        set((state) => {
+          const trimmed = name.trim();
+          if (trimmed.length === 0) return;
+          id = `program-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+          state.userPrograms.push({ id, name: trimmed, description: description.trim(), exercises: [] });
+        });
+        return id;
+      },
+
+      createWorkout: (name) => {
+        let id = '';
+        set((state) => {
+          const trimmed = name.trim();
+          if (trimmed.length === 0) return;
+          id = `custom-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+          state.userWorkouts.push({ id, name: trimmed, exercises: [], createdAt: new Date().toISOString() });
+        });
+        return id;
+      },
+
+      addExerciseToWorkout: (workoutId, exercise) =>
+        set((state) => {
+          const w = state.userWorkouts.find((x) => x.id === workoutId);
+          if (!w) return;
+          if (!exercise || typeof exercise.exerciseId !== 'string' || exercise.exerciseId.length === 0) return;
+          w.exercises.push({
+            exerciseId: exercise.exerciseId,
+            exerciseName: exercise.exerciseName,
+            targetSets: Math.max(1, exercise.targetSets || 1),
+            targetReps: exercise.targetReps,
+          });
+        }),
+
+      addWorkoutToProgram: (programId, workoutId) =>
+        set((state) => {
+          const prog = state.userPrograms.find((p) => p.id === programId);
+          if (!prog) return;
+          const w = state.userWorkouts.find((x) => x.id === workoutId);
+          if (!w) return;
+          for (const ex of w.exercises) {
+            const parts = String(ex.targetReps).split('-').map((s) => parseInt(s.trim(), 10));
+            const min = Number.isNaN(parts[0]) ? 0 : parts[0];
+            const max = parts.length > 1 && !Number.isNaN(parts[1]) ? parts[1] : min;
+            prog.exercises.push({ exerciseId: ex.exerciseId, sets: ex.targetSets, repsMin: min, repsMax: max });
+          }
+        }),
+
+      updateActiveSchedule: (schedule) =>
+        set((state) => {
+          if (!state.userPlan) return;
+          if (!Array.isArray(schedule) || schedule.length !== 7) return;
+          state.userPlan.schedule = schedule.map((v) => (typeof v === 'string' && v.length > 0 ? v : null));
+        }),
     })),
     {
       name: 'aura-workout-data',
@@ -196,6 +262,7 @@ export const useWorkoutDataStore = create<WorkoutDataState>()(
         userPlan: state.userPlan,
         activeSession: state.activeSession,
         userWorkouts: state.userWorkouts,
+        userPrograms: state.userPrograms,
       }),
     }
   )
