@@ -10,6 +10,8 @@ import {
   createUserWithEmailAndPassword,
   signOut,
 } from 'firebase/auth';
+import { backupToCloud, restoreFromCloud } from '../services/cloudSync';
+import { triggerSuccess } from '../utils/haptics';
 
 export default function ProfileView() {
   const darkMode = useUserPreferencesStore((s) => s.darkMode);
@@ -22,6 +24,8 @@ export default function ProfileView() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [syncError, setSyncError] = useState<string | null>(null);
 
   async function handleSignIn() {
     setError(null);
@@ -63,6 +67,35 @@ export default function ProfileView() {
     }
   }
 
+  async function handleBackup() {
+    if (!user) return;
+    setSyncError(null);
+    setIsSyncing(true);
+    try {
+      await backupToCloud(user.uid);
+      triggerSuccess();
+    } catch (e) {
+      setSyncError(e instanceof Error ? e.message : 'Backup failed.');
+    } finally {
+      setIsSyncing(false);
+    }
+  }
+
+  async function handleRestore() {
+    if (!user) return;
+    if (!window.confirm('This will overwrite your current local data. Are you sure?')) return;
+    setSyncError(null);
+    setIsSyncing(true);
+    try {
+      await restoreFromCloud(user.uid);
+      triggerSuccess();
+    } catch (e) {
+      setSyncError(e instanceof Error ? e.message : 'Restore failed.');
+    } finally {
+      setIsSyncing(false);
+    }
+  }
+
   return (
     <motion.section className="view profile-view" {...pageTransition}>
       <h1 className="profile-view__title">Profile</h1>
@@ -85,6 +118,25 @@ export default function ProfileView() {
                 >
                   Sign Out
                 </button>
+              </div>
+              <div className="profile-row profile-row--stack">
+                <button
+                  type="button"
+                  className="auth-button auth-button--primary"
+                  onClick={handleBackup}
+                  disabled={isSyncing}
+                >
+                  {isSyncing ? 'Syncing…' : 'Backup Data to Cloud'}
+                </button>
+                <button
+                  type="button"
+                  className="auth-button auth-button--secondary"
+                  onClick={handleRestore}
+                  disabled={isSyncing}
+                >
+                  {isSyncing ? 'Syncing…' : 'Restore Data from Cloud'}
+                </button>
+                {syncError && <p className="auth-error">{syncError}</p>}
               </div>
             </>
           ) : (
