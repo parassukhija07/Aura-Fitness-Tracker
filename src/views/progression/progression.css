@@ -252,3 +252,134 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+/* ─── Nutrition tab ─────────────────────────────────────── */
+.nutri-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.nutri-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nutri-label {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.nutri-input {
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  color: var(--color-text);
+  padding: 8px 12px;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.nutri-select {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  color: var(--color-text);
+  padding: 8px 12px;
+  font-size: 0.95rem;
+  outline: none;
+  cursor: pointer;
+}
+
+.nutri-segmented {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.nutri-segmented__btn {
+  flex: 1 1 auto;
+  padding: 8px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;
+}
+
+.nutri-segmented__btn--active {
+  background: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+}
+
+.target-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.target-card__calories {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.target-card__calories .macro-cell__value {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.target-card__calories .macro-cell__label {
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.target-card__macros {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.macro-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: var(--color-bg);
+  border-radius: 8px;
+  padding: 10px 4px;
+}
+
+.macro-cell__value {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.macro-cell__label {
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+.nutri-warning {
+  padding: 20px 16px;
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 14px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+}

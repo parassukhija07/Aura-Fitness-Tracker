@@ -2,10 +2,11 @@ import { useState } from 'react';
 import './progression/progression.css';
 import StatsTab from './progression/StatsTab';
 import BodyTab from './progression/BodyTab';
+import NutritionTab from './progression/NutritionTab';
 import { motion } from 'framer-motion';
 import { pageTransition } from '../utils/motion';
 
-const SUB_TABS = ['Stats', 'Body'] as const;
+const SUB_TABS = ['Stats', 'Body', 'Nutrition'] as const;
 type SubTab = typeof SUB_TABS[number];
 
 export default function ProgressionView() {
@@ -28,6 +29,7 @@ export default function ProgressionView() {
       <div className="progression-view__content">
         {activeSubTab === 'Stats' && <StatsTab />}
         {activeSubTab === 'Body' && <BodyTab />}
+        {activeSubTab === 'Nutrition' && <NutritionTab />}
       </div>
     </motion.section>
   );
