@@ -14,6 +14,7 @@ module.exports = {
       {
         tsconfig: {
           module: 'CommonJS',
+          esModuleInterop: true,
           isolatedModules: false,
           allowImportingTsExtensions: false,
           noUnusedLocals: false,

@@ -1,47 +1,21 @@
 import type { Exercise, WorkoutProgram, UserPlan } from '../types/workout';
+import exercisesData from '../data/exercises.json';
 
-export const SEED_EXERCISES: Exercise[] = [
-  {
-    id: 'barbell-bench-press',
-    name: 'Barbell Bench Press',
-    muscleGroup: 'Chest',
-    defaultSets: 3,
-    defaultRepsMin: 6,
-    defaultRepsMax: 10,
-  },
-  {
-    id: 'barbell-back-squat',
-    name: 'Barbell Back Squat',
-    muscleGroup: 'Legs',
-    defaultSets: 3,
-    defaultRepsMin: 5,
-    defaultRepsMax: 8,
-  },
-  {
-    id: 'deadlift',
-    name: 'Deadlift',
-    muscleGroup: 'Back',
-    defaultSets: 3,
-    defaultRepsMin: 3,
-    defaultRepsMax: 6,
-  },
-  {
-    id: 'overhead-press',
-    name: 'Overhead Press',
-    muscleGroup: 'Shoulders',
-    defaultSets: 3,
-    defaultRepsMin: 8,
-    defaultRepsMax: 12,
-  },
-  {
-    id: 'pull-up',
-    name: 'Pull-Up',
-    muscleGroup: 'Back',
-    defaultSets: 3,
-    defaultRepsMin: 6,
-    defaultRepsMax: 12,
-  },
-];
+export const SEED_EXERCISES: Exercise[] = (exercisesData as Array<{
+  id: string;
+  name: string;
+  muscleGroup: Exercise['muscleGroup'];
+  defaultSets: number;
+  defaultRepsMin: number;
+  defaultRepsMax: number;
+}>).map((e) => ({
+  id: e.id,
+  name: e.name,
+  muscleGroup: e.muscleGroup,
+  defaultSets: e.defaultSets,
+  defaultRepsMin: e.defaultRepsMin,
+  defaultRepsMax: e.defaultRepsMax,
+}));
 
 export const SEED_PROGRAMS: WorkoutProgram[] = [
   {
