@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { pageTransition } from '../../utils/motion';
 import exercisesData from '../../data/exercises.json';
+import ExerciseDetailPage from './ExerciseDetailPage';
 import './plan.css';
 
 type CatalogExercise = {
@@ -20,6 +21,7 @@ type Filter = typeof FILTERS[number];
 export default function ExercisesTab() {
   const [query, setQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState<Filter>('All');
+  const [selectedExercise, setSelectedExercise] = useState<CatalogExercise | null>(null);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -29,6 +31,15 @@ export default function ExercisesTab() {
       return groupOk && nameOk;
     });
   }, [query, activeFilter]);
+
+  if (selectedExercise != null) {
+    return (
+      <ExerciseDetailPage
+        exercise={selectedExercise}
+        onBack={() => setSelectedExercise(null)}
+      />
+    );
+  }
 
   return (
     <motion.div className="exercises-tab" {...pageTransition}>
@@ -65,7 +76,12 @@ export default function ExercisesTab() {
       ) : (
         <div className="plan-grid">
           {filtered.map((ex) => (
-            <div key={ex.id} className="plan-card">
+            <div
+                key={ex.id}
+                className="plan-card"
+                onClick={() => setSelectedExercise(ex)}
+                style={{ cursor: 'pointer' }}
+              >
               <p className="plan-card__name">{ex.name}</p>
               <p className="plan-card__sub">{ex.muscleGroup}</p>
               <span className="plan-badge">{ex.equipment}</span>

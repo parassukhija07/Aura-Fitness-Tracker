@@ -383,3 +383,23 @@
   border: 1px solid var(--color-border);
   border-radius: 12px;
 }
+
+/* ─── Heatmap month navigation ───────────────────────────── */
+.heatmap__nav { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.heatmap__nav-btn { background:var(--color-surface); border:1px solid var(--color-border); color:var(--color-text); border-radius:8px; width:32px; height:32px; font-size:18px; line-height:1; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+.heatmap__nav-btn:disabled { opacity:0.4; cursor:not-allowed; }
+.heatmap__nav-label { font-size:13px; font-weight:600; color:var(--color-text); }
+.heatmap__grid--month { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; }
+.heatmap__cell--partial { background:color-mix(in srgb, var(--color-primary) 45%, var(--color-border)); }
+
+/* ─── Weekly volume chart ────────────────────────────────── */
+.stats-chart { background:var(--color-surface); border:1px solid var(--color-border); border-radius:12px; padding:12px 8px; }
+.stats-empty { padding:24px 16px; text-align:center; color:var(--color-text-muted); font-size:14px; background:var(--color-surface); border:1px solid var(--color-border); border-radius:12px; }
+
+/* ─── Personal records ───────────────────────────────────── */
+.pr-group { margin-bottom:16px; }
+.pr-group__title { font-size:13px; font-weight:600; color:var(--color-text-muted); margin:0 0 8px; }
+.pr-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+.pr-card { background:var(--color-surface); border:1px solid var(--color-border); border-radius:12px; padding:12px; display:flex; flex-direction:column; gap:4px; }
+.pr-card__name { font-size:12px; color:var(--color-text-muted); }
+.pr-card__value { font-size:18px; font-weight:700; color:var(--color-text); }

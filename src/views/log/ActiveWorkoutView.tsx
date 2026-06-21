@@ -2,13 +2,17 @@ import { useState, useEffect } from 'react';
 import { useWorkoutDataStore } from '../../store/workoutDataStore';
 import SessionHeader from './SessionHeader';
 import ExerciseList from './ExerciseList';
-import ExerciseLogger from './ExerciseLogger';
+import ExerciseDetailView from './ExerciseDetailView';
+import RestTimerPill from './RestTimerPill';
+import EndWorkoutSheet from './EndWorkoutSheet';
+import PostWorkoutSummary from './PostWorkoutSummary';
 
 export default function ActiveWorkoutView() {
   const activeSession = useWorkoutDataStore((s) => s.activeSession);
-  const endSession = useWorkoutDataStore((s) => s.endSession);
 
   const [selectedExerciseIndex, setSelectedExerciseIndex] = useState<number | null>(null);
+  const [showEndSheet, setShowEndSheet] = useState(false);
+  const [showSummary, setShowSummary] = useState(false);
 
   // Timer: reads fresh state via getState() to avoid stale closure
   useEffect(() => {
@@ -43,7 +47,7 @@ export default function ActiveWorkoutView() {
       <SessionHeader
         title="Active Workout"
         elapsedTime={activeSession.elapsedTime}
-        onEnd={endSession}
+        onEnd={() => setShowEndSheet(true)}
         onBack={selectedExerciseIndex != null ? () => setSelectedExerciseIndex(null) : undefined}
       />
       {selectedExerciseIndex == null || exercise === undefined ? (
@@ -52,10 +56,22 @@ export default function ActiveWorkoutView() {
           onSelect={setSelectedExerciseIndex}
         />
       ) : (
-        <ExerciseLogger
+        <ExerciseDetailView
           exerciseIndex={selectedExerciseIndex}
           exercise={exercise}
+          onComplete={() => setSelectedExerciseIndex(null)}
         />
+      )}
+      <RestTimerPill />
+      {showEndSheet && (
+        <EndWorkoutSheet
+          onEndEarly={() => { setShowEndSheet(false); setShowSummary(true); }}
+          onCancel={() => { setShowEndSheet(false); }}
+          onClose={() => setShowEndSheet(false)}
+        />
+      )}
+      {showSummary && (
+        <PostWorkoutSummary onSave={() => setShowSummary(false)} />
       )}
     </>
   );

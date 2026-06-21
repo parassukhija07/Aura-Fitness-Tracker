@@ -24,6 +24,9 @@ jest.mock('recharts', () => {
     YAxis: () => null,
     Tooltip: () => null,
     CartesianGrid: () => null,
+    BarChart: passthrough('div'),
+    Bar: () => null,
+    Cell: () => null,
   };
 });
 jest.mock('../store/statsDataStore');
@@ -56,6 +59,7 @@ import { useStatsDataStore } from '../store/statsDataStore';
 const FAKE_STATE = {
   completedWorkoutDates: [] as string[],
   lifetimeStats: { totalSessions: 1, totalSets: 2, totalVolumeKg: 3, totalPRs: 4 },
+  completedSessions: [] as never[],
 };
 
 beforeEach(() => {

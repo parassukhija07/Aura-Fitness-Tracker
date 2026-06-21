@@ -166,3 +166,203 @@
   background: var(--color-primary);
   border-color: var(--color-primary);
 }
+
+/* ── Exercise Detail Page ────────────────────────────────────── */
+
+.ex-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 24px;
+}
+
+.ex-detail__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ex-detail__back {
+  border: none;
+  font-size: 28px;
+  color: var(--color-text);
+  line-height: 1;
+  width: 40px;
+  align-self: flex-start;
+  background: transparent;
+  cursor: pointer;
+}
+
+.ex-detail__title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.ex-detail__hero {
+  height: 200px;
+  border-radius: 16px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-surface));
+}
+
+.ex-detail__play {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ex-detail__chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ex-detail__chip {
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.ex-detail__card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ex-detail__card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.ex-detail__card-body {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+.ex-detail__bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ex-detail__bar-label {
+  width: 80px;
+  font-size: 12px;
+  color: var(--color-text);
+  flex-shrink: 0;
+}
+
+.ex-detail__bar-track {
+  flex: 1;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--color-border);
+  overflow: hidden;
+}
+
+.ex-detail__bar-fill {
+  height: 100%;
+  background: var(--color-primary);
+  border-radius: 4px;
+}
+
+.ex-detail__bar-pct {
+  width: 40px;
+  text-align: right;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.ex-detail__body {
+  width: 140px;
+  height: auto;
+  align-self: center;
+  margin-top: 4px;
+}
+
+.ex-detail__body-base {
+  fill: var(--color-border);
+}
+
+.ex-detail__muscle {
+  fill: var(--color-border);
+  transition: fill 0.2s;
+}
+
+.ex-detail__muscle--sub {
+  fill: rgba(168, 85, 247, 0.45);
+}
+
+.ex-detail__muscle--on {
+  fill: var(--color-primary);
+}
+
+.ex-detail__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.ex-detail__action-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ex-detail__action-btn--primary {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+
+.ex-detail__toast {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  bottom: calc(var(--bottom-nav-height) + 16px);
+  background: var(--color-text);
+  color: var(--color-bg);
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  text-align: center;
+  z-index: 60;
+}
+
+.ex-detail__sheet-empty {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: 8px 0;
+}

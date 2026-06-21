@@ -2,45 +2,46 @@
  * @jest-environment jsdom
  */
 import '@testing-library/jest-dom';
-import { render } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import ConsistencyHeatmap from './ConsistencyHeatmap';
 
-const pad = (n: number) => String(n).padStart(2, '0');
-// local-midnight today minus N days, formatted to match component's toKey()
-const dateKeyMinus = (days: number): string => {
-  const now = new Date();
-  const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - days);
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-};
+const now = new Date();
+const currentYear = now.getFullYear();
+const currentMonth = now.getMonth();
 
-test('renders exactly 90 day cells', () => {
+const firstOfMonthKey = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-01`;
+
+const daysInCurrentMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+const priorMonthDate = new Date(currentYear, currentMonth - 1, 1);
+const priorMonthLabel = priorMonthDate.toLocaleString('en-US', { month: 'long', year: 'numeric' });
+
+test('renders one cell per day of the current month', () => {
   const { container } = render(<ConsistencyHeatmap completedDates={[]} />);
-  expect(container.querySelectorAll('.heatmap__cell').length).toBe(90);
+  expect(container.querySelectorAll('.heatmap__cell').length).toBe(daysInCurrentMonth);
 });
 
-test('marks in-window completed dates as active', () => {
-  const d5 = dateKeyMinus(5);
-  const d15 = dateKeyMinus(15);
-  const d30 = dateKeyMinus(30);
+test('marks completed dates in the current month as active', () => {
   const { container } = render(
-    <ConsistencyHeatmap completedDates={[d5, d15, d30]} />
+    <ConsistencyHeatmap completedDates={[firstOfMonthKey]} />
   );
-  expect(container.querySelectorAll('.heatmap__cell--active').length).toBe(3);
-  const titles = Array.from(container.querySelectorAll('.heatmap__cell--active')).map(
-    (el) => el.getAttribute('title')
-  );
-  expect(titles).toEqual(expect.arrayContaining([d5, d15, d30]));
+  expect(container.querySelectorAll('.heatmap__cell--active').length).toBe(1);
 });
 
-test('ignores dates outside the 90-day window', () => {
+test('marks partial dates as medium intensity', () => {
   const { container } = render(
-    <ConsistencyHeatmap completedDates={[dateKeyMinus(91)]} />
+    <ConsistencyHeatmap completedDates={[]} partialDates={[firstOfMonthKey]} />
   );
-  expect(container.querySelectorAll('.heatmap__cell--active').length).toBe(0);
-  expect(container.querySelectorAll('.heatmap__cell--empty').length).toBe(90);
+  expect(container.querySelectorAll('.heatmap__cell--partial').length).toBe(1);
 });
 
-test('renders three month labels', () => {
-  const { container } = render(<ConsistencyHeatmap completedDates={[]} />);
-  expect(container.querySelectorAll('.heatmap__month').length).toBe(3);
+test('next button is disabled on the current month', () => {
+  render(<ConsistencyHeatmap completedDates={[]} />);
+  expect(screen.getByLabelText('Next month')).toBeDisabled();
+});
+
+test('clicking previous navigates to prior month', () => {
+  render(<ConsistencyHeatmap completedDates={[]} />);
+  fireEvent.click(screen.getByLabelText('Previous month'));
+  expect(screen.getByText(priorMonthLabel)).toBeInTheDocument();
 });

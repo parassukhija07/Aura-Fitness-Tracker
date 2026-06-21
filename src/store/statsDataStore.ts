@@ -1,4 +1,6 @@
 import { create } from 'zustand';
+import type { MuscleGroup } from '../types/workout';
+import { SEED_COMPLETED_SESSIONS } from './statsSeedData';
 
 export interface LifetimeStats {
   totalSessions: number;
@@ -7,9 +9,16 @@ export interface LifetimeStats {
   totalPRs: number;
 }
 
+export interface CompletedSessionSet { reps: number; weight: number; completed: boolean; }
+export interface CompletedSessionExercise {
+  exerciseId: string; exerciseName: string; muscleGroup: MuscleGroup; sets: CompletedSessionSet[];
+}
+export interface CompletedSession { date: string; exercises: CompletedSessionExercise[]; } // date = 'YYYY-MM-DD' local key
+
 interface StatsState {
   completedWorkoutDates: string[];
   lifetimeStats: LifetimeStats;
+  completedSessions: CompletedSession[];
 }
 
 export const useStatsDataStore = create<StatsState>()(() => ({
@@ -27,4 +36,5 @@ export const useStatsDataStore = create<StatsState>()(() => ({
     totalVolumeKg: 1284500,
     totalPRs: 37,
   },
+  completedSessions: SEED_COMPLETED_SESSIONS,
 }));
