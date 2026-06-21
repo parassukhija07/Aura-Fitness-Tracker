@@ -2,25 +2,19 @@
  * @jest-environment jsdom
  */
 import '@testing-library/jest-dom';
-import { render, screen, fireEvent, within } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import ExercisesTab from './ExercisesTab';
 
 // Mock framer-motion so motion.div renders as a plain div
 jest.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, className, ...rest }: React.HTMLAttributes<HTMLDivElement>) =>
+    div: ({ children, className }: React.HTMLAttributes<HTMLDivElement>) =>
       // strip framer-motion specific props before passing to div
       <div className={className}>{children}</div>,
   },
 }));
 
 // ─── helpers ────────────────────────────────────────────────────────────────
-
-function getCards() {
-  return screen.queryAllByRole('heading').length > 0
-    ? screen.getAllByRole('heading')
-    : document.querySelectorAll('.plan-card');
-}
 
 function getCardNames() {
   return Array.from(document.querySelectorAll('.plan-card__name')).map(

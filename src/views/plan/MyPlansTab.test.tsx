@@ -20,7 +20,6 @@ jest.mock('./DayAssignmentModal', () => ({
   ),
 }));
 
-import * as React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { useWorkoutDataStore } from '../../store/workoutDataStore';
