@@ -7,4 +7,10 @@ expo-env.d.ts
 # @end expo-cli
 
 dist/
+android/
 .pipeline/
+
+# Environment Variables
+.env
+.env.local
+.env.*
