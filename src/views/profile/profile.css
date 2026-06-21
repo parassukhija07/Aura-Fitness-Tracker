@@ -74,3 +74,77 @@
 .toggle--on .toggle__knob {
   transform: translateX(20px);
 }
+
+.profile-row__value {
+  font-size: 15px;
+  color: var(--color-text-muted);
+  max-width: 60%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profile-row--stack {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 15px;
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.auth-input:focus {
+  border-color: var(--color-primary);
+}
+
+.auth-input:disabled {
+  opacity: 0.6;
+}
+
+.auth-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.auth-button {
+  flex: 1;
+  padding: 12px 14px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: opacity 0.15s, background 0.15s;
+}
+
+.auth-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.auth-button--primary {
+  background: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+}
+
+.auth-button--secondary {
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.auth-error {
+  font-size: 13px;
+  color: #EF4444;
+  margin: 4px 0 0;
+}
