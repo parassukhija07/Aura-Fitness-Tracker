@@ -13,14 +13,32 @@ export default function LogView() {
   const today = startOfDay(new Date());
   const [activeDate, setActiveDate] = useState<Date>(today);
   const [weekOffset, setWeekOffset] = useState<number>(0);
+  const [restOverrides, setRestOverrides] = useState<Record<string, boolean>>({});
 
   const userPlan = useWorkoutDataStore((s) => s.userPlan);
   const getActiveProgram = useWorkoutDataStore((s) => s.getActiveProgram);
   const getExerciseById = useWorkoutDataStore((s) => s.getExerciseById);
   const activeSession = useWorkoutDataStore((s) => s.activeSession);
+  const programs = useWorkoutDataStore((s) => s.programs);
+  const userPrograms = useWorkoutDataStore((s) => s.userPrograms);
+  const userWorkouts = useWorkoutDataStore((s) => s.userWorkouts);
+  const assignWorkoutToDay = useWorkoutDataStore((s) => s.assignWorkoutToDay);
+
   const activeProgram = getActiveProgram();
 
-  const dayWorkout = getDayWorkout(activeDate, userPlan, activeProgram, getExerciseById);
+  const dateKey = activeDate.toISOString().slice(0, 10);
+  const explicitRest = restOverrides[dateKey] === true;
+  const sundayIndex = activeDate.getDay();
+
+  const dayWorkout = getDayWorkout(
+    activeDate,
+    userPlan,
+    activeProgram,
+    getExerciseById,
+    { programs, userPrograms, userWorkouts },
+    explicitRest
+  );
+
   const hasPlan = userPlan != null && activeProgram != null;
   const isViewingToday = isSameDay(activeDate, today);
 
@@ -29,6 +47,16 @@ export default function LogView() {
   const onReturnToToday = () => {
     setWeekOffset(0);
     setActiveDate(today);
+  };
+
+  const onAssignWorkout = (workoutId: string) => {
+    assignWorkoutToDay(sundayIndex, workoutId);
+    setRestOverrides((m) => ({ ...m, [dateKey]: false }));
+  };
+
+  const onSetRestDay = () => {
+    assignWorkoutToDay(sundayIndex, null);
+    setRestOverrides((m) => ({ ...m, [dateKey]: true }));
   };
 
   if (activeSession != null) {
@@ -48,16 +76,19 @@ export default function LogView() {
         today={today}
         onSelectDate={onSelectDate}
         onWeekChange={onWeekChange}
+        showReturnToToday={!isViewingToday}
+        onReturnToToday={onReturnToToday}
       />
-      {!isViewingToday && (
-        <button type="button" className="log-today-btn" onClick={onReturnToToday}>
-          Return to Today
-        </button>
-      )}
       <TodaysOverview
         activeDate={activeDate}
         dayWorkout={dayWorkout}
         programName={activeProgram?.name}
+        sundayIndex={sundayIndex}
+        programs={programs}
+        userPrograms={userPrograms}
+        userWorkouts={userWorkouts}
+        onAssignWorkout={onAssignWorkout}
+        onSetRestDay={onSetRestDay}
       />
       <LogActions
         isRestDay={dayWorkout.isRestDay}

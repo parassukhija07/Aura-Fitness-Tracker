@@ -36,7 +36,12 @@ beforeEach(() => {
 // Use a fixed Monday as "today" so weeks are predictable
 const TODAY = new Date('2026-06-15T12:00:00.000Z'); // Monday
 
-function renderBar(activeDate: Date = TODAY, weekOffset = 0) {
+function renderBar(
+  activeDate: Date = TODAY,
+  weekOffset = 0,
+  showReturnToToday = false,
+  onReturnToToday = jest.fn(),
+) {
   const onSelectDate = jest.fn();
   const onWeekChange = jest.fn();
   const result = render(
@@ -46,6 +51,8 @@ function renderBar(activeDate: Date = TODAY, weekOffset = 0) {
       today={TODAY}
       onSelectDate={onSelectDate}
       onWeekChange={onWeekChange}
+      showReturnToToday={showReturnToToday}
+      onReturnToToday={onReturnToToday}
     />,
   );
   return { ...result, onSelectDate, onWeekChange };

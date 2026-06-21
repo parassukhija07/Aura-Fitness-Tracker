@@ -8,6 +8,8 @@ interface WeekCalendarBarProps {
   today: Date;
   onSelectDate: (date: Date) => void;
   onWeekChange: (delta: number) => void;
+  showReturnToToday: boolean;
+  onReturnToToday: () => void;
 }
 
 const MON_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -19,6 +21,8 @@ export default function WeekCalendarBar({
   today,
   onSelectDate,
   onWeekChange,
+  showReturnToToday,
+  onReturnToToday,
 }: WeekCalendarBarProps) {
   const calendarStartOnMonday = useUserPreferencesStore((s) => s.calendarStartOnMonday);
   const dowLabels = calendarStartOnMonday ? MON_LABELS : SUN_LABELS;
@@ -73,6 +77,15 @@ export default function WeekCalendarBar({
           );
         })}
       </div>
+      {showReturnToToday && (
+        <button
+          type="button"
+          className="log-today-btn"
+          onClick={onReturnToToday}
+        >
+          Return to Today
+        </button>
+      )}
     </div>
   );
 }

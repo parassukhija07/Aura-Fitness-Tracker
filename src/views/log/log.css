@@ -960,3 +960,13 @@
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
+
+/* ── Planned workout controls ────────────────────────────────────── */
+
+.log-overview__controls {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  margin-top: 12px;
+}
+.log-overview__controls .log-actions__btn { margin: 0; }
