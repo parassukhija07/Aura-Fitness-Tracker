@@ -25,6 +25,7 @@ import { setDoc, getDoc, doc } from 'firebase/firestore';
 import { backupToCloud, restoreFromCloud } from './cloudSync';
 import { useWorkoutDataStore } from '../store/workoutDataStore';
 import { useStatsDataStore } from '../store/statsDataStore';
+import { useBodyDataStore } from '../store/bodyDataStore';
 
 describe('cloudSync', () => {
   beforeEach(() => jest.clearAllMocks());
@@ -141,5 +142,52 @@ describe('cloudSync', () => {
       }),
     });
     await expect(restoreFromCloud('user-123')).rejects.toThrow('Invalid backup schema');
+  });
+
+  test('round-trips bodyData: backup includes it and restore applies it', async () => {
+    // Seed the body store, then back up.
+    useBodyDataStore.setState({
+      logs: [{ id: 'body-1', date: '2026-01-12', weightKg: 80.5 }],
+    });
+
+    await backupToCloud('user-123');
+    const payload = (setDoc as jest.Mock).mock.calls[0][1];
+    expect(payload.bodyData).toBeDefined();
+    expect(payload.bodyData.logs).toEqual([
+      { id: 'body-1', date: '2026-01-12', weightKg: 80.5 },
+    ]);
+
+    // Clear local state, then restore from a doc that contains bodyData.
+    useBodyDataStore.setState({ logs: [] });
+    (getDoc as jest.Mock).mockResolvedValue({
+      exists: () => true,
+      data: () => ({
+        workoutData: { exercises: [], programs: [], userPlan: null, activeSession: null, userWorkouts: [] },
+        statsData: { completedWorkoutDates: ['2026-01-01'], lifetimeStats: { totalSessions: 1, totalSets: 1, totalVolumeKg: 1, totalPRs: 1 } },
+        bodyData: { logs: [{ id: 'body-2', date: '2026-02-02', weightKg: 79.0 }] },
+      }),
+    });
+
+    const ok = await restoreFromCloud('user-123');
+    expect(ok).toBe(true);
+    expect(useBodyDataStore.getState().logs).toEqual([
+      { id: 'body-2', date: '2026-02-02', weightKg: 79.0 },
+    ]);
+  });
+
+  test('restoreFromCloud succeeds and skips bodyData when it is absent (legacy backup)', async () => {
+    useBodyDataStore.setState({ logs: [{ id: 'keep', date: '2026-03-03', weightKg: 70 }] });
+    (getDoc as jest.Mock).mockResolvedValue({
+      exists: () => true,
+      data: () => ({
+        workoutData: { exercises: [], programs: [], userPlan: null, activeSession: null, userWorkouts: [] },
+        statsData: { completedWorkoutDates: ['2026-01-01'], lifetimeStats: { totalSessions: 1, totalSets: 1, totalVolumeKg: 1, totalPRs: 1 } },
+        // NO bodyData field.
+      }),
+    });
+    const ok = await restoreFromCloud('user-123');
+    expect(ok).toBe(true);
+    // Body store must be untouched (not cleared) when backup omits bodyData.
+    expect(useBodyDataStore.getState().logs).toEqual([{ id: 'keep', date: '2026-03-03', weightKg: 70 }]);
   });
 });

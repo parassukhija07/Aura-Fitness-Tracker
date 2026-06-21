@@ -3,6 +3,7 @@ import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { useWorkoutDataStore } from '../store/workoutDataStore';
 import { useStatsDataStore } from '../store/statsDataStore';
+import { useBodyDataStore } from '../store/bodyDataStore';
 import { BackupPayloadSchema } from '../schemas/workoutSchemas';
 
 /**
@@ -12,6 +13,7 @@ import { BackupPayloadSchema } from '../schemas/workoutSchemas';
 interface CloudBackup {
   workoutData: Record<string, unknown>;
   statsData: Record<string, unknown>;
+  bodyData: Record<string, unknown>;
   updatedAt: string;
 }
 
@@ -32,6 +34,7 @@ function toSerializable<T>(state: T): Record<string, unknown> {
 export async function backupToCloud(uid: string): Promise<void> {
   const workoutData = toSerializable(useWorkoutDataStore.getState());
   const statsData = toSerializable(useStatsDataStore.getState());
+  const bodyData = toSerializable(useBodyDataStore.getState());
 
   // An in-progress session is local/ephemeral and must never be backed up.
   workoutData.activeSession = null;
@@ -39,6 +42,7 @@ export async function backupToCloud(uid: string): Promise<void> {
   const payload: CloudBackup = {
     workoutData,
     statsData,
+    bodyData,
     updatedAt: new Date().toISOString(),
   };
 
@@ -67,6 +71,9 @@ export async function restoreFromCloud(uid: string): Promise<boolean> {
 
   useWorkoutDataStore.setState(restored.workoutData);
   useStatsDataStore.setState(restored.statsData);
+  if (restored.bodyData) {
+    useBodyDataStore.setState(restored.bodyData);
+  }
 
   return true;
 }
