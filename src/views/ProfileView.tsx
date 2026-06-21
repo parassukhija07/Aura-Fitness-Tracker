@@ -170,7 +170,7 @@ export default function ProfileView() {
         preferences: useUserPreferencesStore.getState(),
         workoutData: useWorkoutDataStore.getState(),
       };
-      const json = JSON.stringify(obj, (k, v) => (typeof v === 'function' ? undefined : v), 2);
+      const json = JSON.stringify(obj, (_k, v) => (typeof v === 'function' ? undefined : v), 2);
       const blob = new Blob([json], { type: 'application/json' });
       objectUrl = URL.createObjectURL(blob);
       const a = document.createElement('a');

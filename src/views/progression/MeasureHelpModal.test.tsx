@@ -7,7 +7,7 @@ jest.mock('framer-motion', () => {
     motion: {
       div: React.forwardRef(
         (
-          { children, onClick, role, className, ...rest }: React.HTMLAttributes<HTMLDivElement> & { [k: string]: unknown },
+          { children, onClick, role, className }: React.HTMLAttributes<HTMLDivElement> & { [k: string]: unknown },
           ref: React.Ref<HTMLDivElement>
         ) => React.createElement('div', { ref, onClick, role, className }, children)
       ),
