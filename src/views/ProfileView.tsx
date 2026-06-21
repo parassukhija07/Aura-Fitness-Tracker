@@ -1,5 +1,7 @@
 import './profile/profile.css';
 import { useUserPreferencesStore } from '../store/userPreferencesStore';
+import { motion } from 'framer-motion';
+import { pageTransition } from '../utils/motion';
 
 export default function ProfileView() {
   const darkMode = useUserPreferencesStore((s) => s.darkMode);
@@ -8,7 +10,7 @@ export default function ProfileView() {
   const toggleCalendarStartOnMonday = useUserPreferencesStore((s) => s.toggleCalendarStartOnMonday);
 
   return (
-    <section className="view profile-view">
+    <motion.section className="view profile-view" {...pageTransition}>
       <h1 className="profile-view__title">Profile</h1>
 
       <div className="profile-section">
@@ -45,6 +47,6 @@ export default function ProfileView() {
 
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

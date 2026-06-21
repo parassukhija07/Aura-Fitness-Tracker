@@ -9,6 +9,11 @@ jest.mock('@capacitor/preferences', () => ({
     remove: jest.fn().mockResolvedValue(undefined),
   },
 }));
+jest.mock('../../utils/haptics', () => ({
+  triggerLightImpact: jest.fn(),
+  triggerSuccess: jest.fn(),
+  triggerSelection: jest.fn(),
+}));
 
 import * as React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';

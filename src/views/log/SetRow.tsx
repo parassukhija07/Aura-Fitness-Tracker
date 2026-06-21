@@ -1,5 +1,6 @@
 import type { LoggedSet, SetType } from '../../types/workout';
 import { useWorkoutDataStore } from '../../store/workoutDataStore';
+import { triggerSuccess } from '../../utils/haptics';
 
 interface SetRowProps {
   exerciseIndex: number;
@@ -18,6 +19,7 @@ export default function SetRow({ exerciseIndex, setIndex, set, onDelete }: SetRo
   const handleBlur = () => {
     if (!set.completed && set.weight > 0 && set.reps > 0) {
       completeSet(exerciseIndex, setIndex);
+      triggerSuccess();
     }
   };
 
@@ -53,7 +55,10 @@ export default function SetRow({ exerciseIndex, setIndex, set, onDelete }: SetRo
       <input
         type="checkbox"
         checked={set.completed}
-        onChange={() => completeSet(exerciseIndex, setIndex)}
+        onChange={() => {
+          if (!set.completed) triggerSuccess();
+          completeSet(exerciseIndex, setIndex);
+        }}
       />
       <button type="button" className="aw-set__delete" onClick={onDelete}>✕</button>
     </div>

@@ -1,5 +1,6 @@
 import { getWeekDays, isSameDay } from './logDates';
 import { useUserPreferencesStore } from '../../store/userPreferencesStore';
+import { triggerSelection } from '../../utils/haptics';
 
 interface WeekCalendarBarProps {
   weekOffset: number;
@@ -61,7 +62,10 @@ export default function WeekCalendarBar({
               key={date.toISOString()}
               type="button"
               className={cls}
-              onClick={() => onSelectDate(date)}
+              onClick={() => {
+                if (!isActive) triggerSelection();
+                onSelectDate(date);
+              }}
             >
               <span className="log-week__dow">{dowLabels[i]}</span>
               <span className="log-week__date">{date.getDate()}</span>

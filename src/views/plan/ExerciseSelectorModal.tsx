@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useWorkoutDataStore } from '../../store/workoutDataStore';
 import type { Exercise } from '../../types/workout';
 import './workoutBuilder.css';
+import { motion } from 'framer-motion';
+import { overlayTransition, panelTransition } from '../../utils/motion';
 
 interface ExerciseSelectorModalProps {
   onSelect: (exercise: Exercise) => void;
@@ -14,9 +16,9 @@ export default function ExerciseSelectorModal({ onSelect, onClose }: ExerciseSel
   const q = query.trim().toLowerCase();
   const filtered = exercises.filter((e) => e.name.toLowerCase().includes(q) || e.muscleGroup.toLowerCase().includes(q));
   return (
-    <div className="exercise-modal__backdrop" role="presentation"
-         onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
-      <div className="exercise-modal__panel" role="dialog" aria-modal="true" aria-label="Select Exercise">
+    <motion.div className="exercise-modal__backdrop" role="presentation"
+         onClick={(e) => { if (e.target === e.currentTarget) onClose(); }} {...overlayTransition}>
+      <motion.div className="exercise-modal__panel" role="dialog" aria-modal="true" aria-label="Select Exercise" {...panelTransition}>
         <header className="exercise-modal__header">
           <input
             type="text" className="exercise-modal__search"
@@ -34,7 +36,7 @@ export default function ExerciseSelectorModal({ onSelect, onClose }: ExerciseSel
             </button>
           ))}
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

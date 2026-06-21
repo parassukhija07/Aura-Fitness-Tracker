@@ -10,6 +10,11 @@ jest.mock('@capacitor/preferences', () => ({
 }));
 
 jest.mock('../../store/workoutDataStore');
+jest.mock('../../utils/haptics', () => ({
+  triggerLightImpact: jest.fn(),
+  triggerSuccess: jest.fn(),
+  triggerSelection: jest.fn(),
+}));
 
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent } from '@testing-library/react';

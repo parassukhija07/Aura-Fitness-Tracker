@@ -1,6 +1,8 @@
 import { useWorkoutDataStore } from '../../store/workoutDataStore';
 import './workoutBuilder.css';
 import './plan.css';
+import { motion } from 'framer-motion';
+import { overlayTransition, panelTransition } from '../../utils/motion';
 
 interface DayAssignmentModalProps {
   dayIndex: number;
@@ -22,10 +24,10 @@ export default function DayAssignmentModal({ dayIndex, dayLabel, onClose }: DayA
   function handleRest()           { assignWorkoutToDay(dayIndex, null); onClose(); }
 
   return (
-    <div className="exercise-modal__backdrop" role="presentation"
-         onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
-      <div className="exercise-modal__panel" role="dialog" aria-modal="true"
-           aria-label={`Assign workout to ${dayLabel}`}>
+    <motion.div className="exercise-modal__backdrop" role="presentation"
+         onClick={(e) => { if (e.target === e.currentTarget) onClose(); }} {...overlayTransition}>
+      <motion.div className="exercise-modal__panel" role="dialog" aria-modal="true"
+           aria-label={`Assign workout to ${dayLabel}`} {...panelTransition}>
         <header className="exercise-modal__header">
           <span className="exercise-modal__item-name">{dayLabel}</span>
           <button type="button" className="exercise-modal__close" aria-label="Close" onClick={onClose}>×</button>
@@ -42,7 +44,7 @@ export default function DayAssignmentModal({ dayIndex, dayLabel, onClose }: DayA
             </button>
           ))}
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

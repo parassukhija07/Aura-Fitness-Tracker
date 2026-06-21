@@ -3,6 +3,7 @@ import { useWorkoutDataStore } from '../../store/workoutDataStore';
 import type { Exercise, CustomWorkoutExercise } from '../../types/workout';
 import ExerciseSelectorModal from './ExerciseSelectorModal';
 import './workoutBuilder.css';
+import { triggerLightImpact } from '../../utils/haptics';
 
 interface WorkoutBuilderViewProps { onClose: () => void; }
 
@@ -43,6 +44,7 @@ export default function WorkoutBuilderView({ onClose }: WorkoutBuilderViewProps)
 
   function handleSave() {
     if (name.trim() === '' || draftExercises.length === 0) return;
+    triggerLightImpact();
     saveCustomWorkout(name, draftExercises);
     onClose();
   }

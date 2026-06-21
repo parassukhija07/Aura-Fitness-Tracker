@@ -2,6 +2,8 @@ import { useState } from 'react';
 import './progression/progression.css';
 import StatsTab from './progression/StatsTab';
 import BodyTab from './progression/BodyTab';
+import { motion } from 'framer-motion';
+import { pageTransition } from '../utils/motion';
 
 const SUB_TABS = ['Stats', 'Body'] as const;
 type SubTab = typeof SUB_TABS[number];
@@ -10,7 +12,7 @@ export default function ProgressionView() {
   const [activeSubTab, setActiveSubTab] = useState<SubTab>('Stats');
 
   return (
-    <section className="view progression-view">
+    <motion.section className="view progression-view" {...pageTransition}>
       <h1 className="progression-view__title">Progression</h1>
       <nav className="prog-tabs" role="tablist">
         {SUB_TABS.map((tab) => (
@@ -27,6 +29,6 @@ export default function ProgressionView() {
         {activeSubTab === 'Stats' && <StatsTab />}
         {activeSubTab === 'Body' && <BodyTab />}
       </div>
-    </section>
+    </motion.section>
   );
 }

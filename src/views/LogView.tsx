@@ -6,6 +6,8 @@ import LogActions from './log/LogActions';
 import ActiveWorkoutView from './log/ActiveWorkoutView';
 import { useWorkoutDataStore } from '../store/workoutDataStore';
 import { getDayWorkout, isSameDay, startOfDay } from './log/logDates';
+import { motion } from 'framer-motion';
+import { pageTransition } from '../utils/motion';
 
 export default function LogView() {
   const today = startOfDay(new Date());
@@ -31,14 +33,14 @@ export default function LogView() {
 
   if (activeSession != null) {
     return (
-      <section className="view log-view">
+      <motion.section className="view log-view" {...pageTransition}>
         <ActiveWorkoutView />
-      </section>
+      </motion.section>
     );
   }
 
   return (
-    <section className="view log-view">
+    <motion.section className="view log-view" {...pageTransition}>
       <h1 className="log-view__title">Log</h1>
       <WeekCalendarBar
         weekOffset={weekOffset}
@@ -63,6 +65,6 @@ export default function LogView() {
         dayExercises={dayWorkout.exercises}
         activeProgram={activeProgram}
       />
-    </section>
+    </motion.section>
   );
 }
