@@ -250,7 +250,7 @@ export const useWorkoutDataStore = create<WorkoutDataState>()(
       name: 'aura-workout-data',
       storage: createJSONStorage(() => capacitorStorage),
       version: 2,
-      migrate: (persistedState: any, fromVersion: number) => {
+      migrate: (persistedState: any, _fromVersion: number) => {
         if (persistedState?.userPlan && !Array.isArray(persistedState.userPlan.schedule)) {
           persistedState.userPlan.schedule = [null, null, null, null, null, null, null];
         }
