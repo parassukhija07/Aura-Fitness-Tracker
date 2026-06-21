@@ -1,5 +1,5 @@
 import '../store/authStore';
-import { useEffect } from 'react';
+import { useEffect, useLayoutEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { useNavStore, type TabKey } from '../store/navStore';
 import { useUserPreferencesStore } from '../store/userPreferencesStore';
@@ -27,7 +27,7 @@ export default function RootLayout() {
     if (tab) setActiveTab(tab);
   }, [location.pathname, setActiveTab]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const root = document.documentElement;
     if (darkMode) root.classList.add('dark-theme');
     else root.classList.remove('dark-theme');

@@ -1,5 +1,8 @@
 /* Keep in sync with src/constants/theme.ts */
 
+/* ── CSS layer order — prevents specificity battles between old view CSS and tokens ── */
+@layer reset, base, tokens, components, utilities;
+
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 /* ── Aura Design Tokens ──────────────────────────────────────────── */
@@ -9,8 +12,10 @@
   --mono: "JetBrains Mono", ui-monospace, monospace;
 
   /* Accent — warm amber */
+  --accent:        #E07A1F;
   --accent:        oklch(0.70 0.17 60);
   --accent-press:  oklch(0.64 0.17 60);
+  --accent-soft:   rgba(224, 122, 31, 0.12);
   --accent-soft:   oklch(0.70 0.17 60 / 0.12);
   --on-accent:     #fff;
 
@@ -39,13 +44,18 @@
   --s10: 40px;
 
   /* Light theme */
+  --bg:         #FCFBFA;
   --bg:         oklch(0.985 0.004 80);
   --bg-grouped: oklch(0.965 0.005 80);
   --surface:    #ffffff;
   --surface-2:  oklch(0.975 0.004 80);
+  --text:       #2E2A26;
   --text:       oklch(0.20 0.012 70);
+  --text-2:     #7C746C;
   --text-2:     oklch(0.52 0.012 70);
+  --text-3:     #A39A91;
   --text-3:     oklch(0.66 0.010 70);
+  --separator:  #E5E2DF;
   --separator:  oklch(0.90 0.005 70);
   --fill:       oklch(0.72 0.01 70 / 0.12);
   --fill-2:     oklch(0.72 0.01 70 / 0.08);
@@ -68,23 +78,80 @@
 
 /* Dark theme — target both class (RootLayout) and attribute (design CSS) */
 .dark-theme, [data-theme="dark"] {
+  --bg:         #1E1C1A;
   --bg:         oklch(0.155 0.005 70);
+  --bg-grouped: #181614;
   --bg-grouped: oklch(0.125 0.005 70);
+  --surface:    #2A2724;
   --surface:    oklch(0.205 0.006 70);
   --surface-2:  oklch(0.235 0.006 70);
+  --text:       #F7F5F3;
   --text:       oklch(0.97 0.004 80);
   --text-2:     oklch(0.70 0.012 75);
   --text-3:     oklch(0.55 0.012 75);
   --separator:  oklch(0.32 0.006 70);
+  --fill:       rgba(191, 183, 175, 0.16);
   --fill:       oklch(0.75 0.01 75 / 0.16);
   --fill-2:     oklch(0.75 0.01 75 / 0.10);
   --shadow:     0 1px 3px #0008, 0 10px 30px #0006;
   --shadow-sm:  0 1px 2px #0006;
   --scrim:      #000a;
   --track:      oklch(0.30 0.006 70);
+  --accent:       #F59331;
   --accent:       oklch(0.76 0.17 65);
   --accent-press: oklch(0.70 0.17 65);
+  --accent-soft:  rgba(245, 147, 49, 0.18);
   --accent-soft:  oklch(0.76 0.17 65 / 0.18);
+}
+
+/* ── OKLCH fallback for WebViews that do not support oklch() ── */
+@supports not (color: oklch(0 0 0)) {
+  :root {
+    --accent:        #E07A1F;
+    --accent-press:  #C46910;
+    --accent-soft:   rgba(224, 122, 31, 0.12);
+    --green:         #2DA66A;
+    --red:           #D8432E;
+    --blue:          #3E83D4;
+    --purple:        #9354C9;
+    --bg:            #FCFBFA;
+    --bg-grouped:    #F5F3F1;
+    --surface:       #FFFFFF;
+    --surface-2:     #F8F6F4;
+    --text:          #2E2A26;
+    --text-2:        #7C746C;
+    --text-3:        #A39A91;
+    --separator:     #E5E2DF;
+    --fill:          rgba(115, 105, 95, 0.12);
+    --fill-2:        rgba(115, 105, 95, 0.08);
+    --shadow-sm:     0 1px 2px rgba(64, 40, 20, 0.08);
+    --shadow:        0 1px 3px rgba(64, 40, 20, 0.06), 0 8px 24px rgba(64, 40, 20, 0.06);
+    --scrim:         rgba(40, 32, 24, 0.4);
+    --track:         #DDD9D5;
+    --r-xs:          8px;
+    --r-sm:          12px;
+    --r-md:          16px;
+    --r-lg:          22px;
+    --r-xl:          28px;
+    --r-pill:        999px;
+  }
+
+  .dark-theme, [data-theme="dark"] {
+    --accent:        #F59331;
+    --accent-press:  #E07A1F;
+    --accent-soft:   rgba(245, 147, 49, 0.18);
+    --bg:            #1E1C1A;
+    --bg-grouped:    #181614;
+    --surface:       #2A2724;
+    --surface-2:     #312E2B;
+    --text:          #F7F5F3;
+    --text-2:        #A89F96;
+    --text-3:        #736960;
+    --separator:     #3E3A36;
+    --fill:          rgba(191, 183, 175, 0.16);
+    --fill-2:        rgba(191, 183, 175, 0.10);
+    --track:         #3A3632;
+  }
 }
 
 /* ── Typography utility classes ──────────────────────────────────── */
