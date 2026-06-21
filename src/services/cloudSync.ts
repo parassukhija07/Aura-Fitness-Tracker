@@ -1,7 +1,9 @@
+import { z } from 'zod';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { useWorkoutDataStore } from '../store/workoutDataStore';
 import { useStatsDataStore } from '../store/statsDataStore';
+import { BackupPayloadSchema } from '../schemas/workoutSchemas';
 
 /**
  * Shape of the document persisted to Firestore at users/{uid}.
@@ -52,22 +54,19 @@ export async function restoreFromCloud(uid: string): Promise<boolean> {
   const snap = await getDoc(doc(db, 'users', uid));
   if (!snap.exists()) return false;
 
-  const data = snap.data() as Partial<CloudBackup> | undefined;
+  const data = snap.data() as unknown;
   if (!data) return false;
 
-  const exercises = (data.workoutData as Record<string, unknown> | undefined)?.exercises;
-  const completedWorkoutDates = (data.statsData as Record<string, unknown> | undefined)?.completedWorkoutDates;
-
-  if (!Array.isArray(exercises) || !Array.isArray(completedWorkoutDates)) {
-    throw new Error('Invalid backup shape');
+  const parsedData = BackupPayloadSchema.safeParse(data);
+  if (!parsedData.success) {
+    console.error('Cloud backup failed schema validation', parsedData.error.issues);
+    throw new Error('Invalid backup schema');
   }
 
-  if (data.workoutData) {
-    useWorkoutDataStore.setState(data.workoutData as Partial<ReturnType<typeof useWorkoutDataStore.getState>>);
-  }
-  if (data.statsData) {
-    useStatsDataStore.setState(data.statsData as Partial<ReturnType<typeof useStatsDataStore.getState>>);
-  }
+  const restored: z.infer<typeof BackupPayloadSchema> = parsedData.data;
+
+  useWorkoutDataStore.setState(restored.workoutData);
+  useStatsDataStore.setState(restored.statsData);
 
   return true;
 }
