@@ -3,6 +3,9 @@ import { motion } from 'framer-motion';
 import { pageTransition } from '../../utils/motion';
 import exercisesData from '../../data/exercises.json';
 import ExerciseDetailPage from './ExerciseDetailPage';
+import { Chip } from '../../design';
+import { MediaPlaceholder } from '../../design';
+import { SearchIcon } from '../../components/icons/AuraIcons';
 import './plan.css';
 
 type CatalogExercise = {
@@ -15,22 +18,28 @@ type CatalogExercise = {
   defaultRepsMax: number;
 };
 const CATALOG = exercisesData as CatalogExercise[];
-const FILTERS = ['All', 'Chest', 'Back', 'Legs', 'Shoulders', 'Arms', 'Core'] as const;
-type Filter = typeof FILTERS[number];
+
+const BODY_FILTERS = ['All', 'Chest', 'Back', 'Legs', 'Shoulders', 'Arms', 'Core'] as const;
+const EQUIP_FILTERS = ['All', 'Cable', 'Barbell', 'Dumbbell', 'Smith', 'Machine', 'Bodyweight'] as const;
+
+type BodyFilter = typeof BODY_FILTERS[number];
+type EquipFilter = typeof EQUIP_FILTERS[number];
 
 export default function ExercisesTab() {
   const [query, setQuery] = useState('');
-  const [activeFilter, setActiveFilter] = useState<Filter>('All');
+  const [bodyFilter, setBodyFilter] = useState<BodyFilter>('All');
+  const [equipFilter, setEquipFilter] = useState<EquipFilter>('All');
   const [selectedExercise, setSelectedExercise] = useState<CatalogExercise | null>(null);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return CATALOG.filter((ex) => {
-      const groupOk = activeFilter === 'All' || ex.muscleGroup === activeFilter;
+      const groupOk = bodyFilter === 'All' || ex.muscleGroup === bodyFilter;
+      const equipOk = equipFilter === 'All' || ex.equipment === equipFilter;
       const nameOk = q === '' || ex.name.toLowerCase().includes(q);
-      return groupOk && nameOk;
+      return groupOk && equipOk && nameOk;
     });
-  }, [query, activeFilter]);
+  }, [query, bodyFilter, equipFilter]);
 
   if (selectedExercise != null) {
     return (
@@ -43,48 +52,52 @@ export default function ExercisesTab() {
 
   return (
     <motion.div className="exercises-tab" {...pageTransition}>
+      {/* Search */}
       <div className="exercises-tab__search">
-        <input
-          type="text"
-          className="exercises-tab__search-input"
-          placeholder="Search exercises"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          aria-label="Search exercises"
-        />
+        <div className="exercises-tab__search-wrap">
+          <span className="exercises-tab__search-icon">
+            <SearchIcon size={16} />
+          </span>
+          <input
+            type="text"
+            className="exercises-tab__search-input"
+            placeholder="Search exercises"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            aria-label="Search exercises"
+          />
+        </div>
       </div>
 
-      <div className="exercises-tab__chips" role="tablist">
-        {FILTERS.map((f) => (
-          <button
-            key={f}
-            type="button"
-            className={
-              f === activeFilter
-                ? 'exercises-tab__chip exercises-tab__chip--active'
-                : 'exercises-tab__chip'
-            }
-            onClick={() => setActiveFilter(f)}
-          >
-            {f}
-          </button>
+      {/* Row 1: Body part */}
+      <div className="exercises-tab__chips" role="group" aria-label="Filter by body part">
+        {BODY_FILTERS.map((f) => (
+          <Chip key={f} label={f} selected={f === bodyFilter} onClick={() => setBodyFilter(f)} />
+        ))}
+      </div>
+
+      {/* Row 2: Equipment */}
+      <div className="exercises-tab__chips" role="group" aria-label="Filter by equipment">
+        {EQUIP_FILTERS.map((f) => (
+          <Chip key={f} label={f} selected={f === equipFilter} color="neutral" onClick={() => setEquipFilter(f)} />
         ))}
       </div>
 
       {filtered.length === 0 ? (
         <div className="plan-empty">No exercises match your search.</div>
       ) : (
-        <div className="plan-grid">
+        <div className="exercises-tab__grid">
           {filtered.map((ex) => (
             <div
-                key={ex.id}
-                className="plan-card"
-                onClick={() => setSelectedExercise(ex)}
-                style={{ cursor: 'pointer' }}
-              >
-              <p className="plan-card__name">{ex.name}</p>
-              <p className="plan-card__sub">{ex.muscleGroup}</p>
-              <span className="plan-badge">{ex.equipment}</span>
+              key={ex.id}
+              className="exercises-tab__cell"
+              onClick={() => setSelectedExercise(ex)}
+            >
+              <MediaPlaceholder label={ex.muscleGroup} aspect={4 / 3} rounded="md" />
+              <div className="exercises-tab__cell-info">
+                <div className="exercises-tab__cell-name">{ex.name}</div>
+                <div className="exercises-tab__cell-meta">{ex.muscleGroup} · {ex.equipment}</div>
+              </div>
             </div>
           ))}
         </div>

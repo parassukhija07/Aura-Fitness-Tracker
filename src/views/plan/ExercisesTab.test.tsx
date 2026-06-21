@@ -16,8 +16,8 @@ jest.mock('framer-motion', () => ({
 
 // ─── helpers ────────────────────────────────────────────────────────────────
 
-function getCardNames() {
-  return Array.from(document.querySelectorAll('.plan-card__name')).map(
+function getCellNames() {
+  return Array.from(document.querySelectorAll('.exercises-tab__cell-name')).map(
     (el) => el.textContent ?? ''
   );
 }
@@ -27,9 +27,9 @@ function getCardNames() {
 describe('ExercisesTab — happy path', () => {
   beforeEach(() => render(<ExercisesTab />));
 
-  test('renders all 56 exercise cards when no filter is active', () => {
-    const cards = document.querySelectorAll('.plan-card');
-    expect(cards).toHaveLength(56);
+  test('renders all 56 exercise cells when no filter is active', () => {
+    const cells = document.querySelectorAll('.exercises-tab__cell');
+    expect(cells).toHaveLength(56);
   });
 
   test('renders the search input with placeholder text', () => {
@@ -38,32 +38,32 @@ describe('ExercisesTab — happy path', () => {
     ).toBeInTheDocument();
   });
 
-  test('renders 7 filter chips (All + 6 muscle groups)', () => {
-    const chips = document.querySelectorAll('.exercises-tab__chip');
+  test('renders 7 body-part filter chips (All + 6 muscle groups)', () => {
+    const chips = document.querySelectorAll('[aria-label="Filter by body part"] .aura-chip');
     expect(chips).toHaveLength(7);
     const labels = Array.from(chips).map((c) => c.textContent);
     expect(labels).toEqual(['All', 'Chest', 'Back', 'Legs', 'Shoulders', 'Arms', 'Core']);
   });
 
-  test('"All" chip has the active class on initial render', () => {
-    const allChip = screen.getByRole('button', { name: 'All' });
-    expect(allChip).toHaveClass('exercises-tab__chip--active');
+  test('"All" body-part chip has the selected class on initial render', () => {
+    const bodyPartGroup = document.querySelector('[aria-label="Filter by body part"]')!;
+    const allChip = Array.from(bodyPartGroup.querySelectorAll('.aura-chip')).find(
+      (el) => el.textContent === 'All'
+    ) as HTMLElement;
+    expect(allChip).toHaveClass('aura-chip--selected');
   });
 
-  test('each card shows name, muscleGroup, and equipment badge', () => {
+  test('each cell shows name and muscle · equipment meta', () => {
     // Spot-check first entry: Barbell Bench Press
-    const cardNames = document.querySelectorAll('.plan-card__name');
-    const cardSubs = document.querySelectorAll('.plan-card__sub');
-    const cardBadges = document.querySelectorAll('.plan-badge');
+    const cellNames = document.querySelectorAll('.exercises-tab__cell-name');
+    const cellMetas = document.querySelectorAll('.exercises-tab__cell-meta');
 
-    const names = Array.from(cardNames).map((el) => el.textContent);
-    const subs = Array.from(cardSubs).map((el) => el.textContent);
-    const badges = Array.from(cardBadges).map((el) => el.textContent);
+    const names = Array.from(cellNames).map((el) => el.textContent);
+    const metas = Array.from(cellMetas).map((el) => el.textContent);
 
     expect(names).toContain('Barbell Bench Press');
     const idx = names.indexOf('Barbell Bench Press');
-    expect(subs[idx]).toBe('Chest');
-    expect(badges[idx]).toBe('Barbell');
+    expect(metas[idx]).toBe('Chest · Barbell');
   });
 });
 
@@ -76,8 +76,8 @@ describe('ExercisesTab — edge cases', () => {
     const input = screen.getByPlaceholderText('Search exercises');
     fireEvent.change(input, { target: { value: ' BENCH ' } });
 
-    const names = getCardNames();
-    // All returned cards must contain "bench" (case-insensitive)
+    const names = getCellNames();
+    // All returned cells must contain "bench" (case-insensitive)
     names.forEach((name) => {
       expect(name.toLowerCase()).toContain('bench');
     });
@@ -88,42 +88,48 @@ describe('ExercisesTab — edge cases', () => {
 
   test('Chest chip filters to exactly 10 Chest exercises', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Chest' }));
-    const cards = document.querySelectorAll('.plan-card');
-    expect(cards).toHaveLength(10);
+    const cells = document.querySelectorAll('.exercises-tab__cell');
+    expect(cells).toHaveLength(10);
 
-    const subs = Array.from(document.querySelectorAll('.plan-card__sub')).map(
+    const metas = Array.from(document.querySelectorAll('.exercises-tab__cell-meta')).map(
       (el) => el.textContent
     );
-    subs.forEach((s) => expect(s).toBe('Chest'));
+    metas.forEach((s) => expect(s).toContain('Chest'));
   });
 
   test('Core chip filters to exactly 8 Core exercises', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Core' }));
-    const cards = document.querySelectorAll('.plan-card');
-    expect(cards).toHaveLength(8);
+    const cells = document.querySelectorAll('.exercises-tab__cell');
+    expect(cells).toHaveLength(8);
   });
 
-  test('clicking "All" after a chip filter resets to 56 cards', () => {
+  test('clicking "All" after a chip filter resets to 56 cells', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Chest' }));
-    expect(document.querySelectorAll('.plan-card')).toHaveLength(10);
+    expect(document.querySelectorAll('.exercises-tab__cell')).toHaveLength(10);
 
-    fireEvent.click(screen.getByRole('button', { name: 'All' }));
-    expect(document.querySelectorAll('.plan-card')).toHaveLength(56);
+    const bodyPartGroup = document.querySelector('[aria-label="Filter by body part"]')!;
+    const allChip = Array.from(bodyPartGroup.querySelectorAll('.aura-chip')).find(
+      (el) => el.textContent === 'All'
+    ) as HTMLElement;
+    fireEvent.click(allChip);
+    expect(document.querySelectorAll('.exercises-tab__cell')).toHaveLength(56);
   });
 
-  test('active chip class moves to the clicked chip', () => {
+  test('selected chip class moves to the clicked chip', () => {
     const chestBtn = screen.getByRole('button', { name: 'Chest' });
     fireEvent.click(chestBtn);
-    expect(chestBtn).toHaveClass('exercises-tab__chip--active');
-    expect(screen.getByRole('button', { name: 'All' })).not.toHaveClass(
-      'exercises-tab__chip--active'
-    );
+    expect(chestBtn).toHaveClass('aura-chip--selected');
+    const bodyPartGroup = document.querySelector('[aria-label="Filter by body part"]')!;
+    const allChip = Array.from(bodyPartGroup.querySelectorAll('.aura-chip')).find(
+      (el) => el.textContent === 'All'
+    ) as HTMLElement;
+    expect(allChip).not.toHaveClass('aura-chip--selected');
   });
 
   test('Shoulders chip filters to exactly 9 Shoulder exercises', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Shoulders' }));
-    const cards = document.querySelectorAll('.plan-card');
-    expect(cards).toHaveLength(9);
+    const cells = document.querySelectorAll('.exercises-tab__cell');
+    expect(cells).toHaveLength(9);
   });
 });
 
@@ -139,7 +145,7 @@ describe('ExercisesTab — failure/empty states', () => {
     fireEvent.change(input, { target: { value: 'xyznonexistent' } });
 
     expect(screen.getByText('No exercises match your search.')).toBeInTheDocument();
-    expect(document.querySelectorAll('.plan-card')).toHaveLength(0);
+    expect(document.querySelectorAll('.exercises-tab__cell')).toHaveLength(0);
   });
 
   test('search with no matching name shows empty state', () => {
@@ -148,15 +154,15 @@ describe('ExercisesTab — failure/empty states', () => {
     expect(screen.getByText('No exercises match your search.')).toBeInTheDocument();
   });
 
-  test('plan-grid is NOT rendered when empty state is shown', () => {
+  test('exercises-tab__grid is NOT rendered when empty state is shown', () => {
     const input = screen.getByPlaceholderText('Search exercises');
     fireEvent.change(input, { target: { value: 'zzzzzznotanexercise' } });
-    expect(document.querySelector('.plan-grid')).toBeNull();
+    expect(document.querySelector('.exercises-tab__grid')).toBeNull();
   });
 
   test('whitespace-only search shows all 56 exercises (empty trimmed query)', () => {
     const input = screen.getByPlaceholderText('Search exercises');
     fireEvent.change(input, { target: { value: '     ' } });
-    expect(document.querySelectorAll('.plan-card')).toHaveLength(56);
+    expect(document.querySelectorAll('.exercises-tab__cell')).toHaveLength(56);
   });
 });

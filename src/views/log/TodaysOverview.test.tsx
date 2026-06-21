@@ -74,53 +74,53 @@ beforeEach(() => {
 // ---------------------------------------------------------------------------
 // Happy path — workout planned renders exercise card and control buttons
 // ---------------------------------------------------------------------------
-test('renders exercise card and Switch Workout / Mark as Rest Day buttons when workout is planned', () => {
+test('renders exercise card and Switch / Rest Day buttons when workout is planned', () => {
   render(<TodaysOverview {...BASE_PROPS} dayWorkout={WORKOUT_DAY} />);
 
   expect(screen.getByText('Back Squat')).toBeInTheDocument();
-  expect(screen.getByRole('button', { name: 'Switch Workout' })).toBeInTheDocument();
-  expect(screen.getByRole('button', { name: 'Mark as Rest Day' })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Switch' })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Rest Day' })).toBeInTheDocument();
 });
 
 // ---------------------------------------------------------------------------
 // Happy path — "Mark as Rest Day" button calls onSetRestDay
 // ---------------------------------------------------------------------------
-test('"Mark as Rest Day" button calls onSetRestDay', () => {
+test('"Rest Day" button calls onSetRestDay', () => {
   const onSetRestDay = jest.fn();
   render(<TodaysOverview {...BASE_PROPS} dayWorkout={WORKOUT_DAY} onSetRestDay={onSetRestDay} />);
 
-  fireEvent.click(screen.getByRole('button', { name: 'Mark as Rest Day' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Rest Day' }));
   expect(onSetRestDay).toHaveBeenCalledTimes(1);
 });
 
 // ---------------------------------------------------------------------------
 // Happy path — "Switch Workout" opens picker sheet
 // ---------------------------------------------------------------------------
-test('"Switch Workout" button opens WorkoutPickerSheet', () => {
+test('"Switch" button opens WorkoutPickerSheet', () => {
   render(<TodaysOverview {...BASE_PROPS} dayWorkout={WORKOUT_DAY} />);
 
-  fireEvent.click(screen.getByRole('button', { name: 'Switch Workout' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Switch' }));
   // Sheet title should appear
   expect(screen.getByText('Switch Workout', { selector: '.awd-sheet__title' })).toBeInTheDocument();
 });
 
 // ---------------------------------------------------------------------------
-// Edge case — rest day (not beforeStart) renders Add Workout Anyway button
+// Edge case — rest day (not beforeStart) renders Add a Workout button
 // ---------------------------------------------------------------------------
-test('renders "Add Workout Anyway" button on rest day (not beforeStart)', () => {
+test('renders "Add a Workout" button on rest day (not beforeStart)', () => {
   render(<TodaysOverview {...BASE_PROPS} dayWorkout={REST_DAY} />);
 
   expect(screen.getByText(/rest day/i)).toBeInTheDocument();
-  expect(screen.getByRole('button', { name: 'Add Workout Anyway' })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Add a Workout' })).toBeInTheDocument();
 });
 
 // ---------------------------------------------------------------------------
-// Edge case — "Add Workout Anyway" opens picker sheet with "Add Workout" title
+// Edge case — "Add a Workout" opens picker sheet with "Add Workout" title
 // ---------------------------------------------------------------------------
-test('"Add Workout Anyway" opens WorkoutPickerSheet with "Add Workout" title', () => {
+test('"Add a Workout" opens WorkoutPickerSheet with "Add Workout" title', () => {
   render(<TodaysOverview {...BASE_PROPS} dayWorkout={REST_DAY} />);
 
-  fireEvent.click(screen.getByRole('button', { name: 'Add Workout Anyway' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Add a Workout' }));
   expect(screen.getByText('Add Workout', { selector: '.awd-sheet__title' })).toBeInTheDocument();
 });
 
@@ -151,7 +151,7 @@ test('picking a workout calls onAssignWorkout with workoutId and closes sheet', 
     />,
   );
 
-  fireEvent.click(screen.getByRole('button', { name: 'Add Workout Anyway' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Add a Workout' }));
   fireEvent.click(screen.getByRole('button', { name: 'My Program' }));
 
   expect(onAssignWorkout).toHaveBeenCalledWith('prog-1');

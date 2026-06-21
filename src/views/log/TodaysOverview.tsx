@@ -3,6 +3,8 @@ import type { DayWorkout } from './logDates';
 import { isSameDay, startOfDay } from './logDates';
 import type { WorkoutProgram, CustomWorkout } from '../../types/workout';
 import WorkoutPickerSheet from './WorkoutPickerSheet';
+import { MoonIcon } from '../../components/icons/AuraIcons';
+import { Button } from '../../design';
 
 interface TodaysOverviewProps {
   activeDate: Date;
@@ -15,6 +17,8 @@ interface TodaysOverviewProps {
   onAssignWorkout: (workoutId: string) => void;
   onSetRestDay: () => void;
 }
+
+const MAX_VISIBLE = 4;
 
 export default function TodaysOverview({
   activeDate,
@@ -30,65 +34,90 @@ export default function TodaysOverview({
 
   const isActiveDateToday = isSameDay(activeDate, startOfDay(new Date()));
   const heading = isActiveDateToday
-    ? "Today's Overview"
+    ? 'TODAY'
     : activeDate.toLocaleDateString('en-US', {
         weekday: 'long',
         month: 'short',
         day: 'numeric',
-      });
+      }).toUpperCase();
 
   const isWorkoutPlanned = !dayWorkout.isRestDay && !dayWorkout.beforeStart;
+  const visibleExercises = dayWorkout.exercises.slice(0, MAX_VISIBLE);
+  const hiddenCount = dayWorkout.exercises.length - MAX_VISIBLE;
 
   return (
     <div className="log-overview">
       <p className="log-overview__title">{heading}</p>
-      {programName && <p className="log-overview__sub">{programName}</p>}
+      {programName && (
+        <div className="log-overview__program-badge">{programName}</div>
+      )}
 
       {dayWorkout.beforeStart ? (
-        <div className="log-empty">Your program hasn&apos;t started yet.</div>
+        <div className="log-card log-card--dashed">
+          <div className="log-empty__title">Program hasn't started yet</div>
+          <div className="log-empty__sub">Check back on the start date.</div>
+        </div>
       ) : dayWorkout.isRestDay ? (
         <>
-          <div className="log-empty">Rest day &mdash; no exercises planned.</div>
+          <div className="log-rest-card">
+            <div className="log-rest-card__icon">
+              <MoonIcon size={32} />
+            </div>
+            <div className="log-rest-card__title">Rest Day</div>
+            <div className="log-rest-card__sub">Recovery is part of the plan.</div>
+          </div>
           <div className="log-overview__controls">
-            <button
-              type="button"
-              className="log-actions__btn"
-              onClick={() => setSheetOpen(true)}
-            >
-              Add Workout Anyway
-            </button>
+            <Button variant="tinted" size="md" fullWidth onClick={() => setSheetOpen(true)}>
+              Add a Workout
+            </Button>
+          </div>
+        </>
+      ) : dayWorkout.exercises.length === 0 ? (
+        <>
+          <div className="log-card log-card--dashed">
+            <div className="log-empty__title">No workout planned</div>
+            <div className="log-empty__sub">Add a workout to get started.</div>
+          </div>
+          <div className="log-overview__controls">
+            <Button variant="tinted" size="md" fullWidth onClick={() => setSheetOpen(true)}>
+              Add a Workout
+            </Button>
           </div>
         </>
       ) : (
         <>
           <div className="log-card">
-            {dayWorkout.exercises.map((ex) => (
+            <div className="log-card__header">
+              <div className="log-card__name">Today&apos;s Workout</div>
+              <div className="log-card__meta">
+                {dayWorkout.exercises.length} exercises
+              </div>
+            </div>
+            {visibleExercises.map((ex, idx) => (
               <div key={ex.exerciseId} className="log-exercise">
                 <div className="log-exercise__info">
-                  <span className="log-exercise__name">{ex.name}</span>
-                  <span className="log-exercise__meta">
-                    {ex.sets} sets &middot; {ex.repsMin}&ndash;{ex.repsMax} reps
-                  </span>
+                  <span className="log-exercise__num">{idx + 1}</span>
+                  <div>
+                    <div className="log-exercise__name">{ex.name}</div>
+                    <div className="log-exercise__meta">
+                      {ex.sets} sets &middot; {ex.repsMin}–{ex.repsMax} reps
+                    </div>
+                  </div>
                 </div>
                 <span className="log-badge">{ex.muscleGroup}</span>
               </div>
             ))}
+            {hiddenCount > 0 && (
+              <div className="log-more">+{hiddenCount} more exercises</div>
+            )}
           </div>
           <div className="log-overview__controls">
-            <button
-              type="button"
-              className="log-actions__btn"
-              onClick={() => setSheetOpen(true)}
-            >
-              Switch Workout
-            </button>
-            <button
-              type="button"
-              className="log-actions__btn"
-              onClick={onSetRestDay}
-            >
-              Mark as Rest Day
-            </button>
+            <Button variant="secondary" size="md" fullWidth onClick={() => setSheetOpen(true)}>
+              Switch
+            </Button>
+            <Button variant="secondary" size="md" fullWidth onClick={onSetRestDay}>
+              Rest Day
+            </Button>
           </div>
         </>
       )}

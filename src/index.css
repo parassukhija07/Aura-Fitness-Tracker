@@ -1,31 +1,150 @@
 /* Keep in sync with src/constants/theme.ts */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* ── Aura Design Tokens ──────────────────────────────────────────── */
 :root {
-  --color-bg: #FFFFFF;
-  --color-surface: #F2F2F2;
-  --color-primary: #A855F7;
-  --color-text: #111111;
-  --color-text-muted: #666666;
-  --color-border: #DDDDDD;
-  --color-danger: #ef4444;
+  /* Fonts */
+  --font: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* Accent — warm amber */
+  --accent:        oklch(0.70 0.17 60);
+  --accent-press:  oklch(0.64 0.17 60);
+  --accent-soft:   oklch(0.70 0.17 60 / 0.12);
+  --on-accent:     #fff;
+
+  /* Semantic accents */
+  --green:  oklch(0.70 0.15 150);
+  --red:    oklch(0.64 0.19 25);
+  --blue:   oklch(0.66 0.14 250);
+  --purple: oklch(0.62 0.15 300);
+
+  /* Radius */
+  --r-xs:   8px;
+  --r-sm:   12px;
+  --r-md:   16px;
+  --r-lg:   22px;
+  --r-xl:   28px;
+  --r-pill: 999px;
+
+  /* Spacing base-4 */
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 20px;
+  --s6: 24px;
+  --s8: 32px;
+  --s10: 40px;
+
+  /* Light theme */
+  --bg:         oklch(0.985 0.004 80);
+  --bg-grouped: oklch(0.965 0.005 80);
+  --surface:    #ffffff;
+  --surface-2:  oklch(0.975 0.004 80);
+  --text:       oklch(0.20 0.012 70);
+  --text-2:     oklch(0.52 0.012 70);
+  --text-3:     oklch(0.66 0.010 70);
+  --separator:  oklch(0.90 0.005 70);
+  --fill:       oklch(0.72 0.01 70 / 0.12);
+  --fill-2:     oklch(0.72 0.01 70 / 0.08);
+  --shadow-sm:  0 1px 2px oklch(0.4 0.02 70 / 0.08);
+  --shadow:     0 1px 3px oklch(0.4 0.02 70 / 0.06), 0 8px 24px oklch(0.4 0.02 70 / 0.06);
+  --scrim:      oklch(0.2 0.01 70 / 0.4);
+  --track:      oklch(0.88 0.006 70);
+
+  /* Back-compat aliases — old components reference these names */
+  --color-bg:         var(--bg);
+  --color-surface:    var(--surface);
+  --color-primary:    var(--accent);
+  --color-text:       var(--text);
+  --color-text-muted: var(--text-2);
+  --color-border:     var(--separator);
+  --color-danger:     var(--red);
+
   --bottom-nav-height: 60px;
 }
 
-.dark-theme {
-  --color-bg: #0D0D0D;
-  --color-surface: #1A1A1A;
-  --color-primary: #A855F7;
-  --color-text: #FFFFFF;
-  --color-text-muted: #888888;
-  --color-border: #2A2A2A;
-  --color-danger: #f87171;
+/* Dark theme — target both class (RootLayout) and attribute (design CSS) */
+.dark-theme, [data-theme="dark"] {
+  --bg:         oklch(0.155 0.005 70);
+  --bg-grouped: oklch(0.125 0.005 70);
+  --surface:    oklch(0.205 0.006 70);
+  --surface-2:  oklch(0.235 0.006 70);
+  --text:       oklch(0.97 0.004 80);
+  --text-2:     oklch(0.70 0.012 75);
+  --text-3:     oklch(0.55 0.012 75);
+  --separator:  oklch(0.32 0.006 70);
+  --fill:       oklch(0.75 0.01 75 / 0.16);
+  --fill-2:     oklch(0.75 0.01 75 / 0.10);
+  --shadow:     0 1px 3px #0008, 0 10px 30px #0006;
+  --shadow-sm:  0 1px 2px #0006;
+  --scrim:      #000a;
+  --track:      oklch(0.30 0.006 70);
+  --accent:       oklch(0.76 0.17 65);
+  --accent-press: oklch(0.70 0.17 65);
+  --accent-soft:  oklch(0.76 0.17 65 / 0.18);
 }
 
+/* ── Typography utility classes ──────────────────────────────────── */
+.t-large-title {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.t-nav-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.t-card-title {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.t-body {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.t-secondary {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-2);
+}
+
+.sec-label {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--text-3);
+}
+
+.stat-num {
+  font-size: 24px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+  color: var(--text);
+}
+
+/* ── Reset & base ────────────────────────────────────────────────── */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 html,
@@ -35,14 +154,13 @@ body,
 }
 
 body {
-  background: var(--color-bg);
-  color: var(--color-text);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  /* Stops rubber-band scroll inside Capacitor */
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
   overscroll-behavior: none;
 }
 
+/* ── App shell ───────────────────────────────────────────────────── */
 .app-shell {
   display: flex;
   flex-direction: column;
@@ -52,6 +170,6 @@ body {
 .app-content {
   flex: 1;
   overflow-y: auto;
-  /* Prevent content from hiding behind the fixed bottom nav */
-  padding-bottom: var(--bottom-nav-height);
+  padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom));
+  padding-top: env(safe-area-inset-top);
 }
