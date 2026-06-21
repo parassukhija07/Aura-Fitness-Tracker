@@ -4,16 +4,19 @@ import WeekCalendarBar from './log/WeekCalendarBar';
 import TodaysOverview from './log/TodaysOverview';
 import LogActions from './log/LogActions';
 import ActiveWorkoutView from './log/ActiveWorkoutView';
+import { CalendarSheet } from './log/CalendarSheet';
 import { useWorkoutDataStore } from '../store/workoutDataStore';
 import { getDayWorkout, isSameDay, startOfDay } from './log/logDates';
 import { motion } from 'framer-motion';
 import { pageTransition } from '../utils/motion';
+import { CalendarIcon } from '../components/icons/AuraIcons';
 
 export default function LogView() {
   const today = startOfDay(new Date());
   const [activeDate, setActiveDate] = useState<Date>(today);
   const [weekOffset, setWeekOffset] = useState<number>(0);
   const [restOverrides, setRestOverrides] = useState<Record<string, boolean>>({});
+  const [calendarOpen, setCalendarOpen] = useState(false);
 
   const userPlan = useWorkoutDataStore((s) => s.userPlan);
   const getActiveProgram = useWorkoutDataStore((s) => s.getActiveProgram);
@@ -69,7 +72,16 @@ export default function LogView() {
 
   return (
     <motion.section className="view log-view" {...pageTransition}>
-      <h1 className="log-view__title">Log</h1>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--s4)' }}>
+        <h1 className="log-view__title t-large-title" style={{ margin: 0 }}>Today</h1>
+        <button
+          style={{ background: 'var(--fill)', border: 'none', borderRadius: 'var(--r-sm)', width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-2)' }}
+          onClick={() => setCalendarOpen(true)}
+          aria-label="Open calendar"
+        >
+          <CalendarIcon size={18} />
+        </button>
+      </div>
       <WeekCalendarBar
         weekOffset={weekOffset}
         activeDate={activeDate}
@@ -95,6 +107,18 @@ export default function LogView() {
         hasPlan={hasPlan}
         dayExercises={dayWorkout.exercises}
         activeProgram={activeProgram}
+        activeDate={activeDate}
+      />
+      <CalendarSheet
+        open={calendarOpen}
+        onClose={() => setCalendarOpen(false)}
+        selectedDate={activeDate}
+        today={today}
+        onSelectDate={(date) => {
+          onSelectDate(date);
+          const offset = Math.round((date.getTime() - today.getTime()) / (7 * 24 * 60 * 60 * 1000));
+          setWeekOffset(offset);
+        }}
       />
     </motion.section>
   );

@@ -1,9 +1,28 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
-import type { Exercise, WorkoutProgram, UserPlan, SessionExercise, ActiveSessionState, LoggedSet, SetType, CustomWorkout, CustomWorkoutExercise, CablePulley, CatalogProgram, CatalogWorkout } from '../types/workout';
+import type {
+  Exercise,
+  Equipment,
+  MuscleGroup,
+  WorkoutProgram,
+  UserPlan,
+  SessionExercise,
+  ActiveSessionState,
+  LoggedSet,
+  SetType,
+  CustomWorkout,
+  CustomWorkoutExercise,
+  CablePulley,
+  CatalogProgram,
+  CatalogWorkout,
+  CompletedWorkout,
+  CompletedExercise,
+  CompletedSet,
+} from '../types/workout';
 import { SEED_EXERCISES, SEED_PROGRAMS, SEED_USER_PLAN } from './seedData';
 import { capacitorStorage } from './capacitorStorage';
+import exercisesData from '../data/exercises.json';
 
 // ─── State + Actions ───────────────────────────────────────────────────────────
 interface WorkoutDataState {
@@ -13,6 +32,7 @@ interface WorkoutDataState {
   activeSession: ActiveSessionState | null;
   userWorkouts: CustomWorkout[];
   userPrograms: WorkoutProgram[];
+  completedWorkouts: CompletedWorkout[];
 
   // selectors-as-helpers (pure reads; keep minimal)
   getActiveProgram: () => WorkoutProgram | undefined;
@@ -24,6 +44,7 @@ interface WorkoutDataState {
   resetToSeed: () => void;      // restores SEED_* values
   startSession: (program: WorkoutProgram, exercises: SessionExercise[]) => void;
   endSession: () => void;
+  cancelSession: () => void;
   updateElapsedTime: (seconds: number) => void;
   completeSet: (exerciseIndex: number, setIndex: number) => void;
   addSet: (exerciseIndex: number) => void;
@@ -36,6 +57,7 @@ interface WorkoutDataState {
   addWorkoutToProgram: (programId: string, workoutId: string) => void;
   createWorkout: (name: string) => string;
   addExerciseToWorkout: (workoutId: string, exercise: CustomWorkoutExercise) => void;
+  replaceExerciseInWorkout: (workoutId: string, index: number, exercise: CustomWorkoutExercise) => void;
   updateActiveSchedule: (schedule: (string | null)[]) => void;
 
   // New actions — Exercise Detail View
@@ -49,6 +71,25 @@ interface WorkoutDataState {
 
   addCatalogProgramToMyPlans: (program: CatalogProgram) => string; // returns new userProgram id ('' on failure)
   addCatalogWorkoutToMyPlans: (workout: CatalogWorkout) => string; // returns new userWorkout id ('' on failure)
+
+  // In-session mutation actions
+  addExerciseToSession: (exerciseId: string) => void;
+  removeExerciseFromSession: (exerciseIndex: number) => void;
+  substituteExercise: (exerciseIndex: number, newExerciseId: string) => void;
+
+  // Custom exercise creation
+  createExercise: (input: {
+    name: string;
+    muscleGroup: MuscleGroup;
+    equipment: Equipment;
+    difficulty?: Exercise['difficulty'];
+    formTips?: string;
+    imageUrl?: string;
+    videoUrl?: string;
+  }) => string; // returns new exercise id, or '' on invalid (empty name)
+
+  // History
+  logPastWorkout: (workout: CompletedWorkout) => void;
 }
 
 // ─── Store ────────────────────────────────────────────────────────────────────
@@ -62,6 +103,7 @@ export const useWorkoutDataStore = create<WorkoutDataState>()(
       activeSession: null,
       userWorkouts: [],
       userPrograms: [],
+      completedWorkouts: [],
 
       // ─── Selectors ───────────────────────────────────────────────────────
       getActiveProgram: () => {
@@ -114,6 +156,111 @@ export const useWorkoutDataStore = create<WorkoutDataState>()(
         }),
 
       endSession: () =>
+        set((state) => {
+          const session = state.activeSession;
+          if (!session) return;
+
+          // Build completed exercises (only exercises with >= 1 completed set)
+          const completedExercises: CompletedExercise[] = [];
+          for (const ex of session.exercises) {
+            const completedSets: CompletedSet[] = ex.sets
+              .filter((s: LoggedSet) => s.completed)
+              .map((s: LoggedSet) => ({
+                reps: s.reps,
+                weight: s.weight,
+                setType: s.setType,
+                note: s.note,
+              }));
+            if (completedSets.length === 0) continue;
+            completedExercises.push({
+              exerciseId: ex.exerciseId,
+              exerciseName: ex.exerciseName,
+              muscleGroup: ex.muscleGroup,
+              cablePulley: ex.cablePulley,
+              supersetGroupId: ex.supersetGroupId,
+              sets: completedSets,
+            });
+          }
+
+          // If no completed sets at all, just null the session (cancel path)
+          if (completedExercises.length === 0) {
+            state.activeSession = null;
+            return;
+          }
+
+          // Compute total volume
+          const totalVolume = completedExercises.reduce((acc, ex) => {
+            return acc + ex.sets.reduce((s, set) => s + set.weight * set.reps, 0);
+          }, 0);
+
+          // Compute date from startTime
+          const startDate = new Date(session.startTime);
+          const date = startDate.toLocaleDateString('en-CA'); // YYYY-MM-DD
+
+          // Compute prCount against existing history (before pushing new record)
+          // We need to check inline since we can't call imported pr.ts helpers from store
+          const existingHistory = state.completedWorkouts;
+          let prCount = 0;
+          for (const ex of session.exercises) {
+            const completedSets = ex.sets.filter((s: LoggedSet) => s.completed && s.weight > 0);
+            if (completedSets.length === 0) continue;
+            const bestSessionSet = completedSets.reduce((best: LoggedSet, s: LoggedSet) => {
+              if (s.weight > best.weight) return s;
+              if (s.weight === best.weight && s.reps > best.reps) return s;
+              return best;
+            });
+
+            // Find best historical set for this exercise
+            let bestHistWeight = 0;
+            let bestHistReps = 0;
+            for (const workout of existingHistory) {
+              for (const histEx of workout.exercises) {
+                if (histEx.exerciseId !== ex.exerciseId) continue;
+                for (const set of histEx.sets) {
+                  if (set.weight > bestHistWeight) {
+                    bestHistWeight = set.weight;
+                    bestHistReps = set.reps;
+                  } else if (set.weight === bestHistWeight && set.reps > bestHistReps) {
+                    bestHistReps = set.reps;
+                  }
+                }
+              }
+            }
+
+            const noHistory = bestHistWeight === 0 && bestHistReps === 0;
+            const isNewPr = noHistory
+              ? bestSessionSet.weight > 0
+              : bestSessionSet.weight > bestHistWeight ||
+                (bestSessionSet.weight === bestHistWeight && bestSessionSet.reps > bestHistReps);
+
+            if (isNewPr) prCount++;
+          }
+
+          // Look up program name
+          const prog =
+            state.programs.find((p) => p.id === session.workoutId) ??
+            state.userPrograms.find((p) => p.id === session.workoutId);
+          const programName = prog?.name ?? session.workoutId;
+
+          const record: CompletedWorkout = {
+            id: `session-${Date.now()}`,
+            programId: session.workoutId,
+            programName,
+            date,
+            startTime: session.startTime,
+            durationSeconds: session.elapsedTime,
+            totalVolume,
+            prCount,
+            exercises: completedExercises,
+            sessionNotes: session.sessionNotes,
+            logSource: 'live',
+          };
+
+          state.completedWorkouts.push(record);
+          state.activeSession = null;
+        }),
+
+      cancelSession: () =>
         set((state) => {
           state.activeSession = null;
         }),
@@ -237,6 +384,20 @@ export const useWorkoutDataStore = create<WorkoutDataState>()(
           });
         }),
 
+      replaceExerciseInWorkout: (workoutId, index, exercise) =>
+        set((state) => {
+          const w = state.userWorkouts.find((x) => x.id === workoutId);
+          if (!w) return;
+          if (index < 0 || index >= w.exercises.length) return;
+          if (!exercise || typeof exercise.exerciseId !== 'string' || exercise.exerciseId.length === 0) return;
+          w.exercises[index] = {
+            exerciseId: exercise.exerciseId,
+            exerciseName: exercise.exerciseName,
+            targetSets: Math.max(1, exercise.targetSets || 1),
+            targetReps: exercise.targetReps,
+          };
+        }),
+
       addWorkoutToProgram: (programId, workoutId) =>
         set((state) => {
           const prog = state.userPrograms.find((p) => p.id === programId);
@@ -350,14 +511,122 @@ export const useWorkoutDataStore = create<WorkoutDataState>()(
         });
         return newId;
       },
+
+      // ─── In-session mutations ─────────────────────────────────────────────
+
+      addExerciseToSession: (exerciseId: string) =>
+        set((state) => {
+          if (!state.activeSession) return;
+          const ex = state.exercises.find((e) => e.id === exerciseId);
+          if (!ex) return;
+          state.activeSession.exercises.push({
+            exerciseId: ex.id,
+            exerciseName: ex.name,
+            muscleGroup: ex.muscleGroup,
+            defaultSets: ex.defaultSets,
+            sets: [{ reps: 0, weight: 0, setType: 'Normal', completed: false }],
+          });
+        }),
+
+      removeExerciseFromSession: (exerciseIndex: number) =>
+        set((state) => {
+          if (!state.activeSession) return;
+          const exercises = state.activeSession.exercises;
+          if (exerciseIndex < 0 || exerciseIndex >= exercises.length) return;
+
+          const removedGroupId = exercises[exerciseIndex].supersetGroupId;
+          exercises.splice(exerciseIndex, 1);
+
+          // If removed exercise was in a superset, check if the group now has only 1 member
+          if (removedGroupId) {
+            const remaining = exercises.filter((e) => e.supersetGroupId === removedGroupId);
+            if (remaining.length === 1) {
+              remaining[0].supersetGroupId = undefined;
+            }
+          }
+        }),
+
+      substituteExercise: (exerciseIndex: number, newExerciseId: string) =>
+        set((state) => {
+          if (!state.activeSession) return;
+          const exercises = state.activeSession.exercises;
+          if (exerciseIndex < 0 || exerciseIndex >= exercises.length) return;
+          const newEx = state.exercises.find((e) => e.id === newExerciseId);
+          if (!newEx) return;
+          const existing = exercises[exerciseIndex];
+          exercises[exerciseIndex] = {
+            exerciseId: newEx.id,
+            exerciseName: newEx.name,
+            muscleGroup: newEx.muscleGroup,
+            defaultSets: newEx.defaultSets,
+            sets: [{ reps: 0, weight: 0, setType: 'Normal', completed: false }],
+            supersetGroupId: existing.supersetGroupId, // KEEP superset
+            // cablePulley is cleared (not carried over)
+          };
+        }),
+
+      // ─── Custom exercise creation ─────────────────────────────────────────
+
+      createExercise: (input) => {
+        let newId = '';
+        set((state) => {
+          const trimmed = input.name.trim();
+          if (trimmed.length === 0) return;
+          const slug = trimmed
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-|-$/g, '');
+          const rand = Math.random().toString(36).slice(2, 7);
+          newId = `${slug}-${rand}`;
+          const newExercise: Exercise = {
+            id: newId,
+            name: trimmed,
+            muscleGroup: input.muscleGroup,
+            equipment: input.equipment,
+            defaultSets: 3,
+            defaultRepsMin: 8,
+            defaultRepsMax: 12,
+            custom: true,
+            difficulty: input.difficulty ?? 'Intermediate',
+            formTips: input.formTips,
+            imageUrl: input.imageUrl,
+            videoUrl: input.videoUrl,
+          };
+          state.exercises.push(newExercise);
+        });
+        return newId;
+      },
+
+      // ─── History ──────────────────────────────────────────────────────────
+
+      logPastWorkout: (workout: CompletedWorkout) =>
+        set((state) => {
+          state.completedWorkouts.push(workout);
+        }),
     })),
     {
       name: 'aura-workout-data',
       storage: createJSONStorage(() => capacitorStorage),
-      version: 2,
+      version: 3,
       migrate: (persistedState: any, _fromVersion: number) => {
         if (persistedState?.userPlan && !Array.isArray(persistedState.userPlan.schedule)) {
           persistedState.userPlan.schedule = [null, null, null, null, null, null, null];
+        }
+        // v3: ensure completedWorkouts exists
+        if (!Array.isArray(persistedState?.completedWorkouts)) {
+          persistedState.completedWorkouts = [];
+        }
+        // v3: backfill equipment on persisted exercises that lack it
+        if (Array.isArray(persistedState?.exercises)) {
+          const seedMap = new Map(
+            (exercisesData as Array<{ id: string; equipment?: string }>).map((e) => [e.id, e.equipment])
+          );
+          persistedState.exercises = persistedState.exercises.map((ex: any) => {
+            if (!ex.equipment) {
+              ex.equipment = seedMap.get(ex.id) ?? 'Barbell';
+            }
+            return ex;
+          });
         }
         return persistedState;
       },
@@ -368,6 +637,7 @@ export const useWorkoutDataStore = create<WorkoutDataState>()(
         activeSession: state.activeSession,
         userWorkouts: state.userWorkouts,
         userPrograms: state.userPrograms,
+        completedWorkouts: state.completedWorkouts,
       }),
     }
   )

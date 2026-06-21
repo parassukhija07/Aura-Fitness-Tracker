@@ -67,6 +67,7 @@ export default function ActiveWorkoutView() {
         <EndWorkoutSheet
           onEndEarly={() => { setShowEndSheet(false); setShowSummary(true); }}
           onCancel={() => { setShowEndSheet(false); }}
+          onDiscard={() => { setShowEndSheet(false); }}
           onClose={() => setShowEndSheet(false)}
         />
       )}

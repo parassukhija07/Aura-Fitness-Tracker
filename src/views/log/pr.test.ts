@@ -9,10 +9,14 @@ jest.mock('@capacitor/preferences', () => ({
   },
 }));
 
-// Mock the store so pr.ts can call getExerciseById
+// Mutable state so individual tests can inject history
+let mockCompletedWorkouts: any[] = [];
+
+// Mock the store so pr.ts can call getExerciseById and bestSetFromHistory
 jest.mock('../../store/workoutDataStore', () => ({
   useWorkoutDataStore: {
     getState: jest.fn(() => ({
+      get completedWorkouts() { return mockCompletedWorkouts; },
       getExerciseById: (id: string) => {
         const catalogue: Record<string, { defaultRepsMax: number }> = {
           'barbell-bench-press': { defaultRepsMax: 10 },
@@ -24,12 +28,18 @@ jest.mock('../../store/workoutDataStore', () => ({
   },
 }));
 
+beforeEach(() => {
+  mockCompletedWorkouts = [];
+});
+
 import {
   bestCompletedSet,
   getLastPr,
   getTodaysTarget,
   getWarmupSets,
   evaluateCelebration,
+  isExercisePrAgainstHistory,
+  bestSetFromHistory,
 } from './pr';
 import type { LoggedSet, SessionExercise } from '../../types/workout';
 
@@ -196,4 +206,134 @@ test('evaluateCelebration falls back to repsMax 8 for unknown exercise', () => {
   // 10 reps > 8 fallback => extra-reps
   const outcome = evaluateCelebration(ex);
   expect(outcome.kind).toBe('extra-reps');
+});
+
+// ── bestSetFromHistory ────────────────────────────────────────────────────────
+
+test('bestSetFromHistory returns null when completedWorkouts is empty', () => {
+  mockCompletedWorkouts = [];
+  expect(bestSetFromHistory('barbell-bench-press')).toBeNull();
+});
+
+test('bestSetFromHistory returns null when exerciseId is not present in history', () => {
+  mockCompletedWorkouts = [
+    {
+      exercises: [
+        {
+          exerciseId: 'different-exercise',
+          sets: [{ weight: 100, reps: 8 }],
+        },
+      ],
+    },
+  ];
+  expect(bestSetFromHistory('barbell-bench-press')).toBeNull();
+});
+
+test('bestSetFromHistory returns the best set by weight', () => {
+  mockCompletedWorkouts = [
+    {
+      exercises: [
+        {
+          exerciseId: 'barbell-bench-press',
+          sets: [
+            { weight: 80, reps: 10 },
+            { weight: 100, reps: 5 },
+          ],
+        },
+      ],
+    },
+  ];
+  const best = bestSetFromHistory('barbell-bench-press');
+  expect(best).toEqual({ weight: 100, reps: 5 });
+});
+
+test('bestSetFromHistory breaks weight ties by reps', () => {
+  mockCompletedWorkouts = [
+    {
+      exercises: [
+        {
+          exerciseId: 'barbell-bench-press',
+          sets: [
+            { weight: 100, reps: 5 },
+            { weight: 100, reps: 10 },
+          ],
+        },
+      ],
+    },
+  ];
+  const best = bestSetFromHistory('barbell-bench-press');
+  expect(best).toEqual({ weight: 100, reps: 10 });
+});
+
+test('bestSetFromHistory scans across multiple workouts', () => {
+  mockCompletedWorkouts = [
+    {
+      exercises: [{ exerciseId: 'barbell-bench-press', sets: [{ weight: 80, reps: 10 }] }],
+    },
+    {
+      exercises: [{ exerciseId: 'barbell-bench-press', sets: [{ weight: 120, reps: 4 }] }],
+    },
+  ];
+  const best = bestSetFromHistory('barbell-bench-press');
+  expect(best?.weight).toBe(120);
+});
+
+// ── isExercisePrAgainstHistory ────────────────────────────────────────────────
+
+test('isExercisePrAgainstHistory returns false when no completed sets in session', () => {
+  mockCompletedWorkouts = [];
+  const ex = makeExercise([makeSet(100, 8, false)]);
+  expect(isExercisePrAgainstHistory(ex)).toBe(false);
+});
+
+test('isExercisePrAgainstHistory returns false when no history and weight is 0', () => {
+  mockCompletedWorkouts = [];
+  const ex = makeExercise([makeSet(0, 5, true)]);
+  expect(isExercisePrAgainstHistory(ex)).toBe(false);
+});
+
+test('isExercisePrAgainstHistory returns true when no history and weight > 0 (first-ever PR)', () => {
+  mockCompletedWorkouts = [];
+  const ex = makeExercise([makeSet(60, 8, true)]);
+  expect(isExercisePrAgainstHistory(ex)).toBe(true);
+});
+
+test('isExercisePrAgainstHistory returns true when session weight beats historical best', () => {
+  mockCompletedWorkouts = [
+    {
+      exercises: [{ exerciseId: 'barbell-bench-press', sets: [{ weight: 80, reps: 10 }] }],
+    },
+  ];
+  const ex = makeExercise([makeSet(100, 8, true)]);
+  expect(isExercisePrAgainstHistory(ex)).toBe(true);
+});
+
+test('isExercisePrAgainstHistory returns false when session weight is lower than historical best', () => {
+  mockCompletedWorkouts = [
+    {
+      exercises: [{ exerciseId: 'barbell-bench-press', sets: [{ weight: 120, reps: 5 }] }],
+    },
+  ];
+  const ex = makeExercise([makeSet(100, 8, true)]);
+  expect(isExercisePrAgainstHistory(ex)).toBe(false);
+});
+
+test('isExercisePrAgainstHistory returns true when weight ties but reps exceed historical best', () => {
+  mockCompletedWorkouts = [
+    {
+      exercises: [{ exerciseId: 'barbell-bench-press', sets: [{ weight: 100, reps: 5 }] }],
+    },
+  ];
+  const ex = makeExercise([makeSet(100, 8, true)]);
+  expect(isExercisePrAgainstHistory(ex)).toBe(true);
+});
+
+test('isExercisePrAgainstHistory returns false when weight ties and reps do not exceed historical best', () => {
+  mockCompletedWorkouts = [
+    {
+      exercises: [{ exerciseId: 'barbell-bench-press', sets: [{ weight: 100, reps: 10 }] }],
+    },
+  ];
+  const ex = makeExercise([makeSet(100, 8, true)]);
+  expect(isExercisePrAgainstHistory(ex)).toBe(false);
 });

@@ -17,8 +17,33 @@ export function bestCompletedSet(sets: LoggedSet[]): SetRef | null {
   });
 }
 
-/** Session-local PR: best completed set for this exercise in the current session. */
+/** Scans completed workout history for the best set by weight then reps for a given exerciseId. */
+export function bestSetFromHistory(exerciseId: string): SetRef | null {
+  const history = useWorkoutDataStore.getState().completedWorkouts;
+  let bestWeight = 0;
+  let bestReps = 0;
+  let found = false;
+
+  for (const workout of history) {
+    for (const ex of workout.exercises) {
+      if (ex.exerciseId !== exerciseId) continue;
+      for (const set of ex.sets) {
+        if (!found || set.weight > bestWeight || (set.weight === bestWeight && set.reps > bestReps)) {
+          bestWeight = set.weight;
+          bestReps = set.reps;
+          found = true;
+        }
+      }
+    }
+  }
+
+  return found ? { weight: bestWeight, reps: bestReps } : null;
+}
+
+/** Returns the best known PR for an exercise: checks history first, falls back to current session. */
 export function getLastPr(exercise: SessionExercise): SetRef | null {
+  const historyBest = bestSetFromHistory(exercise.exerciseId);
+  if (historyBest !== null) return historyBest;
   return bestCompletedSet(exercise.sets);
 }
 
@@ -66,6 +91,27 @@ export function getWarmupSets(index: number, workingWeight: number): WarmupSet[]
   }));
 }
 
+/**
+ * Returns true when the best completed set THIS session beats the historical best
+ * (by weight, tie-broken by reps), OR when there is no history but a completed set
+ * with weight > 0 exists.
+ */
+export function isExercisePrAgainstHistory(exercise: SessionExercise): boolean {
+  const sessionBest = bestCompletedSet(exercise.sets);
+  if (!sessionBest) return false;
+
+  const histBest = bestSetFromHistory(exercise.exerciseId);
+  if (histBest === null) {
+    // No history — any completed set with weight > 0 is a first PR
+    return sessionBest.weight > 0;
+  }
+
+  return (
+    sessionBest.weight > histBest.weight ||
+    (sessionBest.weight === histBest.weight && sessionBest.reps > histBest.reps)
+  );
+}
+
 export type CelebrationOutcome =
   | { kind: 'pr'; weight: number; reps: number }
   | { kind: 'extra-reps'; message: string }
@@ -78,8 +124,7 @@ export function evaluateCelebration(exercise: SessionExercise): CelebrationOutco
     return { kind: 'generic', message: 'Great effort! Keep it up.' };
   }
 
-  // Any completed set with weight > 0 is treated as a PR (session-local baseline)
-  if (best.weight > 0) {
+  if (best.weight > 0 && isExercisePrAgainstHistory(exercise)) {
     // Check extra-reps: compare to defaultRepsMax from the exercise catalogue
     const catalogExercise = useWorkoutDataStore.getState().getExerciseById(exercise.exerciseId);
     const repsMax = catalogExercise?.defaultRepsMax ?? 8;

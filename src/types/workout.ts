@@ -1,6 +1,8 @@
 export type MuscleGroup =
   | 'Chest' | 'Back' | 'Legs' | 'Shoulders' | 'Arms' | 'Core';
 
+export type Equipment = 'Barbell' | 'Dumbbell' | 'Machine' | 'Cable' | 'Smith' | 'Bodyweight';
+
 export interface Exercise {
   id: string;            // stable slug, e.g. 'barbell-bench-press'
   name: string;
@@ -8,6 +10,12 @@ export interface Exercise {
   defaultSets: number;   // default target set count
   defaultRepsMin: number;
   defaultRepsMax: number;
+  equipment: Equipment;
+  custom?: boolean;          // true for user-created exercises
+  formTips?: string;         // optional
+  imageUrl?: string;         // optional
+  videoUrl?: string;         // optional
+  difficulty?: 'Beginner' | 'Intermediate' | 'Advanced'; // optional
 }
 
 // An exercise as it appears within a program (id reference + per-program overrides)
@@ -116,4 +124,35 @@ export interface CatalogProgram {
   description: string;
   goal: ProgramGoal;          // single goal tag for filter chips
   workouts: CatalogProgramWorkout[];
+}
+
+// ─── Workout History types ─────────────────────────────────────────────────
+export interface CompletedSet {
+  reps: number;
+  weight: number;
+  setType?: SetType;
+  note?: string;
+}
+
+export interface CompletedExercise {
+  exerciseId: string;
+  exerciseName: string;
+  muscleGroup: MuscleGroup;
+  cablePulley?: CablePulley;
+  supersetGroupId?: string;
+  sets: CompletedSet[];     // only completed sets are stored
+}
+
+export interface CompletedWorkout {
+  id: string;               // `session-${epochMs}`
+  programId: string;        // mirrors ActiveSessionState.workoutId
+  programName: string;
+  date: string;             // ISO date 'YYYY-MM-DD' (session start day)
+  startTime: string;        // ISO datetime
+  durationSeconds: number;
+  totalVolume: number;      // sum(weight*reps) over completed sets
+  prCount: number;
+  exercises: CompletedExercise[];
+  sessionNotes?: string;
+  logSource: 'live' | 'past'; // 'live' = ran timer; 'past' = manually logged
 }
