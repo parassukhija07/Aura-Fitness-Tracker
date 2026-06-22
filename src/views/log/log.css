@@ -173,6 +173,8 @@
 }
 
 .log-card__header {
+  display: flex;
+  align-items: center;
   padding: var(--s4);
   border-bottom: 1px solid var(--separator);
 }
@@ -1619,4 +1621,30 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--s2);
+}
+
+/* ── Icon button (log-card__header utility) ──────────────────────── */
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin-left: auto;
+  flex-shrink: 0;
+  border: none;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.icon-btn:hover {
+  background: var(--surface);
+  color: var(--text);
+}
+.icon-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
