@@ -27,6 +27,8 @@ jest.mock('recharts', () => {
     BarChart: passthrough('div'),
     Bar: () => null,
     Cell: () => null,
+    AreaChart: passthrough('div'),
+    Area: () => null,
   };
 });
 jest.mock('../store/statsDataStore');
@@ -72,8 +74,8 @@ test('defaults to the Stats tab as active', () => {
   render(<ProgressionView />);
   const statsBtn = screen.getByRole('tab', { name: 'Stats' });
   const bodyBtn = screen.getByRole('tab', { name: 'Body' });
-  expect(statsBtn).toHaveClass('prog-tabs__tab--active');
-  expect(bodyBtn).not.toHaveClass('prog-tabs__tab--active');
+  expect(statsBtn).toHaveClass('aura-seg__option--active');
+  expect(bodyBtn).not.toHaveClass('aura-seg__option--active');
 });
 
 test('renders Stats content by default', () => {
@@ -86,49 +88,53 @@ test('renders Stats content by default', () => {
 test('switches active class to Body on click', () => {
   render(<ProgressionView />);
   fireEvent.click(screen.getByRole('tab', { name: 'Body' }));
-  expect(screen.getByRole('tab', { name: 'Body' })).toHaveClass('prog-tabs__tab--active');
-  expect(screen.getByRole('tab', { name: 'Stats' })).not.toHaveClass('prog-tabs__tab--active');
+  expect(screen.getByRole('tab', { name: 'Body' })).toHaveClass('aura-seg__option--active');
+  expect(screen.getByRole('tab', { name: 'Stats' })).not.toHaveClass('aura-seg__option--active');
 });
 
 test('swaps content to BodyTab on click', () => {
   render(<ProgressionView />);
   fireEvent.click(screen.getByRole('tab', { name: 'Body' }));
-  expect(screen.getByText('Log Measurement')).toBeInTheDocument();
+  // BODY-01 shows the weight card and a "Log" action
+  expect(screen.getByText(/WEIGHT/)).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /^Log$/i })).toBeInTheDocument();
   expect(screen.queryByText('Consistency')).toBeNull();
 });
 
 // ── Nutrition tab tests ──────────────────────────────────────────────────────
 
-test('Nutrition tab button is rendered in the tab list', () => {
+test('Nutrition tab button is rendered after selecting Body', () => {
   render(<ProgressionView />);
+  fireEvent.click(screen.getByRole('tab', { name: 'Body' }));
   expect(screen.getByRole('tab', { name: 'Nutrition' })).toBeInTheDocument();
 });
 
-// Happy path: switching to Nutrition tab shows the biometric form
+// Happy path: switching to Nutrition tab reveals biometric inputs after tapping Edit
 test('switches active class to Nutrition on click and shows biometric inputs', () => {
   render(<ProgressionView />);
+  fireEvent.click(screen.getByRole('tab', { name: 'Body' }));
   fireEvent.click(screen.getByRole('tab', { name: 'Nutrition' }));
-  expect(screen.getByRole('tab', { name: 'Nutrition' })).toHaveClass('prog-tabs__tab--active');
-  expect(screen.getByRole('tab', { name: 'Stats' })).not.toHaveClass('prog-tabs__tab--active');
-  // The biometric form fields are always visible
-  expect(screen.getByLabelText('Age (years)')).toBeInTheDocument();
-  expect(screen.getByLabelText('Weight (kg)')).toBeInTheDocument();
-  expect(screen.getByLabelText('Height (cm)')).toBeInTheDocument();
+  expect(screen.getByRole('tab', { name: 'Nutrition' })).toHaveClass('aura-seg__option--active');
+  expect(screen.getByRole('tab', { name: 'Stats' })).not.toHaveClass('aura-seg__option--active');
+  // Inputs live behind the profile "Edit" toggle
+  fireEvent.click(screen.getByRole('button', { name: 'Edit' }));
+  expect(screen.getByLabelText('Age')).toBeInTheDocument();
+  expect(screen.getByLabelText(/Weight/)).toBeInTheDocument();
+  expect(screen.getByLabelText(/Height/)).toBeInTheDocument();
 });
 
-// Edge case: when biometrics are null (default), .nutri-warning renders and .target-card is absent
+// Edge case: when biometrics are null (default), the warning renders and no targets card
 test('shows nutri-warning when biometrics are incomplete (ready = false)', () => {
   const { container } = render(<ProgressionView />);
+  fireEvent.click(screen.getByRole('tab', { name: 'Body' }));
   fireEvent.click(screen.getByRole('tab', { name: 'Nutrition' }));
-  expect(
-    screen.getByText(/Enter your age, weight, height, and sex to see daily targets/i)
-  ).toBeInTheDocument();
-  // The target card must NOT be in the DOM
-  expect(container.querySelector('.target-card')).toBeNull();
+  expect(container.querySelector('.nutri-warning')).not.toBeNull();
+  // No macro bars without a complete profile
+  expect(container.querySelector('.nutri-targets__cal')).toBeNull();
 });
 
-// Failure case: with complete biometrics, target-card renders and warning is hidden
-test('shows target-card and hides warning when biometrics are complete (ready = true)', () => {
+// Failure case: with complete biometrics, daily targets render and warning is hidden
+test('shows daily targets and hides warning when biometrics are complete (ready = true)', () => {
   // Override the store mock for this test to return valid biometrics
   const { useUserPreferencesStore } = require('../store/userPreferencesStore');
   (useUserPreferencesStore as jest.Mock).mockImplementation(
@@ -144,12 +150,12 @@ test('shows target-card and hides warning when biometrics are complete (ready = 
   );
 
   const { container } = render(<ProgressionView />);
+  fireEvent.click(screen.getByRole('tab', { name: 'Body' }));
   fireEvent.click(screen.getAllByRole('tab', { name: 'Nutrition' })[0]);
-  // target-card must be present
-  expect(container.querySelector('.target-card')).not.toBeNull();
-  // The warning must be gone
-  expect(screen.queryByText(/Enter your age, weight, height, and sex/i)).toBeNull();
-  // All four macro-cell values must be present
-  const macroCells = container.querySelectorAll('.target-card__macros .macro-cell__value');
-  expect(macroCells.length).toBe(4);
+  // Calories headline present
+  expect(container.querySelector('.nutri-targets__cal')).not.toBeNull();
+  expect(container.querySelector('.nutri-warning')).toBeNull();
+  // Four macro bars (Protein/Carbs/Fats/Fiber)
+  const macroRows = container.querySelectorAll('.mbar-row');
+  expect(macroRows.length).toBe(4);
 });

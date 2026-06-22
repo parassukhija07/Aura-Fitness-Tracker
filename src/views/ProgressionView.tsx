@@ -5,31 +5,42 @@ import BodyTab from './progression/BodyTab';
 import NutritionTab from './progression/NutritionTab';
 import { motion } from 'framer-motion';
 import { pageTransition } from '../utils/motion';
+import { SegmentedControl } from '../design';
 
-const SUB_TABS = ['Stats', 'Body', 'Nutrition'] as const;
-type SubTab = typeof SUB_TABS[number];
+type TopTab = 'Stats' | 'Body';
+type BodyTab = 'Measurements' | 'Nutrition';
 
 export default function ProgressionView() {
-  const [activeSubTab, setActiveSubTab] = useState<SubTab>('Stats');
+  const [topTab, setTopTab] = useState<TopTab>('Stats');
+  const [bodyTab, setBodyTab] = useState<BodyTab>('Measurements');
 
   return (
     <motion.section className="view progression-view" {...pageTransition}>
-      <h1 className="progression-view__title">Progression</h1>
-      <nav className="prog-tabs" role="tablist">
-        {SUB_TABS.map((tab) => (
-          <button
-            key={tab}
-            type="button"
-            role="tab"
-            className={tab === activeSubTab ? 'prog-tabs__tab prog-tabs__tab--active' : 'prog-tabs__tab'}
-            onClick={() => setActiveSubTab(tab)}
-          >{tab}</button>
-        ))}
-      </nav>
+      <h1 className="progression-view__title t-large-title">Progress</h1>
+      <SegmentedControl
+        options={[
+          { value: 'Stats', label: 'Stats' },
+          { value: 'Body', label: 'Body' },
+        ]}
+        value={topTab}
+        onChange={(v) => setTopTab(v as TopTab)}
+      />
+      {topTab === 'Body' && (
+        <div className="prog-body-seg">
+          <SegmentedControl
+            options={[
+              { value: 'Measurements', label: 'Measurements' },
+              { value: 'Nutrition', label: 'Nutrition' },
+            ]}
+            value={bodyTab}
+            onChange={(v) => setBodyTab(v as BodyTab)}
+          />
+        </div>
+      )}
       <div className="progression-view__content">
-        {activeSubTab === 'Stats' && <StatsTab />}
-        {activeSubTab === 'Body' && <BodyTab />}
-        {activeSubTab === 'Nutrition' && <NutritionTab />}
+        {topTab === 'Stats' && <StatsTab />}
+        {topTab === 'Body' && bodyTab === 'Measurements' && <BodyTab />}
+        {topTab === 'Body' && bodyTab === 'Nutrition' && <NutritionTab />}
       </div>
     </motion.section>
   );

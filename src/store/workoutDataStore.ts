@@ -19,6 +19,7 @@ import type {
   CompletedWorkout,
   CompletedExercise,
   CompletedSet,
+  PlanEditPayload,
 } from '../types/workout';
 import { SEED_EXERCISES, SEED_PROGRAMS, SEED_USER_PLAN } from './seedData';
 import { capacitorStorage } from './capacitorStorage';
@@ -72,9 +73,16 @@ interface WorkoutDataState {
   addCatalogProgramToMyPlans: (program: CatalogProgram) => string; // returns new userProgram id ('' on failure)
   addCatalogWorkoutToMyPlans: (workout: CatalogWorkout) => string; // returns new userWorkout id ('' on failure)
 
+  // Gap A — scoped edit save
+  applyPlanEdit: (scope: 'today' | 'permanent', payload: PlanEditPayload) => void;
+
+  // Gap C — direct workout exercise update (for non-plan-derived custom workouts)
+  updateWorkoutExercises: (workoutId: string, exercises: CustomWorkoutExercise[], restBetweenExercisesSec?: number) => void;
+
   // In-session mutation actions
   addExerciseToSession: (exerciseId: string) => void;
   removeExerciseFromSession: (exerciseIndex: number) => void;
+  reorderSessionExercise: (fromIndex: number, toIndex: number) => void;
   substituteExercise: (exerciseIndex: number, newExerciseId: string) => void;
 
   // Custom exercise creation
@@ -471,12 +479,89 @@ export const useWorkoutDataStore = create<WorkoutDataState>()(
           ex.sets = cleaned.length > 0 ? cleaned : ex.sets.slice(0, 1);
         }),
 
+      // ─── Gap A: scoped edit save ──────────────────────────────────────────
+
+      applyPlanEdit: (scope, payload) => {
+        if (scope === 'today') return; // live session already holds the edit; nothing to persist
+        set((state) => {
+          const { sourceKind, sourceId, exercises, restBetweenExercisesSec } = payload;
+
+          if (sourceKind === 'userWorkout') {
+            const w = state.userWorkouts.find((x) => x.id === sourceId);
+            if (!w) return;
+            w.exercises = exercises.map((e) => ({
+              exerciseId: e.exerciseId,
+              exerciseName: e.exerciseName,
+              targetSets: e.targetSets,
+              targetReps: e.targetReps,
+              restBetweenSetsSec: e.restBetweenSetsSec,
+            }));
+            if (restBetweenExercisesSec !== undefined) {
+              w.restBetweenExercisesSec = restBetweenExercisesSec;
+            }
+          } else if (sourceKind === 'userProgram') {
+            const prog = state.userPrograms.find((p) => p.id === sourceId);
+            if (!prog) return;
+            prog.exercises = exercises.map((e) => {
+              const parts = String(e.targetReps).split('-').map((s) => parseInt(s.trim(), 10));
+              const min = Number.isNaN(parts[0]) ? 0 : parts[0];
+              const max = parts.length > 1 && !Number.isNaN(parts[1]) ? parts[1] : min;
+              return { exerciseId: e.exerciseId, sets: e.targetSets, repsMin: min, repsMax: max };
+            });
+          } else if (sourceKind === 'program') {
+            // Do NOT mutate state.programs. Route to myplan- copy.
+            const myplanId = `myplan-${sourceId}`;
+            let userProg = state.userPrograms.find((p) => p.id === myplanId);
+            if (!userProg) {
+              // Guard: max 3 myplan- entries
+              const myplanCount = state.userPrograms.filter((p) => p.id.startsWith('myplan-')).length;
+              if (myplanCount >= 3) return;
+              const seed = state.programs.find((p) => p.id === sourceId);
+              userProg = {
+                id: myplanId,
+                name: seed?.name ?? sourceId,
+                description: seed?.description ?? '',
+                exercises: [],
+              };
+              state.userPrograms.push(userProg);
+            }
+            userProg.exercises = exercises.map((e) => {
+              const parts = String(e.targetReps).split('-').map((s) => parseInt(s.trim(), 10));
+              const min = Number.isNaN(parts[0]) ? 0 : parts[0];
+              const max = parts.length > 1 && !Number.isNaN(parts[1]) ? parts[1] : min;
+              return { exerciseId: e.exerciseId, sets: e.targetSets, repsMin: min, repsMax: max };
+            });
+          }
+        });
+      },
+
+      // ─── Gap C: direct custom workout exercise update ─────────────────────
+
+      updateWorkoutExercises: (workoutId, exercises, restBetweenExercisesSec) =>
+        set((state) => {
+          const w = state.userWorkouts.find((x) => x.id === workoutId);
+          if (!w) return;
+          w.exercises = exercises.map((e) => ({
+            exerciseId: e.exerciseId,
+            exerciseName: e.exerciseName,
+            targetSets: e.targetSets,
+            targetReps: e.targetReps,
+            restBetweenSetsSec: e.restBetweenSetsSec,
+          }));
+          if (restBetweenExercisesSec !== undefined) {
+            w.restBetweenExercisesSec = restBetweenExercisesSec;
+          }
+        }),
+
       addCatalogProgramToMyPlans: (program) => {
         let newId = '';
         set((state) => {
           if (!program || typeof program.id !== 'string' || program.id.length === 0) return;
+          // Gap B: max 3 myplan- entries
+          const myplanCount = state.userPrograms.filter((p) => p.id.startsWith('myplan-')).length;
           const already = state.userPrograms.find((p) => p.id === `myplan-${program.id}`);
           if (already) { newId = already.id; return; }
+          if (myplanCount >= 3) { return; } // at limit
           newId = `myplan-${program.id}`;
           const flat = program.workouts.flatMap((w) =>
             w.exercises.map((e) => ({
@@ -546,6 +631,22 @@ export const useWorkoutDataStore = create<WorkoutDataState>()(
           }
         }),
 
+      reorderSessionExercise: (fromIndex: number, toIndex: number) =>
+        set((state) => {
+          if (!state.activeSession) return;
+          const exercises = state.activeSession.exercises;
+          const n = exercises.length;
+          if (
+            fromIndex < 0 || fromIndex >= n ||
+            toIndex < 0 || toIndex >= n ||
+            fromIndex === toIndex
+          ) {
+            return;
+          }
+          const [moved] = exercises.splice(fromIndex, 1);
+          exercises.splice(toIndex, 0, moved);
+        }),
+
       substituteExercise: (exerciseIndex: number, newExerciseId: string) =>
         set((state) => {
           if (!state.activeSession) return;
@@ -607,7 +708,7 @@ export const useWorkoutDataStore = create<WorkoutDataState>()(
     {
       name: 'aura-workout-data',
       storage: createJSONStorage(() => capacitorStorage),
-      version: 3,
+      version: 4,
       migrate: (persistedState: any, _fromVersion: number) => {
         if (persistedState?.userPlan && !Array.isArray(persistedState.userPlan.schedule)) {
           persistedState.userPlan.schedule = [null, null, null, null, null, null, null];
@@ -616,6 +717,9 @@ export const useWorkoutDataStore = create<WorkoutDataState>()(
         if (!Array.isArray(persistedState?.completedWorkouts)) {
           persistedState.completedWorkouts = [];
         }
+        // v4: restBetweenSetsSec / restBetweenExercisesSec are optional on exercises/workouts
+        // No backfill needed — readers fall back to userPreferencesStore defaults when undefined.
+
         // v3: backfill equipment on persisted exercises that lack it
         if (Array.isArray(persistedState?.exercises)) {
           const seedMap = new Map(

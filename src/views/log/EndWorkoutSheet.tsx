@@ -4,18 +4,17 @@ import { panelTransition } from '../../utils/motion';
 
 interface Props {
   onEndEarly: () => void;
-  onCancel: () => void;
+  onCancel?: () => void;  // kept for backwards compatibility; use onClose instead
+  onDiscard: () => void;  // "Discard" — clear session and navigate away
   onClose: () => void;
 }
 
-export default function EndWorkoutSheet({ onEndEarly, onCancel, onClose }: Props) {
-  const endSession = useWorkoutDataStore((s) => s.endSession);
+export default function EndWorkoutSheet({ onEndEarly, onDiscard, onClose }: Props) {
+  const cancelSession = useWorkoutDataStore((s) => s.cancelSession);
 
-  const handleCancelWorkout = () => {
-    if (window.confirm('Discard this workout? All logged sets will be lost.')) {
-      endSession();
-      onCancel();
-    }
+  const handleDiscard = () => {
+    cancelSession();
+    onDiscard();
   };
 
   return (
@@ -26,11 +25,11 @@ export default function EndWorkoutSheet({ onEndEarly, onCancel, onClose }: Props
         <button type="button" className="awd-sheet__option awd-sheet__option--primary" onClick={onEndEarly}>
           End Early &amp; Save
         </button>
-        <button type="button" className="awd-sheet__option awd-sheet__option--danger" onClick={handleCancelWorkout}>
-          Cancel Workout
+        <button type="button" className="awd-sheet__option awd-sheet__option--danger" onClick={handleDiscard}>
+          Discard Workout
         </button>
         <button type="button" className="awd-sheet__option" onClick={onClose}>
-          Keep Going
+          Continue Workout
         </button>
       </motion.div>
     </>

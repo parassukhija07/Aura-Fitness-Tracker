@@ -1,0 +1,22 @@
+rules_version = '2';
+
+// Aura Tracker — Firestore security rules
+//
+// The app stores exactly ONE document per user at users/{uid}: a full backup of
+// their local workout/stats/body data (see src/services/cloudSync.ts). A user
+// must be signed in and may only ever touch their OWN document. Everything else
+// is denied by default.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /users/{uid} {
+      // Read/write only your own backup document.
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // Default-deny: no other collection or path is accessible.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

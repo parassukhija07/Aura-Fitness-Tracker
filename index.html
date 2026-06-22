@@ -7,6 +7,11 @@
       content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no"
     />
     <meta name="theme-color" content="#1E1C1A" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <!-- A strict Content-Security-Policy is injected at BUILD time only
+         (see vite.config.ts) so it ships to production/Android but does not
+         block Vite's dev server inline scripts & HMR. -->
     <title>Aura Tracker</title>
   </head>
   <body>

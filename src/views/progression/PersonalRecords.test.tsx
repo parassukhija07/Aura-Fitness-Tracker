@@ -33,6 +33,6 @@ test('shows PR card for barbell bench press with 100kg x 5', () => {
   };
   const { container } = render(<PersonalRecords sessions={[session]} />);
   const prValue = container.querySelector('.pr-card__value');
-  expect(prValue?.textContent).toBe('100kg × 5');
+  expect(prValue?.textContent).toBe('100 kg × 5');
   expect(screen.getByText('Chest')).toBeInTheDocument();
 });

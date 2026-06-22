@@ -5,16 +5,34 @@ export const SEED_EXERCISES: Exercise[] = (exercisesData as Array<{
   id: string;
   name: string;
   muscleGroup: Exercise['muscleGroup'];
+  equipment: Exercise['equipment'];
   defaultSets: number;
   defaultRepsMin: number;
   defaultRepsMax: number;
+  difficulty?: Exercise['difficulty'];
+  category?: string;
+  type?: string;
+  musclesTargeted?: string[];
+  proTips?: string[];
+  videoUrl?: string;
+  imageUrl?: string;
+  warmupType?: string;
 }>).map((e) => ({
   id: e.id,
   name: e.name,
   muscleGroup: e.muscleGroup,
+  equipment: e.equipment ?? 'Barbell',
   defaultSets: e.defaultSets,
   defaultRepsMin: e.defaultRepsMin,
   defaultRepsMax: e.defaultRepsMax,
+  difficulty: e.difficulty,
+  category: e.category,
+  type: e.type,
+  musclesTargeted: e.musclesTargeted,
+  proTips: e.proTips,
+  videoUrl: e.videoUrl,
+  imageUrl: e.imageUrl,
+  warmupType: e.warmupType,
 }));
 
 export const SEED_PROGRAMS: WorkoutProgram[] = [

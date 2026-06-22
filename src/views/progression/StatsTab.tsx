@@ -11,13 +11,15 @@ export default function StatsTab() {
 
   return (
     <div className="stats-tab">
-      <h2 className="stats-tab__heading">Consistency</h2>
+      <div className="stats-tab__head-row">
+        <h2 className="stats-tab__title">Consistency</h2>
+      </div>
       <ConsistencyHeatmap completedDates={completedWorkoutDates} />
-      <h2 className="stats-tab__heading">This Week</h2>
+      <div className="sec-label">This week · muscle focus</div>
       <WeeklyVolumeChart sessions={completedSessions} />
-      <h2 className="stats-tab__heading">Lifetime</h2>
+      <div className="sec-label">Lifetime</div>
       <LifetimeStatsCards stats={lifetimeStats} />
-      <h2 className="stats-tab__heading">Personal Records</h2>
+      <div className="sec-label">Personal Records</div>
       <PersonalRecords sessions={completedSessions} />
     </div>
   );

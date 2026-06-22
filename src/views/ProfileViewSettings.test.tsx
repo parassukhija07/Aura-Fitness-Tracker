@@ -14,6 +14,11 @@ import { useUserPreferencesStore } from '../store/userPreferencesStore';
 import { useWorkoutDataStore } from '../store/workoutDataStore';
 import { useAuthStore } from '../store/authStore';
 
+// Profile is now hub-and-spoke; sub-screens are reached from the home nav list.
+const goWorkout = () => fireEvent.click(screen.getByRole('button', { name: /Workout\b/i }));
+const goPreferences = () => fireEvent.click(screen.getByRole('button', { name: /General & Preferences/i }));
+const goAccount = () => fireEvent.click(screen.getByRole('button', { name: /Account Details/i }));
+
 jest.mock('../lib/firebase', () => ({
   auth: {},
   db: {},
@@ -41,7 +46,11 @@ jest.mock('framer-motion', () => ({
     section: ({ children, ...props }: React.HTMLAttributes<HTMLElement> & { children?: React.ReactNode }) => (
       <section {...props}>{children}</section>
     ),
+    div: ({ children, ...props }: React.HTMLAttributes<HTMLDivElement> & { children?: React.ReactNode }) => (
+      <div {...props}>{children}</div>
+    ),
   },
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }));
 
 // ---------------------------------------------------------------------------
@@ -156,26 +165,31 @@ beforeEach(() => {
 
 test('"Workout · Display" section header renders', () => {
   render(<ProfileView />);
+  goWorkout();
   expect(screen.getByRole('heading', { level: 2, name: /workout.*display/i })).toBeInTheDocument();
 });
 
 test('"Show Reps/Time First" toggle renders in Workout Display section', () => {
   render(<ProfileView />);
+  goWorkout();
   expect(screen.getByRole('switch', { name: 'Show Reps/Time First' })).toBeInTheDocument();
 });
 
 test('"Show PRs During Workout" toggle renders', () => {
   render(<ProfileView />);
+  goWorkout();
   expect(screen.getByRole('switch', { name: 'Show PRs During Workout' })).toBeInTheDocument();
 });
 
 test('"Workout · Exercise Targets" section header renders', () => {
   render(<ProfileView />);
+  goWorkout();
   expect(screen.getByRole('heading', { level: 2, name: /workout.*exercise targets/i })).toBeInTheDocument();
 });
 
 test('"Default Sets" input renders with correct value', () => {
   render(<ProfileView />);
+  goWorkout();
   const input = screen.getByRole('spinbutton', { name: 'Default Sets' });
   expect(input).toBeInTheDocument();
   expect(input).toHaveValue(3);
@@ -183,16 +197,19 @@ test('"Default Sets" input renders with correct value', () => {
 
 test('"Workout · Automation" section header renders', () => {
   render(<ProfileView />);
+  goWorkout();
   expect(screen.getByRole('heading', { level: 2, name: /workout.*automation/i })).toBeInTheDocument();
 });
 
 test('"Auto Rest Timer" toggle renders', () => {
   render(<ProfileView />);
+  goWorkout();
   expect(screen.getByRole('switch', { name: 'Auto Rest Timer' })).toBeInTheDocument();
 });
 
 test('"Auto Play Video" toggle renders', () => {
   render(<ProfileView />);
+  goWorkout();
   expect(screen.getByRole('switch', { name: 'Auto Play Video' })).toBeInTheDocument();
 });
 
@@ -202,16 +219,19 @@ test('"Auto Play Video" toggle renders', () => {
 
 test('"Units & Measurements" section header renders', () => {
   render(<ProfileView />);
+  goPreferences();
   expect(screen.getByRole('heading', { level: 2, name: /units/i })).toBeInTheDocument();
 });
 
 test('"Weight Unit" select renders', () => {
   render(<ProfileView />);
+  goPreferences();
   expect(screen.getByRole('combobox', { name: 'Weight Unit' })).toBeInTheDocument();
 });
 
 test('"Length Unit" select renders', () => {
   render(<ProfileView />);
+  goPreferences();
   expect(screen.getByRole('combobox', { name: 'Length Unit' })).toBeInTheDocument();
 });
 
@@ -221,21 +241,25 @@ test('"Length Unit" select renders', () => {
 
 test('"Account Details" section header renders', () => {
   render(<ProfileView />);
+  goAccount();
   expect(screen.getByRole('heading', { level: 2, name: /account details/i })).toBeInTheDocument();
 });
 
 test('"First Name" input renders', () => {
   render(<ProfileView />);
+  goAccount();
   expect(screen.getByRole('textbox', { name: 'First Name' })).toBeInTheDocument();
 });
 
 test('"Last Name" input renders', () => {
   render(<ProfileView />);
+  goAccount();
   expect(screen.getByRole('textbox', { name: 'Last Name' })).toBeInTheDocument();
 });
 
 test('Email is displayed as read-only value from auth (not an input)', () => {
   render(<ProfileView />);
+  goAccount();
   // The Account Details section renders email as a read-only span (not input)
   // There is no input with aria-label="Email"
   const emailInputs = document.querySelectorAll('input[aria-label="Email"]');
@@ -251,11 +275,13 @@ test('Email is displayed as read-only value from auth (not an input)', () => {
 
 test('"Session" section renders when user is logged in', () => {
   render(<ProfileView />);
+  goAccount();
   expect(screen.getByRole('heading', { level: 2, name: /session/i })).toBeInTheDocument();
 });
 
 test('"Log Out" button is present when user is logged in', () => {
   render(<ProfileView />);
+  // Log Out is surfaced on the Profile home for signed-in users
   expect(screen.getByRole('button', { name: 'Log Out' })).toBeInTheDocument();
 });
 
@@ -273,21 +299,25 @@ test('"Log Out" section is NOT rendered when user is null', () => {
 
 test('"Export Data" button is present in Data Management section', () => {
   render(<ProfileView />);
+  goAccount();
   expect(screen.getByRole('button', { name: 'Export Data' })).toBeInTheDocument();
 });
 
 test('"Data Management" section header renders', () => {
   render(<ProfileView />);
+  goAccount();
   expect(screen.getByRole('heading', { level: 2, name: /data management/i })).toBeInTheDocument();
 });
 
 test('"Reset Workout Data" button is present', () => {
   render(<ProfileView />);
+  goAccount();
   expect(screen.getByRole('button', { name: 'Reset Workout Data' })).toBeInTheDocument();
 });
 
 test('"Reset All Data" button is present', () => {
   render(<ProfileView />);
+  goAccount();
   expect(screen.getByRole('button', { name: 'Reset All Data' })).toBeInTheDocument();
 });
 
@@ -322,6 +352,7 @@ test('clicking Log Out with confirm=true calls signOut', async () => {
 test('clicking Reset Workout Data with confirm=false does NOT call resetToSeed', () => {
   jest.spyOn(window, 'confirm').mockReturnValue(false);
   render(<ProfileView />);
+  goAccount();
   fireEvent.click(screen.getByRole('button', { name: 'Reset Workout Data' }));
   expect(mockResetToSeed).not.toHaveBeenCalled();
 });
@@ -329,6 +360,7 @@ test('clicking Reset Workout Data with confirm=false does NOT call resetToSeed',
 test('clicking Reset Workout Data with confirm=true calls resetToSeed', () => {
   jest.spyOn(window, 'confirm').mockReturnValue(true);
   render(<ProfileView />);
+  goAccount();
   fireEvent.click(screen.getByRole('button', { name: 'Reset Workout Data' }));
   expect(mockResetToSeed).toHaveBeenCalledTimes(1);
   expect(mockResetPreferences).not.toHaveBeenCalled();
@@ -341,6 +373,7 @@ test('clicking Reset Workout Data with confirm=true calls resetToSeed', () => {
 test('clicking Reset All Data with confirm=false does NOT call resetToSeed or resetPreferences', () => {
   jest.spyOn(window, 'confirm').mockReturnValue(false);
   render(<ProfileView />);
+  goAccount();
   fireEvent.click(screen.getByRole('button', { name: 'Reset All Data' }));
   expect(mockResetToSeed).not.toHaveBeenCalled();
   expect(mockResetPreferences).not.toHaveBeenCalled();
@@ -349,6 +382,7 @@ test('clicking Reset All Data with confirm=false does NOT call resetToSeed or re
 test('clicking Reset All Data with confirm=true calls both resetToSeed and resetPreferences', () => {
   jest.spyOn(window, 'confirm').mockReturnValue(true);
   render(<ProfileView />);
+  goAccount();
   fireEvent.click(screen.getByRole('button', { name: 'Reset All Data' }));
   expect(mockResetToSeed).toHaveBeenCalledTimes(1);
   expect(mockResetPreferences).toHaveBeenCalledTimes(1);
@@ -367,6 +401,7 @@ test('clicking Export Data calls URL.revokeObjectURL', () => {
   });
 
   render(<ProfileView />);
+  goAccount();
   fireEvent.click(screen.getByRole('button', { name: 'Export Data' }));
   expect(mockRevokeObjectURL).toHaveBeenCalledWith('blob:mock-url');
 });

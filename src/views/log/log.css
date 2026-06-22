@@ -7,12 +7,43 @@
   min-height: 100%;
 }
 
+.log-view__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: var(--s3);
+}
+
+.log-view__eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--text-2);
+  margin-bottom: 2px;
+}
+
 .log-view__title {
   font-size: 30px;
   font-weight: 800;
   letter-spacing: -0.02em;
   color: var(--text);
-  margin-bottom: var(--s4);
+  margin: 0;
+  line-height: 1.05;
+}
+
+.log-view__cal-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--r-pill);
+  background: var(--fill);
+  border: none;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* ── Week calendar bar ───────────────────────────────────────────── */
@@ -26,25 +57,29 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  padding: 0 6px;
   margin-bottom: var(--s2);
 }
 
-.log-week__nav {
+.log-week__jump {
   background: transparent;
   border: none;
-  color: var(--text-2);
-  font-size: 22px;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 700;
+  font-family: var(--font);
   line-height: 1;
-  padding: 4px 8px;
+  padding: 4px;
   cursor: pointer;
+  white-space: nowrap;
   -webkit-tap-highlight-color: transparent;
-  border-radius: var(--r-xs);
 }
 
 .log-week__label {
   font-size: 14px;
   font-weight: 700;
   color: var(--text);
+  white-space: nowrap;
 }
 
 .log-week__strip {
@@ -110,36 +145,10 @@
   margin-top: 2px;
 }
 
-/* ── Return to Today pill ────────────────────────────────────────── */
-
-.log-today-btn {
-  display: block;
-  margin: 6px auto;
-  padding: 6px 16px;
-  border-radius: var(--r-pill);
-  border: none;
-  background: var(--accent-soft);
-  color: var(--accent);
-  font-size: 13px;
-  font-weight: 700;
-  font-family: var(--font);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-
 /* ── Overview section ────────────────────────────────────────────── */
 
 .log-overview {
   margin-bottom: var(--s4);
-}
-
-.log-overview__title {
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-  color: var(--text-3);
-  margin-bottom: var(--s3);
 }
 
 .log-overview__program-badge {
@@ -159,72 +168,106 @@
 
 .log-card {
   background: var(--surface);
-  border-radius: var(--r-lg);
+  border-radius: var(--r-xl);
   overflow: hidden;
   box-shadow: var(--shadow-sm);
+  border: 1px solid var(--separator-2, var(--separator));
+}
+
+.log-card--padded {
+  padding: var(--s4);
 }
 
 .log-card--dashed {
   background: transparent;
   border: 2px dashed var(--separator);
   box-shadow: none;
-  padding: var(--s8) var(--s4);
+  padding: 44px var(--s6);
   text-align: center;
 }
 
-.log-card__header {
+.log-empty__icon {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--r-md);
+  background: var(--accent-soft);
+  color: var(--accent);
   display: flex;
   align-items: center;
-  padding: var(--s4);
-  border-bottom: 1px solid var(--separator);
+  justify-content: center;
+  margin: 0 auto var(--s4);
+}
+
+.log-card__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s3);
+}
+
+.log-card__top-text {
+  min-width: 0;
 }
 
 .log-card__name {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 800;
   letter-spacing: -0.02em;
   color: var(--text);
-  margin-bottom: 4px;
 }
 
 .log-card__meta {
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 500;
   color: var(--text-2);
+  margin-top: 2px;
+}
+
+.log-card__divider {
+  height: 1px;
+  background: var(--separator);
+  margin: var(--s3) 0;
+}
+
+.log-card__exercises {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
 }
 
 .log-exercise {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
-  padding: 11px var(--s4);
-  border-bottom: 1px solid var(--separator);
-}
-
-.log-exercise:last-child {
-  border-bottom: none;
-}
-
-.log-exercise__info {
-  display: flex;
-  align-items: center;
   gap: var(--s3);
 }
 
 .log-exercise__num {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--r-pill);
+  background: var(--fill);
+  color: var(--text-2);
   font-size: 12px;
   font-weight: 700;
-  color: var(--text-3);
-  width: 18px;
-  text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+}
+
+.log-exercise__body {
+  flex: 1;
+  min-width: 0;
 }
 
 .log-exercise__name {
   font-size: 15px;
   font-weight: 600;
   color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .log-exercise__meta {
@@ -233,43 +276,69 @@
   margin-top: 1px;
 }
 
-.log-badge {
-  display: inline-block;
-  padding: 3px 10px;
-  border-radius: var(--r-pill);
-  background: var(--accent-soft);
-  color: var(--accent);
-  font-size: 11px;
-  font-weight: 700;
-  white-space: nowrap;
+.log-exercise > svg {
+  color: var(--text-3);
+  flex-shrink: 0;
 }
 
 .log-more {
-  padding: 10px var(--s4);
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-2);
+  padding-left: 36px;
+}
+
+/* ── Convert-to-training row (rest day) ──────────────────────────── */
+
+.log-convert-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: var(--s3);
+  padding: var(--s4);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  border: 1px solid var(--separator-2, var(--separator));
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
   color: var(--text-3);
-  border-top: 1px solid var(--separator);
+}
+
+.log-convert-row__label {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
 }
 
 /* ── Rest day card ───────────────────────────────────────────────── */
 
 .log-rest-card {
   background: var(--surface);
-  border-radius: var(--r-lg);
-  padding: var(--s8) var(--s4);
+  border-radius: var(--r-xl);
+  padding: 38px var(--s6);
   text-align: center;
   box-shadow: var(--shadow-sm);
+  border: 1px solid var(--separator-2, var(--separator));
 }
 
 .log-rest-card__icon {
-  color: var(--text-3);
-  margin-bottom: var(--s3);
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--fill);
+  color: var(--text-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--s4);
 }
 
 .log-rest-card__title {
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
   color: var(--text);
   margin-bottom: 6px;
 }
@@ -277,6 +346,20 @@
 .log-rest-card__sub {
   font-size: 13px;
   color: var(--text-2);
+  line-height: 1.5;
+  max-width: 240px;
+  margin: 0 auto;
+}
+
+/* Section label (matches template .sec-label) */
+.log-overview .sec-label {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin: 22px 0 8px;
+  padding: 0 4px;
 }
 
 /* ── Empty states ────────────────────────────────────────────────── */
@@ -422,24 +505,34 @@
 
 /* ── Source picker sheet cards ───────────────────────────────────── */
 
-.log-source-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+.log-source-hint {
+  font-size: 12.5px;
+  color: var(--text-2);
+  margin: 4px 4px 14px;
+}
+
+.log-source-list {
+  display: flex;
+  flex-direction: column;
   gap: var(--s3);
-  padding: var(--s2) 0;
+  padding-bottom: var(--s2);
 }
 
 .log-source-card {
-  background: var(--surface-2);
-  border-radius: var(--r-md);
-  padding: var(--s4);
   display: flex;
-  flex-direction: column;
-  gap: var(--s2);
+  align-items: center;
+  gap: var(--s3);
+  width: 100%;
+  text-align: left;
+  background: var(--surface);
+  border-radius: var(--r-md);
+  padding: 14px;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  border: 1px solid var(--separator);
+  border: 1px solid var(--separator-2, var(--separator));
+  box-shadow: var(--shadow-sm);
   transition: background 0.12s;
+  color: var(--text-3);
 }
 
 .log-source-card:active {
@@ -447,17 +540,36 @@
 }
 
 .log-source-card__icon {
-  color: var(--accent);
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.log-source-card__icon--accent { background: var(--accent-soft); color: var(--accent); }
+.log-source-card__icon--blue   { background: oklch(0.66 0.14 250 / 0.16); color: var(--blue); }
+.log-source-card__icon--green  { background: oklch(0.70 0.15 150 / 0.16); color: var(--green); }
+.log-source-card__icon--gray   { background: var(--fill); color: var(--text-2); }
+
+.log-source-card__text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .log-source-card__title {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
   color: var(--text);
 }
 
 .log-source-card__sub {
-  font-size: 12px;
+  font-size: 12.5px;
   color: var(--text-2);
 }
 
@@ -557,12 +669,35 @@
   flex-shrink: 0;
 }
 
+/* ── Active Workout — Header extras ─────────────────────────────── */
+
+.aw-header__end--left { margin-left: 0; }
+.aw-header__spacer { width: 36px; height: 36px; flex-shrink: 0; }
+
 /* ── Active Workout — Progress bar ──────────────────────────────── */
 
 .aw-progress {
-  padding: var(--s2) var(--s4);
-  background: var(--surface);
-  border-bottom: 1px solid var(--separator);
+  padding: 14px var(--s4) 12px;
+  background: var(--bg);
+}
+
+.aw-progress__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.aw-progress__count {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+.aw-progress__program {
+  font-size: 12.5px;
+  color: var(--text-2);
 }
 
 .aw-progress__label {
@@ -570,6 +705,120 @@
   font-weight: 600;
   color: var(--text-2);
   margin-bottom: 4px;
+}
+
+/* ── Active Workout — Overview exercise cards ───────────────────── */
+
+.aw-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 var(--s4);
+}
+
+.aw-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  background: var(--surface);
+  border: 1px solid var(--separator-2, var(--separator));
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 14px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.15s;
+}
+
+.aw-card--done { opacity: 0.62; }
+
+.aw-card--dragging {
+  opacity: 0.4;
+}
+
+.aw-card--drop-target {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+
+.aw-card__grip {
+  color: var(--text-3);
+  flex-shrink: 0;
+  margin-top: 2px;
+  cursor: grab;
+}
+
+.aw-card:active .aw-card__grip { cursor: grabbing; }
+
+.aw-card__body { flex: 1; min-width: 0; }
+
+.aw-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.aw-card__name {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.aw-card__check {
+  color: var(--green);
+  flex-shrink: 0;
+  display: flex;
+}
+
+.aw-card__meta {
+  display: block;
+  font-size: 12.5px;
+  color: var(--text-2);
+  margin-top: 2px;
+}
+
+.aw-card__bar {
+  display: block;
+  height: 5px;
+  border-radius: var(--r-pill);
+  background: var(--track);
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.aw-card__bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--r-pill);
+  background: var(--accent);
+  transition: width 0.3s ease;
+}
+
+.aw-card__menu {
+  background: transparent;
+  border: none;
+  color: var(--text-3);
+  font-size: 18px;
+  line-height: 1;
+  padding: 0 4px;
+  cursor: pointer;
+  flex-shrink: 0;
+  align-self: center;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.aw-overview-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px var(--s4) 24px;
 }
 
 .aw-progress__track {
@@ -905,6 +1154,51 @@
 
 .awd-card--tip {
   background: var(--accent-soft);
+}
+
+/* ── Progressive-overload target card ────────────────────────────── */
+
+.awd-card__label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s2);
+  margin-bottom: 6px;
+}
+
+.awd-card__label-row .awd-card__label {
+  margin-bottom: 0;
+}
+
+.awd-target__badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  padding: 3px 8px;
+  border-radius: var(--r-pill);
+  text-transform: uppercase;
+}
+
+.awd-target__badge--up { background: color-mix(in oklab, var(--green) 16%, transparent); color: var(--green); }
+.awd-target__badge--hold { background: var(--accent-soft); color: var(--accent); }
+.awd-target__badge--down { background: oklch(0.64 0.19 25 / 0.14); color: var(--red); }
+.awd-target__badge--neutral { background: var(--fill); color: var(--text-2); }
+
+.awd-target__value {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+}
+
+.awd-target__reason {
+  font-size: 12px;
+  color: var(--text-2);
+  line-height: 1.45;
+  margin-top: 4px;
 }
 
 .awd-card__tip-text {
@@ -1308,6 +1602,24 @@
   gap: var(--s4);
 }
 
+.awd-summary__celebration {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s3);
+  background: var(--accent-soft, rgba(var(--accent-rgb, 80 130 255) / 0.12));
+  border: 1px solid var(--accent);
+  border-radius: var(--r-md);
+  padding: var(--s3);
+  color: var(--text);
+  font-size: 15px;
+}
+
+.awd-summary__celebration-icon {
+  font-size: 28px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
 .awd-summary__title {
   font-size: 22px;
   font-weight: 800;
@@ -1648,3 +1960,31 @@
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+.icon-btn--round {
+  border-radius: var(--r-pill);
+  background: var(--fill-2, var(--fill));
+}
+
+/* Strength summary card (PRD 5.2.1 — score / balance / both) */
+.log-strength { margin-bottom: var(--s3); }
+.log-strength__score-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.log-strength__label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--text-2);
+}
+.log-strength__sub { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+.log-strength__score {
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+}
+.log-strength__score span { font-size: 14px; font-weight: 600; color: var(--text-3); }
+.log-strength__balance { margin-top: var(--s2); }
+.log-strength__balance .log-strength__label { display: block; margin-bottom: var(--s2); }

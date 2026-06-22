@@ -37,8 +37,22 @@ describe('calculateMacros', () => {
     expect(calculateMacros(2000, 'fat_loss', 'balanced').calories).toBe(1500);
   });
 
-  it('muscle_gain 2000 balanced → 2300 kcal', () => {
-    expect(calculateMacros(2000, 'muscle_gain', 'balanced').calories).toBe(2300);
+  it('muscle_gain 2000 balanced → 2400 kcal', () => {
+    expect(calculateMacros(2000, 'muscle_gain', 'balanced').calories).toBe(2400);
+  });
+
+  it('lean_gain 2000 balanced → 2250 kcal (surplus between maintenance and muscle_gain)', () => {
+    const result = calculateMacros(2000, 'lean_gain', 'balanced');
+    expect(result.calories).toBe(2250);
+    // Must be strictly between maintenance (0 delta) and muscle_gain (+400)
+    expect(result.calories).toBeGreaterThan(2000);
+    expect(result.calories).toBeLessThan(2400);
+  });
+
+  it('high_carb split: carbs ratio > protein ratio > fats ratio', () => {
+    const { protein, carbs, fats } = SPLIT_RATIOS['high_carb'];
+    expect(carbs).toBeGreaterThan(protein);
+    expect(protein).toBeGreaterThan(fats);
   });
 
   it('floor: fat_loss 1500 balanced → 1200 kcal (raw 1000 clamped)', () => {

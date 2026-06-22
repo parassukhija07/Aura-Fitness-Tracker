@@ -27,10 +27,10 @@ import type { Exercise } from '../../types/workout';
 // ---------------------------------------------------------------------------
 
 const MOCK_EXERCISES: Exercise[] = [
-  { id: 'barbell-bench-press', name: 'Barbell Bench Press', muscleGroup: 'Chest', defaultSets: 3, defaultRepsMin: 6, defaultRepsMax: 10 },
-  { id: 'barbell-back-squat', name: 'Barbell Back Squat', muscleGroup: 'Legs', defaultSets: 3, defaultRepsMin: 5, defaultRepsMax: 8 },
-  { id: 'deadlift', name: 'Deadlift', muscleGroup: 'Back', defaultSets: 3, defaultRepsMin: 3, defaultRepsMax: 6 },
-  { id: 'overhead-press', name: 'Overhead Press', muscleGroup: 'Shoulders', defaultSets: 3, defaultRepsMin: 6, defaultRepsMax: 10 },
+  { id: 'barbell-bench-press', name: 'Barbell Bench Press', muscleGroup: 'Chest',     defaultSets: 3, defaultRepsMin: 6, defaultRepsMax: 10, equipment: 'Barbell' },
+  { id: 'barbell-back-squat',  name: 'Barbell Back Squat',  muscleGroup: 'Legs',      defaultSets: 3, defaultRepsMin: 5, defaultRepsMax: 8,  equipment: 'Barbell' },
+  { id: 'deadlift',            name: 'Deadlift',            muscleGroup: 'Back',      defaultSets: 3, defaultRepsMin: 3, defaultRepsMax: 6,  equipment: 'Barbell' },
+  { id: 'overhead-press',      name: 'Overhead Press',      muscleGroup: 'Shoulders', defaultSets: 3, defaultRepsMin: 6, defaultRepsMax: 10, equipment: 'Barbell' },
 ];
 
 beforeEach(() => {

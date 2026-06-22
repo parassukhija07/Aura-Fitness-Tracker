@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { overlayTransition } from '../../utils/motion';
 import type { CelebrationOutcome } from './pr';
+import { useUnits } from '../../utils/units';
 
 interface Props {
   outcome: CelebrationOutcome;
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export default function Celebration({ outcome, onDone }: Props) {
+  const { fmtWeight } = useUnits();
   useEffect(() => {
     const id = setTimeout(onDone, 2500);
     return () => clearTimeout(id);
@@ -31,7 +33,7 @@ export default function Celebration({ outcome, onDone }: Props) {
             <span className="awd-celebration__emoji" aria-hidden="true">🎉</span>
             <div className="awd-celebration__pr-text">Personal Record!</div>
             <div className="awd-celebration__pr-stats">
-              {outcome.weight}kg × {outcome.reps} reps
+              {fmtWeight(outcome.weight)} × {outcome.reps} reps
             </div>
           </motion.div>
         </div>

@@ -56,6 +56,16 @@ interface UserPreferencesState {
   notificationsEnabled: boolean;
   restTimerSound: 'ding' | 'alarm';
 
+  // ── Connected apps ────────────────────────────────────────────────────────
+  appleHealthEnabled: boolean;
+  googleHealthEnabled: boolean;
+
+  // ── Gap F: Nutrition target weight ───────────────────────────────────────
+  targetWeightKg: number | null;
+
+  // ── Gap G: Profile photo ──────────────────────────────────────────────────
+  avatarDataUrl: string | null;
+
   // ── Existing Actions ──────────────────────────────────────────────────────
   toggleDarkMode: () => void;
   toggleCalendarStartOnMonday: () => void;
@@ -87,7 +97,13 @@ interface UserPreferencesState {
   setLengthUnit: (value: 'cm' | 'in') => void;
   toggleNotificationsEnabled: () => void;
   setRestTimerSound: (value: 'ding' | 'alarm') => void;
+  toggleAppleHealth: () => void;
+  toggleGoogleHealth: () => void;
   resetPreferences: () => void;
+
+  // ── Gap F/G new actions ───────────────────────────────────────────────────
+  setTargetWeight: (value: number | null) => void;
+  setAvatar: (dataUrl: string | null) => void;
 }
 
 const DEFAULTS = {
@@ -119,6 +135,10 @@ const DEFAULTS = {
   lengthUnit: 'cm' as const,
   notificationsEnabled: false,
   restTimerSound: 'ding' as const,
+  appleHealthEnabled: false,
+  googleHealthEnabled: false,
+  targetWeightKg: null as number | null,
+  avatarDataUrl: null as string | null,
 };
 
 export const useUserPreferencesStore = create<UserPreferencesState>()(
@@ -168,13 +188,25 @@ export const useUserPreferencesStore = create<UserPreferencesState>()(
         set((state) => { state.notificationsEnabled = !state.notificationsEnabled; }),
       setRestTimerSound: (value) =>
         set((state) => { state.restTimerSound = value; }),
+      toggleAppleHealth: () =>
+        set((state) => { state.appleHealthEnabled = !state.appleHealthEnabled; }),
+      toggleGoogleHealth: () =>
+        set((state) => { state.googleHealthEnabled = !state.googleHealthEnabled; }),
       resetPreferences: () =>
         set((state) => { Object.assign(state, DEFAULTS); }),
+
+      // Gap F
+      setTargetWeight: (value) =>
+        set((state) => { state.targetWeightKg = value; }),
+
+      // Gap G
+      setAvatar: (dataUrl) =>
+        set((state) => { state.avatarDataUrl = dataUrl; }),
     })),
     {
       name: 'aura-user-preferences',
       storage: createJSONStorage(() => capacitorStorage),
-      version: 3,
+      version: 5,
       migrate: (state: unknown, version: number) => {
         let s = state as Record<string, unknown>;
         if (version < 2) {
@@ -205,6 +237,12 @@ export const useUserPreferencesStore = create<UserPreferencesState>()(
             notificationsEnabled: false,
             restTimerSound: 'ding',
           };
+        }
+        if (version < 4) {
+          s = { ...s, appleHealthEnabled: false, googleHealthEnabled: false };
+        }
+        if (version < 5) {
+          s = { ...s, targetWeightKg: null, avatarDataUrl: null };
         }
         return s as unknown as UserPreferencesState;
       },
@@ -237,6 +275,10 @@ export const useUserPreferencesStore = create<UserPreferencesState>()(
         lengthUnit: state.lengthUnit,
         notificationsEnabled: state.notificationsEnabled,
         restTimerSound: state.restTimerSound,
+        appleHealthEnabled: state.appleHealthEnabled,
+        googleHealthEnabled: state.googleHealthEnabled,
+        targetWeightKg: state.targetWeightKg,
+        avatarDataUrl: state.avatarDataUrl,
       }),
     }
   )

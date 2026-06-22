@@ -4,6 +4,7 @@ import { overlayTransition, panelTransition } from '../../utils/motion';
 import { useBodyDataStore } from '../../store/bodyDataStore';
 import { triggerSuccess } from '../../utils/haptics';
 import type { BodyMeasurement } from '../../types/body';
+import { useUnits } from '../../utils/units';
 
 interface BodyLogModalProps {
   onClose: () => void;
@@ -15,6 +16,7 @@ function todayISO(): string {
 
 export default function BodyLogModal({ onClose }: BodyLogModalProps) {
   const addLog = useBodyDataStore((s) => s.addLog);
+  const { weightToKg, lengthToCm, weightSuffix, lengthSuffix } = useUnits();
   const [date, setDate] = useState(todayISO());
   const [weight, setWeight] = useState('');
   const [bodyFat, setBodyFat] = useState('');
@@ -32,23 +34,25 @@ export default function BodyLogModal({ onClose }: BodyLogModalProps) {
 
   function handleSave() {
     if (!canSave) return;
-    const num = (v: string) => {
+    // Inputs are in the user's display unit; convert lengths to cm and weight to kg.
+    const len = (v: string) => {
       const n = parseFloat(v);
-      return Number.isNaN(n) ? undefined : n;
+      return Number.isNaN(n) ? undefined : +lengthToCm(n).toFixed(2);
     };
     const measurements: NonNullable<BodyMeasurement['measurements']> = {};
-    if (num(neck) !== undefined) measurements.neck = num(neck);
-    if (num(shoulders) !== undefined) measurements.shoulders = num(shoulders);
-    if (num(chest) !== undefined) measurements.chest = num(chest);
-    if (num(waist) !== undefined) measurements.waist = num(waist);
-    if (num(hips) !== undefined) measurements.hips = num(hips);
-    if (num(arms) !== undefined) measurements.arms = num(arms);
-    if (num(thighs) !== undefined) measurements.thighs = num(thighs);
+    if (len(neck) !== undefined) measurements.neck = len(neck);
+    if (len(shoulders) !== undefined) measurements.shoulders = len(shoulders);
+    if (len(chest) !== undefined) measurements.chest = len(chest);
+    if (len(waist) !== undefined) measurements.waist = len(waist);
+    if (len(hips) !== undefined) measurements.hips = len(hips);
+    if (len(arms) !== undefined) measurements.arms = len(arms);
+    if (len(thighs) !== undefined) measurements.thighs = len(thighs);
 
+    const bfNum = parseFloat(bodyFat);
     const log: Omit<BodyMeasurement, 'id'> = {
       date,
-      weightKg: weightNum,
-      ...(num(bodyFat) !== undefined ? { bodyFatPercentage: num(bodyFat) } : {}),
+      weightKg: +weightToKg(weightNum).toFixed(2),
+      ...(!Number.isNaN(bfNum) ? { bodyFatPercentage: bfNum } : {}),
       ...(Object.keys(measurements).length > 0 ? { measurements } : {}),
     };
     addLog(log);
@@ -72,7 +76,7 @@ export default function BodyLogModal({ onClose }: BodyLogModalProps) {
           </label>
 
           <label className="body-modal__field">
-            <span className="body-modal__label">Weight (kg)</span>
+            <span className="body-modal__label">Weight ({weightSuffix})</span>
             <input type="number" inputMode="decimal" className="body-modal__input"
                    value={weight} onChange={(e) => setWeight(e.target.value)} />
           </label>
@@ -92,31 +96,31 @@ export default function BodyLogModal({ onClose }: BodyLogModalProps) {
           {showMeasurements && (
             <div className="body-modal__collapse">
               <label className="body-modal__field">
-                <span className="body-modal__label">Neck (cm)</span>
+                <span className="body-modal__label">Neck ({lengthSuffix})</span>
                 <input type="number" inputMode="decimal" className="body-modal__input" value={neck} onChange={(e) => setNeck(e.target.value)} />
               </label>
               <label className="body-modal__field">
-                <span className="body-modal__label">Shoulders (cm)</span>
+                <span className="body-modal__label">Shoulders ({lengthSuffix})</span>
                 <input type="number" inputMode="decimal" className="body-modal__input" value={shoulders} onChange={(e) => setShoulders(e.target.value)} />
               </label>
               <label className="body-modal__field">
-                <span className="body-modal__label">Chest (cm)</span>
+                <span className="body-modal__label">Chest ({lengthSuffix})</span>
                 <input type="number" inputMode="decimal" className="body-modal__input" value={chest} onChange={(e) => setChest(e.target.value)} />
               </label>
               <label className="body-modal__field">
-                <span className="body-modal__label">Waist (cm)</span>
+                <span className="body-modal__label">Waist ({lengthSuffix})</span>
                 <input type="number" inputMode="decimal" className="body-modal__input" value={waist} onChange={(e) => setWaist(e.target.value)} />
               </label>
               <label className="body-modal__field">
-                <span className="body-modal__label">Hips (cm)</span>
+                <span className="body-modal__label">Hips ({lengthSuffix})</span>
                 <input type="number" inputMode="decimal" className="body-modal__input" value={hips} onChange={(e) => setHips(e.target.value)} />
               </label>
               <label className="body-modal__field">
-                <span className="body-modal__label">Arms (cm)</span>
+                <span className="body-modal__label">Arms ({lengthSuffix})</span>
                 <input type="number" inputMode="decimal" className="body-modal__input" value={arms} onChange={(e) => setArms(e.target.value)} />
               </label>
               <label className="body-modal__field">
-                <span className="body-modal__label">Thighs (cm)</span>
+                <span className="body-modal__label">Thighs ({lengthSuffix})</span>
                 <input type="number" inputMode="decimal" className="body-modal__input" value={thighs} onChange={(e) => setThighs(e.target.value)} />
               </label>
             </div>

@@ -1,11 +1,11 @@
 import { NavLink } from 'react-router-dom';
 import { useNavStore, type TabKey } from '../store/navStore';
 import {
-  LogIcon,
-  PlanIcon,
-  ProgressionIcon,
-  ProfileIcon,
-} from './icons/TabIcons';
+  CalendarIcon,
+  DumbbellIcon,
+  ChartBarIcon,
+  PersonIcon,
+} from './icons/AuraIcons';
 import './BottomNav.css';
 
 interface TabConfig {
@@ -17,15 +17,15 @@ interface TabConfig {
 const TABS: TabConfig[] = [
   { key: 'log', label: 'Log', path: '/log' },
   { key: 'plan', label: 'Plan', path: '/plan' },
-  { key: 'progression', label: 'Progression', path: '/progression' },
+  { key: 'progression', label: 'Progress', path: '/progression' },
   { key: 'profile', label: 'Profile', path: '/profile' },
 ];
 
 const ICONS: Record<TabKey, (props: { size?: number }) => JSX.Element> = {
-  log: LogIcon,
-  plan: PlanIcon,
-  progression: ProgressionIcon,
-  profile: ProfileIcon,
+  log: CalendarIcon,
+  plan: DumbbellIcon,
+  progression: ChartBarIcon,
+  profile: PersonIcon,
 };
 
 export default function BottomNav() {
