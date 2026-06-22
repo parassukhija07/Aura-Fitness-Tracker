@@ -3,7 +3,9 @@ import type { DayWorkout } from './logDates';
 import { isSameDay, startOfDay } from './logDates';
 import type { WorkoutProgram, CustomWorkout } from '../../types/workout';
 import WorkoutPickerSheet from './WorkoutPickerSheet';
-import { MoonIcon } from '../../components/icons/AuraIcons';
+import { SourcePickerSheet } from './SourcePickerSheet';
+import { ManageTodaySheet } from './ManageTodaySheet';
+import { MoonIcon, EllipsisIcon } from '../../components/icons/AuraIcons';
 import { Button } from '../../design';
 
 interface TodaysOverviewProps {
@@ -31,6 +33,8 @@ export default function TodaysOverview({
   onSetRestDay,
 }: TodaysOverviewProps) {
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [sourcePickerOpen, setSourcePickerOpen] = useState(false);
+  const [manageOpen, setManageOpen] = useState(false);
 
   const isActiveDateToday = isSameDay(activeDate, startOfDay(new Date()));
   const heading = isActiveDateToday
@@ -67,7 +71,7 @@ export default function TodaysOverview({
             <div className="log-rest-card__sub">Recovery is part of the plan.</div>
           </div>
           <div className="log-overview__controls">
-            <Button variant="tinted" size="md" fullWidth onClick={() => setSheetOpen(true)}>
+            <Button variant="tinted" size="md" fullWidth onClick={() => setSourcePickerOpen(true)}>
               Add a Workout
             </Button>
           </div>
@@ -79,7 +83,7 @@ export default function TodaysOverview({
             <div className="log-empty__sub">Add a workout to get started.</div>
           </div>
           <div className="log-overview__controls">
-            <Button variant="tinted" size="md" fullWidth onClick={() => setSheetOpen(true)}>
+            <Button variant="tinted" size="md" fullWidth onClick={() => setSourcePickerOpen(true)}>
               Add a Workout
             </Button>
           </div>
@@ -92,6 +96,13 @@ export default function TodaysOverview({
               <div className="log-card__meta">
                 {dayWorkout.exercises.length} exercises
               </div>
+              <button
+                className="icon-btn"
+                aria-label="Manage today"
+                onClick={() => setManageOpen(true)}
+              >
+                <EllipsisIcon />
+              </button>
             </div>
             {visibleExercises.map((ex, idx) => (
               <div key={ex.exerciseId} className="log-exercise">
@@ -112,7 +123,7 @@ export default function TodaysOverview({
             )}
           </div>
           <div className="log-overview__controls">
-            <Button variant="secondary" size="md" fullWidth onClick={() => setSheetOpen(true)}>
+            <Button variant="secondary" size="md" fullWidth onClick={() => setSourcePickerOpen(true)}>
               Switch
             </Button>
             <Button variant="secondary" size="md" fullWidth onClick={onSetRestDay}>
@@ -122,6 +133,21 @@ export default function TodaysOverview({
         </>
       )}
 
+      <SourcePickerSheet
+        open={sourcePickerOpen}
+        onClose={() => setSourcePickerOpen(false)}
+        onFromProgram={() => { setSourcePickerOpen(false); setSheetOpen(true); }}
+        onSavedWorkout={() => { setSourcePickerOpen(false); setSheetOpen(true); }}
+        onBuildFromLibrary={() => { console.log('TODO: build from library'); setSourcePickerOpen(false); }}
+        onEmpty={() => { console.log('TODO: empty workout'); setSourcePickerOpen(false); }}
+      />
+      <ManageTodaySheet
+        open={manageOpen}
+        onClose={() => setManageOpen(false)}
+        onSwitch={() => { setManageOpen(false); setSourcePickerOpen(true); }}
+        onMakeRestDay={() => { setManageOpen(false); onSetRestDay?.(); }}
+        onRemove={() => { setManageOpen(false); onSetRestDay?.(); }}
+      />
       {sheetOpen && (
         <WorkoutPickerSheet
           title={isWorkoutPlanned ? 'Switch Workout' : 'Add Workout'}
