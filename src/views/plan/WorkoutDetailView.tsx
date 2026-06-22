@@ -4,6 +4,7 @@ import { pageTransition } from '../../utils/motion';
 import { useWorkoutDataStore } from '../../store/workoutDataStore';
 import { triggerLightImpact } from '../../utils/haptics';
 import type { CatalogWorkout } from '../../types/workout';
+import WorkoutEditorView from './WorkoutEditorView';
 import './programLibrary.css';
 
 interface WorkoutDetailViewProps {
@@ -20,12 +21,26 @@ export default function WorkoutDetailView({ workout, onClose, onAdded }: Workout
   const [added, setAdded] = useState(() =>
     userWorkouts.some((w) => w.id === `myplan-${workout.id}`)
   );
+  const [editing, setEditing] = useState(false);
 
   function handleAdd() {
     addCatalogWorkoutToMyPlans(workout);
     triggerLightImpact();
     setAdded(true);
     onAdded?.();
+  }
+
+  if (editing) {
+    const myplanId = `myplan-${workout.id}`;
+    return (
+      <WorkoutEditorView
+        workoutId={myplanId}
+        workoutName={workout.name}
+        sourceKind="userWorkout"
+        isPlanDerived
+        onClose={() => setEditing(false)}
+      />
+    );
   }
 
   return (
@@ -58,6 +73,16 @@ export default function WorkoutDetailView({ workout, onClose, onAdded }: Workout
       >
         {added ? 'Added to My Plans ✓' : 'Add to My Plans'}
       </button>
+      {added && (
+        <button
+          type="button"
+          className="prog-lib-detail__add-btn"
+          style={{ marginTop: 8, background: 'var(--surface)', color: 'var(--accent)' }}
+          onClick={() => setEditing(true)}
+        >
+          Edit Workout
+        </button>
+      )}
     </motion.div>
   );
 }

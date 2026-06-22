@@ -1,11 +1,13 @@
 import type { CompletedSession } from '../../store/statsDataStore';
 import { getPersonalRecords, groupPersonalRecords } from './statsDerivations';
+import { useUnits } from '../../utils/units';
 
 interface Props {
   sessions: CompletedSession[];
 }
 
 export default function PersonalRecords({ sessions }: Props) {
+  const { fmtWeight } = useUnits();
   const groups = groupPersonalRecords(getPersonalRecords(sessions));
 
   if (groups.length === 0) {
@@ -21,7 +23,7 @@ export default function PersonalRecords({ sessions }: Props) {
             {group.records.map((r) => (
               <div className="pr-card" key={r.exerciseId}>
                 <span className="pr-card__name">{r.exerciseName}</span>
-                <span className="pr-card__value">{r.bestWeight}kg × {r.bestReps}</span>
+                <span className="pr-card__value">{fmtWeight(r.bestWeight)} × {r.bestReps}</span>
               </div>
             ))}
           </div>

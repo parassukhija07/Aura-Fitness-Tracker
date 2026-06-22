@@ -40,32 +40,35 @@ const mockStartInterExerciseRest = jest.fn();
 
 let mockExercises: any[] = [];
 
+const mockStoreState = {
+  addSet: null as any,
+  deleteSet: null as any,
+  updateSetNote: null as any,
+  stripEmptySets: null as any,
+  startInterExerciseRest: null as any,
+  updateSetField: jest.fn(),
+  updateSetType: jest.fn(),
+  completeSet: jest.fn(),
+  setCablePulley: jest.fn(),
+  setSupersetGroup: jest.fn(),
+  activeSession: null as any,
+  completedWorkouts: [] as any[],
+  getExerciseById: (id: string) => ({
+    id,
+    name: 'Test Exercise',
+    muscleGroup: 'Chest',
+    defaultSets: 3,
+    defaultRepsMin: 6,
+    defaultRepsMax: 10,
+  }),
+};
+
 jest.mock('../../store/workoutDataStore', () => ({
-  useWorkoutDataStore: jest.fn((selector: (s: any) => any) =>
-    selector({
-      addSet: mockAddSet,
-      deleteSet: mockDeleteSet,
-      updateSetNote: mockUpdateSetNote,
-      stripEmptySets: mockStripEmptySets,
-      startInterExerciseRest: mockStartInterExerciseRest,
-      updateSetField: jest.fn(),
-      updateSetType: jest.fn(),
-      completeSet: jest.fn(),
-      setCablePulley: jest.fn(),
-      setSupersetGroup: jest.fn(),
-      activeSession: {
-        exercises: mockExercises,
-        interExerciseRestStartedAt: null,
-      },
-      getExerciseById: (id: string) => ({
-        id,
-        name: 'Test Exercise',
-        muscleGroup: 'Chest',
-        defaultSets: 3,
-        defaultRepsMin: 6,
-        defaultRepsMax: 10,
-      }),
-    })
+  useWorkoutDataStore: Object.assign(
+    jest.fn((selector: (s: any) => any) => selector(mockStoreState)),
+    {
+      getState: () => mockStoreState,
+    }
   ),
 }));
 
@@ -97,6 +100,15 @@ const baseExercise: SessionExercise = {
 beforeEach(() => {
   jest.clearAllMocks();
   mockExercises = [baseExercise];
+  mockStoreState.addSet = mockAddSet;
+  mockStoreState.deleteSet = mockDeleteSet;
+  mockStoreState.updateSetNote = mockUpdateSetNote;
+  mockStoreState.stripEmptySets = mockStripEmptySets;
+  mockStoreState.startInterExerciseRest = mockStartInterExerciseRest;
+  mockStoreState.activeSession = {
+    exercises: mockExercises,
+    interExerciseRestStartedAt: null,
+  };
 });
 
 test('renders exercise name in header', () => {

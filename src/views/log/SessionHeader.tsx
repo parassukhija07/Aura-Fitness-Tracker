@@ -1,8 +1,11 @@
+import { PlusIcon } from '../../components/icons/AuraIcons';
+
 interface SessionHeaderProps {
   title: string;
   elapsedTime: number;
   onEnd: () => void;
   onBack?: () => void;
+  onAdd?: () => void;
 }
 
 function formatElapsed(seconds: number): string {
@@ -18,25 +21,29 @@ function formatElapsed(seconds: number): string {
   return `${mm}:${ss}`;
 }
 
-export default function SessionHeader({ title, elapsedTime, onEnd, onBack }: SessionHeaderProps) {
-  const handleEnd = () => {
-    if (window.confirm('End workout early? Unsaved progress will be lost.')) onEnd();
-  };
-
+export default function SessionHeader({ title, elapsedTime, onEnd, onBack, onAdd }: SessionHeaderProps) {
   return (
     <header className="aw-header">
-      {onBack && (
+      {onBack ? (
         <button type="button" className="aw-header__back" onClick={onBack}>
           ‹ Back
         </button>
+      ) : (
+        <button type="button" className="aw-header__end aw-header__end--left" onClick={onEnd}>
+          End
+        </button>
       )}
       <div className="aw-header__center">
-        <div className="aw-header__timer">{formatElapsed(elapsedTime)}</div>
         <div className="aw-header__title">{title}</div>
+        <div className="aw-header__timer">{formatElapsed(elapsedTime)}</div>
       </div>
-      <button type="button" className="aw-header__end" onClick={handleEnd}>
-        End
-      </button>
+      {onAdd ? (
+        <button type="button" className="aw-header__add" aria-label="Add exercise" onClick={onAdd}>
+          <PlusIcon size={20} />
+        </button>
+      ) : (
+        <span className="aw-header__spacer" aria-hidden="true" />
+      )}
     </header>
   );
 }

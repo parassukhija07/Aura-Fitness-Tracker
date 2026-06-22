@@ -1,143 +1,466 @@
+/* Plan tab — Aura design tokens */
+
+/* ── WorkoutEditorView ──────────────────────────────────────────────────── */
+.wkted__header {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  padding: var(--s3) var(--s4);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border, rgba(128,128,128,0.15));
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.wkted__back {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  padding: 6px;
+}
+.wkted__title {
+  flex: 1;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.wkted__save-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--accent);
+  font-size: 15px;
+  font-weight: 700;
+  padding: 6px 4px;
+}
+.wkted__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--s4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+}
+.wkted__section-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-2);
+}
+.wkted__rest-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--surface);
+  border-radius: var(--r-md);
+  padding: var(--s3);
+}
+.wkted__rest-label {
+  font-size: 14px;
+  color: var(--text);
+}
+.wkted__rest-input {
+  width: 70px;
+  background: var(--surface-2, var(--bg));
+  border: 1px solid var(--border, rgba(128,128,128,0.25));
+  border-radius: var(--r-sm);
+  color: var(--text);
+  font-size: 15px;
+  padding: 6px 8px;
+  text-align: center;
+}
+.wkted__ex-card {
+  background: var(--surface);
+  border-radius: var(--r-md);
+  padding: var(--s3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+}
+.wkted__ex-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s2);
+}
+.wkted__ex-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.wkted__ex-actions {
+  display: flex;
+  gap: 4px;
+}
+.wkted__ex-btn {
+  background: var(--surface-2, rgba(128,128,128,0.1));
+  border: none;
+  border-radius: var(--r-sm);
+  color: var(--text-2);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px 8px;
+}
+.wkted__ex-btn:disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+.wkted__ex-btn--del {
+  color: var(--red, #e5534b);
+}
+.wkted__ex-fields {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--s2);
+}
+.wkted__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text-2);
+}
+.wkted__num-input {
+  background: var(--surface-2, var(--bg));
+  border: 1px solid var(--border, rgba(128,128,128,0.25));
+  border-radius: var(--r-sm);
+  color: var(--text);
+  font-size: 15px;
+  padding: 6px 8px;
+  text-align: center;
+  width: 100%;
+}
+
 .plan-card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
-  padding: 16px;
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  padding: var(--s4);
+  box-shadow: var(--shadow-sm);
 }
 
 .plan-card__name {
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
   margin-bottom: 4px;
+  color: var(--text);
 }
 
 .plan-card__sub {
   font-size: 13px;
-  color: var(--color-text-muted);
+  color: var(--text-2);
   line-height: 1.4;
 }
 
 .plan-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  gap: var(--s3);
 }
 
 .plan-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--s3);
 }
 
 .plan-badge {
   display: inline-block;
-  margin-top: 8px;
-  padding: 2px 8px;
-  border-radius: 6px;
-  background: rgba(168, 85, 247, 0.15);
-  color: var(--color-primary);
+  margin-top: 6px;
+  padding: 3px 10px;
+  border-radius: var(--r-pill);
+  background: var(--accent-soft);
+  color: var(--accent);
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
+}
+
+.plan-badge--default {
+  background: var(--accent);
+  color: var(--on-accent);
 }
 
 .plan-empty {
-  padding: 32px 16px;
+  padding: 40px var(--s4);
   text-align: center;
-  color: var(--color-text-muted);
+  color: var(--text-2);
   font-size: 14px;
 }
 
 .plan-progress {
-  margin-top: 12px;
+  margin-top: var(--s3);
   font-size: 13px;
-  color: var(--color-text);
+  color: var(--text);
 }
 
 .plan-progress__bar {
   margin-top: 6px;
   height: 6px;
-  border-radius: 3px;
-  background: var(--color-border);
+  border-radius: var(--r-pill);
+  background: var(--track);
   overflow: hidden;
 }
 
 .plan-progress__fill {
   height: 100%;
-  background: var(--color-primary);
+  background: var(--accent);
 }
 
-.schedule-list {
+/* ── This-week weekday rows (PLAN-01) ─────────────────────────── */
+
+.plan-sec-label {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin: 6px 0 8px;
+  padding: 0 4px;
+}
+
+.wday-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--s1);
+  margin-bottom: var(--s4);
 }
 
-.schedule-day {
+.wday {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: var(--s3);
   width: 100%;
-  padding: 16px;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
+  padding: 10px var(--s2);
+  background: transparent;
+  border: none;
+  border-radius: var(--r-md);
   cursor: pointer;
   text-align: left;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.schedule-day__label {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--color-text);
+.wday:active {
+  background: var(--fill-2, var(--fill));
 }
 
-.schedule-day__workout {
+.wday-d {
+  width: 48px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  padding: 6px 0;
+  border-radius: var(--r-sm);
+  background: var(--fill);
+  color: var(--text-3);
+}
+
+.wday-d--has {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.wday-d span {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.wday-d b {
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.wday__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.wday__name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wday__name--rest {
+  color: var(--text-3);
+}
+
+.wday__meta {
+  font-size: 12px;
+  color: var(--text-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wday__chev {
+  color: var(--text-3);
+  flex-shrink: 0;
+  display: flex;
+}
+
+.wday__assign {
+  color: var(--accent);
   font-size: 13px;
-  color: var(--color-primary);
-  font-weight: 600;
+  font-weight: 700;
+  flex-shrink: 0;
 }
 
-.schedule-day__rest {
-  font-size: 13px;
-  color: var(--color-text-muted);
+.my-plan-card__add-label {
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 4px;
 }
+
+/* ── Library row cards (PLAN-02 / PLAN-04) ────────────────────── */
+
+.lib-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s3);
+  margin-top: 6px;
+}
+
+.lib-card {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  width: 100%;
+  text-align: left;
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  padding: 10px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--separator-2, var(--separator));
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  color: var(--text-3);
+}
+
+.lib-card:active {
+  background: var(--fill-2, var(--fill));
+}
+
+.lib-thumb {
+  width: 64px;
+  height: 56px;
+  border-radius: var(--r-md);
+  flex-shrink: 0;
+  background:
+    repeating-linear-gradient(135deg, var(--fill-2, var(--fill)) 0 8px, transparent 8px 16px),
+    var(--surface-2);
+  border: 1px solid var(--separator-2, var(--separator));
+}
+
+.lib-card__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.lib-title {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lib-meta {
+  font-size: 12.5px;
+  color: var(--text-2);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lib-card__added {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: var(--r-pill);
+  padding: 4px 9px;
+}
+
+/* ── Exercise search & filter ─────────────────────────────────── */
 
 .exercises-tab {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--s3);
 }
 
 .exercises-tab__search {
   position: sticky;
   top: 0;
   z-index: 2;
-  background: var(--color-bg);
-  padding-bottom: 8px;
+  background: var(--bg);
+  padding-bottom: 4px;
+}
+
+.exercises-tab__search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.exercises-tab__search-icon {
+  position: absolute;
+  left: 12px;
+  color: var(--text-3);
+  pointer-events: none;
 }
 
 .exercises-tab__search-input {
   width: 100%;
-  padding: 12px 14px;
-  font-size: 14px;
-  color: var(--color-text);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
+  padding: 11px 14px 11px 38px;
+  font-size: 15px;
+  font-family: var(--font);
+  color: var(--text);
+  background: var(--surface);
+  border: 1.5px solid var(--separator);
+  border-radius: var(--r-md);
   outline: none;
+  box-shadow: var(--shadow-sm);
 }
 
 .exercises-tab__search-input::placeholder {
-  color: var(--color-text-muted);
+  color: var(--text-3);
 }
 
 .exercises-tab__search-input:focus {
-  border-color: var(--color-primary);
+  border-color: var(--accent);
 }
 
 .exercises-tab__chips {
   display: flex;
-  gap: 8px;
+  gap: var(--s2);
   overflow-x: auto;
   padding-bottom: 4px;
   -webkit-overflow-scrolling: touch;
@@ -148,23 +471,41 @@
   display: none;
 }
 
-.exercises-tab__chip {
-  flex: 0 0 auto;
-  padding: 8px 14px;
-  font-size: 13px;
-  font-weight: 600;
-  white-space: nowrap;
-  color: var(--color-text-muted);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 999px;
-  cursor: pointer;
+/* Exercise catalog grid (2-up) */
+.exercises-tab__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--s3);
 }
 
-.exercises-tab__chip--active {
-  color: var(--color-bg);
-  background: var(--color-primary);
-  border-color: var(--color-primary);
+.exercises-tab__cell {
+  background: var(--surface);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.12s;
+}
+
+.exercises-tab__cell:active {
+  opacity: 0.8;
+}
+
+.exercises-tab__cell-info {
+  padding: var(--s2) var(--s3) var(--s3);
+}
+
+.exercises-tab__cell-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.exercises-tab__cell-meta {
+  font-size: 12px;
+  color: var(--text-2);
 }
 
 /* ── Exercise Detail Page ────────────────────────────────────── */
@@ -172,197 +513,289 @@
 .ex-detail {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--s4);
   padding-bottom: 24px;
 }
 
 .ex-detail__header {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--s3);
 }
 
 .ex-detail__back {
   border: none;
-  font-size: 28px;
-  color: var(--color-text);
-  line-height: 1;
-  width: 40px;
-  align-self: flex-start;
-  background: transparent;
+  background: var(--fill);
+  color: var(--text-2);
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-pill);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .ex-detail__title {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--color-text);
-}
-
-.ex-detail__hero {
-  height: 200px;
-  border-radius: 16px;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-surface));
-}
-
-.ex-detail__play {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(0, 0, 0, 0.45);
-  color: #fff;
-  font-size: 24px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text);
 }
 
 .ex-detail__chips {
   display: flex;
-  gap: 8px;
+  gap: var(--s2);
   flex-wrap: wrap;
 }
 
-.ex-detail__chip {
-  padding: 4px 12px;
-  border-radius: 999px;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  color: var(--color-text);
-  font-size: 12px;
-  font-weight: 600;
-}
-
 .ex-detail__card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
-  padding: 16px;
+  background: var(--surface);
+  border-radius: var(--r-md);
+  padding: var(--s4);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--s3);
+  box-shadow: var(--shadow-sm);
 }
 
 .ex-detail__card-title {
   font-size: 15px;
   font-weight: 700;
-  color: var(--color-text);
+  color: var(--text);
 }
 
 .ex-detail__card-body {
   font-size: 14px;
-  color: var(--color-text-muted);
+  color: var(--text-2);
   line-height: 1.5;
 }
 
 .ex-detail__bar-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--s2);
 }
 
 .ex-detail__bar-label {
-  width: 80px;
-  font-size: 12px;
-  color: var(--color-text);
+  width: 90px;
+  font-size: 13px;
+  color: var(--text);
   flex-shrink: 0;
-}
-
-.ex-detail__bar-track {
-  flex: 1;
-  height: 8px;
-  border-radius: 4px;
-  background: var(--color-border);
-  overflow: hidden;
-}
-
-.ex-detail__bar-fill {
-  height: 100%;
-  background: var(--color-primary);
-  border-radius: 4px;
+  font-weight: 600;
 }
 
 .ex-detail__bar-pct {
-  width: 40px;
+  width: 36px;
   text-align: right;
   font-size: 12px;
-  font-weight: 600;
-  color: var(--color-primary);
+  font-weight: 700;
+  color: var(--accent);
   flex-shrink: 0;
-}
-
-.ex-detail__body {
-  width: 140px;
-  height: auto;
-  align-self: center;
-  margin-top: 4px;
-}
-
-.ex-detail__body-base {
-  fill: var(--color-border);
-}
-
-.ex-detail__muscle {
-  fill: var(--color-border);
-  transition: fill 0.2s;
-}
-
-.ex-detail__muscle--sub {
-  fill: rgba(168, 85, 247, 0.45);
-}
-
-.ex-detail__muscle--on {
-  fill: var(--color-primary);
 }
 
 .ex-detail__actions {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--s3);
   margin-top: 4px;
-}
-
-.ex-detail__action-btn {
-  width: 100%;
-  padding: 14px;
-  border-radius: 12px;
-  border: 1px solid var(--color-border);
-  background: var(--color-surface);
-  color: var(--color-text);
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.ex-detail__action-btn--primary {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
-  color: #fff;
 }
 
 .ex-detail__toast {
   position: fixed;
-  left: 16px;
-  right: 16px;
-  bottom: calc(var(--bottom-nav-height) + 16px);
-  background: var(--color-text);
-  color: var(--color-bg);
-  padding: 12px 16px;
-  border-radius: 10px;
+  left: var(--s4);
+  right: var(--s4);
+  bottom: calc(var(--bottom-nav-height) + var(--s4));
+  background: var(--text);
+  color: var(--bg);
+  padding: 12px var(--s4);
+  border-radius: var(--r-md);
   font-size: 14px;
+  font-weight: 600;
   text-align: center;
   z-index: 60;
+  box-shadow: var(--shadow);
 }
 
 .ex-detail__sheet-empty {
   font-size: 14px;
-  color: var(--color-text-muted);
+  color: var(--text-2);
   text-align: center;
   padding: 8px 0;
+}
+
+/* ── Program library ──────────────────────────────────────────── */
+
+.prog-search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--s3);
+}
+
+.prog-search-icon {
+  position: absolute;
+  left: 12px;
+  color: var(--text-3);
+  pointer-events: none;
+}
+
+.prog-search {
+  width: 100%;
+  padding: 11px 14px 11px 38px;
+  font-size: 15px;
+  font-family: var(--font);
+  color: var(--text);
+  background: var(--surface);
+  border: 1.5px solid var(--separator);
+  border-radius: var(--r-md);
+  outline: none;
+  box-shadow: var(--shadow-sm);
+}
+
+.prog-search::placeholder { color: var(--text-3); }
+.prog-search:focus { border-color: var(--accent); }
+
+.prog-filter-row {
+  display: flex;
+  gap: var(--s2);
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+  margin-bottom: var(--s3);
+}
+.prog-filter-row::-webkit-scrollbar { display: none; }
+
+/* ── Workout builder ──────────────────────────────────────────── */
+
+.wb-field {
+  margin-bottom: var(--s3);
+}
+
+.wb-field__label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 6px;
+}
+
+.wb-field__input {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 15px;
+  font-family: var(--font);
+  color: var(--text);
+  background: var(--surface);
+  border: 1.5px solid var(--separator);
+  border-radius: var(--r-md);
+  outline: none;
+}
+
+.wb-field__input:focus {
+  border-color: var(--accent);
+}
+
+/* My Plans — horizontal scroll cards */
+.my-plans-scroll {
+  display: flex;
+  gap: var(--s3);
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+  margin-bottom: var(--s4);
+}
+.my-plans-scroll::-webkit-scrollbar { display: none; }
+
+.my-plan-card {
+  min-width: 200px;
+  min-height: 130px;
+  background: linear-gradient(135deg, var(--accent), oklch(0.58 0.18 50));
+  border-radius: var(--r-lg);
+  padding: var(--s4);
+  color: var(--on-accent);
+  flex-shrink: 0;
+  box-shadow: var(--shadow);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.my-plan-card--dashed {
+  background: transparent;
+  border: 2px dashed var(--separator);
+  color: var(--text-2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none;
+  min-height: 100px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.my-plan-card__name {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin-bottom: 4px;
+}
+
+.my-plan-card__sub {
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+.my-plan-card__default-badge {
+  position: absolute;
+  top: var(--s4);
+  left: var(--s4);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #fff;
+  color: var(--accent);
+  border-radius: var(--r-pill);
+  padding: 3px 9px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.my-plan-card__set-default {
+  margin-top: var(--s2);
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: var(--r-pill);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  cursor: pointer;
+  width: 100%;
+}
+
+/* wday row + edit button wrapper */
+.wday-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+}
+.wday-wrapper .wday {
+  flex: 1;
+}
+.wday__edit-btn {
+  background: none;
+  border: 1px solid var(--accent);
+  border-radius: var(--r-pill);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
 }

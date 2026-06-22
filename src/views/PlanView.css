@@ -1,39 +1,70 @@
 .plan-view {
-  padding: 16px;
+  padding: 0 var(--s5) var(--s5);
+  padding-top: var(--s4);
+  background: var(--bg);
+  min-height: 100%;
+}
+
+.plan-view__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--s4);
 }
 
 .plan-view__title {
-  font-size: 24px;
-  font-weight: 700;
-  margin-bottom: 16px;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin: 0;
+}
+
+.plan-view__add {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--r-pill);
+  background: var(--accent-soft);
+  color: var(--accent);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .plan-tabs {
   display: flex;
-  gap: 4px;
-  margin-bottom: 16px;
+  gap: var(--s2);
+  margin-bottom: var(--s4);
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
 }
+
+.plan-tabs::-webkit-scrollbar { display: none; }
 
 .plan-tabs__tab {
   flex: 0 0 auto;
-  padding: 8px 14px;
-  border: 1px solid var(--color-border);
-  border-radius: 999px;
-  background: var(--color-surface);
-  color: var(--color-text-muted);
+  padding: 7px 14px;
+  border: none;
+  border-radius: var(--r-pill);
+  background: var(--fill);
+  color: var(--text-2);
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 700;
+  font-family: var(--font);
   white-space: nowrap;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  transition: background 0.12s, color 0.12s;
 }
 
 .plan-tabs__tab--active {
-  background: var(--color-primary);
-  color: var(--color-text);
-  border-color: var(--color-primary);
+  background: var(--accent);
+  color: var(--on-accent);
 }
 
 .plan-view__content {

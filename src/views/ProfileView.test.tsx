@@ -8,6 +8,12 @@ jest.mock('../store/authStore');
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent } from '@testing-library/react';
 import ProfileView from './ProfileView';
+
+// The Profile tab is now hub-and-spoke; General/Notifications/Units live on the
+// "General & Preferences" sub-screen. Navigate there before asserting on them.
+function gotoPreferences() {
+  fireEvent.click(screen.getByRole('button', { name: /General & Preferences/i }));
+}
 import { useUserPreferencesStore } from '../store/userPreferencesStore';
 import { useWorkoutDataStore } from '../store/workoutDataStore';
 import { useAuthStore } from '../store/authStore';
@@ -39,7 +45,11 @@ jest.mock('framer-motion', () => ({
     section: ({ children, ...props }: React.HTMLAttributes<HTMLElement> & { children?: React.ReactNode }) => (
       <section {...props}>{children}</section>
     ),
+    div: ({ children, ...props }: React.HTMLAttributes<HTMLDivElement> & { children?: React.ReactNode }) => (
+      <div {...props}>{children}</div>
+    ),
   },
+  AnimatePresence: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
 }));
 
 // ---------------------------------------------------------------------------
@@ -136,23 +146,27 @@ test('renders the "Profile" heading', () => {
 
 test('renders the "General" section header', () => {
   render(<ProfileView />);
+  gotoPreferences();
   expect(screen.getByRole('heading', { level: 2, name: /general/i })).toBeInTheDocument();
 });
 
 test('renders Dark Mode toggle switch', () => {
   render(<ProfileView />);
+  gotoPreferences();
   const toggle = screen.getByRole('switch', { name: 'Dark Mode' });
   expect(toggle).toBeInTheDocument();
 });
 
 test('renders Start Week on Monday toggle switch', () => {
   render(<ProfileView />);
+  gotoPreferences();
   const toggle = screen.getByRole('switch', { name: 'Start Week on Monday' });
   expect(toggle).toBeInTheDocument();
 });
 
 test('Dark Mode toggle has aria-checked=true when darkMode=true', () => {
   render(<ProfileView />);
+  gotoPreferences();
   const toggle = screen.getByRole('switch', { name: 'Dark Mode' });
   expect(toggle).toHaveAttribute('aria-checked', 'true');
   expect(toggle).toHaveClass('toggle--on');
@@ -160,6 +174,7 @@ test('Dark Mode toggle has aria-checked=true when darkMode=true', () => {
 
 test('Start Week on Monday toggle has aria-checked=true when calendarStartOnMonday=true', () => {
   render(<ProfileView />);
+  gotoPreferences();
   const toggle = screen.getByRole('switch', { name: 'Start Week on Monday' });
   expect(toggle).toHaveAttribute('aria-checked', 'true');
   expect(toggle).toHaveClass('toggle--on');
@@ -171,12 +186,14 @@ test('Start Week on Monday toggle has aria-checked=true when calendarStartOnMond
 
 test('clicking Dark Mode toggle calls toggleDarkMode', () => {
   render(<ProfileView />);
+  gotoPreferences();
   fireEvent.click(screen.getByRole('switch', { name: 'Dark Mode' }));
   expect(toggleDarkMode).toHaveBeenCalledTimes(1);
 });
 
 test('clicking Start Week on Monday toggle calls toggleCalendarStartOnMonday', () => {
   render(<ProfileView />);
+  gotoPreferences();
   fireEvent.click(screen.getByRole('switch', { name: 'Start Week on Monday' }));
   expect(toggleCalendarStartOnMonday).toHaveBeenCalledTimes(1);
 });
@@ -191,6 +208,7 @@ test('Dark Mode toggle has aria-checked=false and no toggle--on class when darkM
     (selector: (s: typeof state) => unknown) => selector(state)
   );
   render(<ProfileView />);
+  gotoPreferences();
   const toggle = screen.getByRole('switch', { name: 'Dark Mode' });
   expect(toggle).toHaveAttribute('aria-checked', 'false');
   expect(toggle).not.toHaveClass('toggle--on');
@@ -202,6 +220,7 @@ test('Start Week on Monday toggle has no toggle--on class when calendarStartOnMo
     (selector: (s: typeof state) => unknown) => selector(state)
   );
   render(<ProfileView />);
+  gotoPreferences();
   const toggle = screen.getByRole('switch', { name: 'Start Week on Monday' });
   expect(toggle).toHaveAttribute('aria-checked', 'false');
   expect(toggle).not.toHaveClass('toggle--on');

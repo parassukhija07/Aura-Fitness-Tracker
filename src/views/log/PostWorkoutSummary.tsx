@@ -1,8 +1,11 @@
+import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useWorkoutDataStore } from '../../store/workoutDataStore';
 import { overlayTransition } from '../../utils/motion';
 import { formatElapsed } from './formatElapsed';
-import { evaluateCelebration } from './pr';
+import { isExercisePrAgainstHistory } from './pr';
+import { triggerSuccess } from '../../utils/haptics';
+import { useUnits } from '../../utils/units';
 
 interface Props {
   onSave: () => void;
@@ -12,6 +15,7 @@ export default function PostWorkoutSummary({ onSave }: Props) {
   const activeSession = useWorkoutDataStore((s) => s.activeSession);
   const endSession = useWorkoutDataStore((s) => s.endSession);
   const setSessionNotes = useWorkoutDataStore((s) => s.setSessionNotes);
+  const { fmtWeight } = useUnits();
 
   if (!activeSession) return null;
 
@@ -24,8 +28,15 @@ export default function PostWorkoutSummary({ onSave }: Props) {
   }, 0);
 
   const prsHit = activeSession.exercises.filter(
-    (ex) => evaluateCelebration(ex).kind === 'pr'
+    (ex) => isExercisePrAgainstHistory(ex)
   ).length;
+
+  // Gap E: trigger haptic + show celebration banner on mount when PRs were hit
+  useEffect(() => {
+    if (prsHit > 0) {
+      triggerSuccess();
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSave = () => {
     endSession();
@@ -35,6 +46,17 @@ export default function PostWorkoutSummary({ onSave }: Props) {
   return (
     <motion.div className="awd-summary" {...overlayTransition}>
       <div className="awd-summary__panel">
+        {prsHit > 0 && (
+          <div className="awd-summary__celebration" role="status" aria-live="polite">
+            <span className="awd-summary__celebration-icon" aria-hidden="true">🏆</span>
+            <div>
+              <strong>{prsHit} Personal Record{prsHit > 1 ? 's' : ''} Hit!</strong>
+              <div style={{ fontSize: 13, color: 'var(--text-2)', marginTop: 2 }}>
+                Outstanding performance today — keep crushing it!
+              </div>
+            </div>
+          </div>
+        )}
         <div className="awd-summary__title">Workout Complete</div>
 
         <div className="awd-summary__stats">
@@ -43,7 +65,7 @@ export default function PostWorkoutSummary({ onSave }: Props) {
             <div className="awd-summary__stat-label">Duration</div>
           </div>
           <div className="awd-summary__stat">
-            <div className="awd-summary__stat-value">{Math.round(totalVolume)}kg</div>
+            <div className="awd-summary__stat-value">{fmtWeight(Math.round(totalVolume))}</div>
             <div className="awd-summary__stat-label">Total Volume</div>
           </div>
           <div className="awd-summary__stat">

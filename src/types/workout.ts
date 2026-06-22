@@ -16,6 +16,12 @@ export interface Exercise {
   imageUrl?: string;         // optional
   videoUrl?: string;         // optional
   difficulty?: 'Beginner' | 'Intermediate' | 'Advanced'; // optional
+  // ── Library metadata (from gym_exercise_library.json) ──────────────────────
+  category?: string;             // source category, e.g. 'Chest', 'Warm-up'
+  type?: string;                 // 'Compound' | 'Machine' | 'Warm Up'
+  musclesTargeted?: string[];    // specific muscles, ordered primary-first
+  proTips?: string[];            // coaching cues
+  warmupType?: string;           // warm-up protocol label
 }
 
 // An exercise as it appears within a program (id reference + per-program overrides)
@@ -82,6 +88,7 @@ export interface CustomWorkoutExercise {
   exerciseName: string;
   targetSets: number;
   targetReps: string;
+  restBetweenSetsSec?: number;
 }
 
 export interface CustomWorkout {
@@ -89,6 +96,15 @@ export interface CustomWorkout {
   name: string;
   exercises: CustomWorkoutExercise[];
   createdAt: string;
+  restBetweenExercisesSec?: number;
+}
+
+// ─── Plan edit payload (Gap A) ─────────────────────────────────────────────
+export interface PlanEditPayload {
+  sourceKind: 'userProgram' | 'userWorkout' | 'program';
+  sourceId: string;
+  exercises: CustomWorkoutExercise[];
+  restBetweenExercisesSec?: number;
 }
 
 // ─── Catalog types (read-only seed library, PRD 3.2 / 3.3) ───────────────

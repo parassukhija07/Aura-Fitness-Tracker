@@ -2,11 +2,12 @@ import { useState } from 'react';
 import './log/log.css';
 import WeekCalendarBar from './log/WeekCalendarBar';
 import TodaysOverview from './log/TodaysOverview';
-import LogActions from './log/LogActions';
+import StrengthSummary from './log/StrengthSummary';
 import ActiveWorkoutView from './log/ActiveWorkoutView';
 import { CalendarSheet } from './log/CalendarSheet';
 import { useWorkoutDataStore } from '../store/workoutDataStore';
 import { getDayWorkout, isSameDay, startOfDay } from './log/logDates';
+import type { SessionExercise, MuscleGroup } from '../types/workout';
 import { motion } from 'framer-motion';
 import { pageTransition } from '../utils/motion';
 import { CalendarIcon } from '../components/icons/AuraIcons';
@@ -26,6 +27,7 @@ export default function LogView() {
   const userPrograms = useWorkoutDataStore((s) => s.userPrograms);
   const userWorkouts = useWorkoutDataStore((s) => s.userWorkouts);
   const assignWorkoutToDay = useWorkoutDataStore((s) => s.assignWorkoutToDay);
+  const startSession = useWorkoutDataStore((s) => s.startSession);
 
   const activeProgram = getActiveProgram();
 
@@ -62,6 +64,22 @@ export default function LogView() {
     setRestOverrides((m) => ({ ...m, [dateKey]: true }));
   };
 
+  const onStartWorkout = () => {
+    if (!activeProgram) return;
+    const sessionExercises: SessionExercise[] = dayWorkout.exercises.map((ex) => ({
+      exerciseId: ex.exerciseId,
+      exerciseName: ex.name,
+      muscleGroup: ex.muscleGroup as MuscleGroup,
+      defaultSets: ex.sets,
+      sets: [{ reps: 0, weight: 0, setType: 'Normal', completed: false }],
+    }));
+    startSession(activeProgram, sessionExercises);
+  };
+
+  const dayName = activeDate
+    .toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })
+    .toUpperCase();
+
   if (activeSession != null) {
     return (
       <motion.section className="view log-view" {...pageTransition}>
@@ -72,14 +90,17 @@ export default function LogView() {
 
   return (
     <motion.section className="view log-view" {...pageTransition}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--s4)' }}>
-        <h1 className="log-view__title t-large-title" style={{ margin: 0 }}>Today</h1>
+      <div className="log-view__header">
+        <div>
+          <div className="log-view__eyebrow">{dayName}</div>
+          <h1 className="log-view__title">{isViewingToday ? 'Today' : activeDate.toLocaleDateString('en-US', { weekday: 'long' })}</h1>
+        </div>
         <button
-          style={{ background: 'var(--fill)', border: 'none', borderRadius: 'var(--r-sm)', width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-2)' }}
+          className="log-view__cal-btn"
           onClick={() => setCalendarOpen(true)}
           aria-label="Open calendar"
         >
-          <CalendarIcon size={18} />
+          <CalendarIcon size={19} />
         </button>
       </div>
       <WeekCalendarBar
@@ -91,23 +112,20 @@ export default function LogView() {
         showReturnToToday={!isViewingToday}
         onReturnToToday={onReturnToToday}
       />
+      {isViewingToday && <StrengthSummary />}
       <TodaysOverview
         activeDate={activeDate}
         dayWorkout={dayWorkout}
         programName={activeProgram?.name}
+        workoutName={activeProgram?.name}
+        canStart={hasPlan}
         sundayIndex={sundayIndex}
         programs={programs}
         userPrograms={userPrograms}
         userWorkouts={userWorkouts}
         onAssignWorkout={onAssignWorkout}
         onSetRestDay={onSetRestDay}
-      />
-      <LogActions
-        isRestDay={dayWorkout.isRestDay}
-        hasPlan={hasPlan}
-        dayExercises={dayWorkout.exercises}
-        activeProgram={activeProgram}
-        activeDate={activeDate}
+        onStartWorkout={onStartWorkout}
       />
       <CalendarSheet
         open={calendarOpen}

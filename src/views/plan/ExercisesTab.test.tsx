@@ -14,6 +14,20 @@ jest.mock('framer-motion', () => ({
   },
 }));
 
+// Mock the store to return the real exercises catalog
+jest.mock('../../store/workoutDataStore', () => ({
+  useWorkoutDataStore: (sel: (s: any) => any) => sel({ exercises: require('../../data/exercises.json') }),
+}));
+
+// Mock CreateExerciseSheet to avoid Sheet/portal/framer-motion complexity
+jest.mock('./CreateExerciseSheet', () => {
+  const React = require('react');
+  return {
+    __esModule: true,
+    default: () => React.createElement(React.Fragment, null),
+  };
+});
+
 // ─── helpers ────────────────────────────────────────────────────────────────
 
 function getCellNames() {
@@ -22,14 +36,20 @@ function getCellNames() {
   );
 }
 
+// Derive expected counts from the same catalog the component renders, so the
+// tests stay correct as the exercise library grows.
+const CATALOG = require('../../data/exercises.json') as Array<{ muscleGroup: string }>;
+const TOTAL_EXERCISES = CATALOG.length;
+const countByGroup = (g: string) => CATALOG.filter((e) => e.muscleGroup === g).length;
+
 // ─── Happy Path ──────────────────────────────────────────────────────────────
 
 describe('ExercisesTab — happy path', () => {
   beforeEach(() => render(<ExercisesTab />));
 
-  test('renders all 56 exercise cells when no filter is active', () => {
+  test('renders all exercise cells when no filter is active', () => {
     const cells = document.querySelectorAll('.exercises-tab__cell');
-    expect(cells).toHaveLength(56);
+    expect(cells).toHaveLength(TOTAL_EXERCISES);
   });
 
   test('renders the search input with placeholder text', () => {
@@ -86,10 +106,10 @@ describe('ExercisesTab — edge cases', () => {
     expect(names).toContain('Dumbbell Bench Press');
   });
 
-  test('Chest chip filters to exactly 10 Chest exercises', () => {
+  test('Chest chip filters to only Chest exercises', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Chest' }));
     const cells = document.querySelectorAll('.exercises-tab__cell');
-    expect(cells).toHaveLength(10);
+    expect(cells).toHaveLength(countByGroup('Chest'));
 
     const metas = Array.from(document.querySelectorAll('.exercises-tab__cell-meta')).map(
       (el) => el.textContent
@@ -97,22 +117,22 @@ describe('ExercisesTab — edge cases', () => {
     metas.forEach((s) => expect(s).toContain('Chest'));
   });
 
-  test('Core chip filters to exactly 8 Core exercises', () => {
+  test('Core chip filters to only Core exercises', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Core' }));
     const cells = document.querySelectorAll('.exercises-tab__cell');
-    expect(cells).toHaveLength(8);
+    expect(cells).toHaveLength(countByGroup('Core'));
   });
 
-  test('clicking "All" after a chip filter resets to 56 cells', () => {
+  test('clicking "All" after a chip filter resets to the full catalog', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Chest' }));
-    expect(document.querySelectorAll('.exercises-tab__cell')).toHaveLength(10);
+    expect(document.querySelectorAll('.exercises-tab__cell')).toHaveLength(countByGroup('Chest'));
 
     const bodyPartGroup = document.querySelector('[aria-label="Filter by body part"]')!;
     const allChip = Array.from(bodyPartGroup.querySelectorAll('.aura-chip')).find(
       (el) => el.textContent === 'All'
     ) as HTMLElement;
     fireEvent.click(allChip);
-    expect(document.querySelectorAll('.exercises-tab__cell')).toHaveLength(56);
+    expect(document.querySelectorAll('.exercises-tab__cell')).toHaveLength(TOTAL_EXERCISES);
   });
 
   test('selected chip class moves to the clicked chip', () => {
@@ -126,10 +146,10 @@ describe('ExercisesTab — edge cases', () => {
     expect(allChip).not.toHaveClass('aura-chip--selected');
   });
 
-  test('Shoulders chip filters to exactly 9 Shoulder exercises', () => {
+  test('Shoulders chip filters to only Shoulder exercises', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Shoulders' }));
     const cells = document.querySelectorAll('.exercises-tab__cell');
-    expect(cells).toHaveLength(9);
+    expect(cells).toHaveLength(countByGroup('Shoulders'));
   });
 });
 
@@ -160,9 +180,9 @@ describe('ExercisesTab — failure/empty states', () => {
     expect(document.querySelector('.exercises-tab__grid')).toBeNull();
   });
 
-  test('whitespace-only search shows all 56 exercises (empty trimmed query)', () => {
+  test('whitespace-only search shows all exercises (empty trimmed query)', () => {
     const input = screen.getByPlaceholderText('Search exercises');
     fireEvent.change(input, { target: { value: '     ' } });
-    expect(document.querySelectorAll('.exercises-tab__cell')).toHaveLength(56);
+    expect(document.querySelectorAll('.exercises-tab__cell')).toHaveLength(TOTAL_EXERCISES);
   });
 });

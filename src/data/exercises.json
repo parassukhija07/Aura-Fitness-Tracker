@@ -1,58 +1,3599 @@
 [
-  { "id": "barbell-bench-press", "name": "Barbell Bench Press", "muscleGroup": "Chest", "equipment": "Barbell", "defaultSets": 3, "defaultRepsMin": 6, "defaultRepsMax": 10 },
-  { "id": "incline-barbell-press", "name": "Incline Barbell Press", "muscleGroup": "Chest", "equipment": "Barbell", "defaultSets": 3, "defaultRepsMin": 6, "defaultRepsMax": 10 },
-  { "id": "dumbbell-bench-press", "name": "Dumbbell Bench Press", "muscleGroup": "Chest", "equipment": "Dumbbell", "defaultSets": 3, "defaultRepsMin": 8, "defaultRepsMax": 12 },
-  { "id": "incline-dumbbell-press", "name": "Incline Dumbbell Press", "muscleGroup": "Chest", "equipment": "Dumbbell", "defaultSets": 3, "defaultRepsMin": 8, "defaultRepsMax": 12 },
-  { "id": "dumbbell-fly", "name": "Dumbbell Fly", "muscleGroup": "Chest", "equipment": "Dumbbell", "defaultSets": 3, "defaultRepsMin": 10, "defaultRepsMax": 15 },
-  { "id": "machine-chest-press", "name": "Machine Chest Press", "muscleGroup": "Chest", "equipment": "Machine", "defaultSets": 3, "defaultRepsMin": 8, "defaultRepsMax": 12 },
-  { "id": "pec-deck-machine", "name": "Pec Deck Machine", "muscleGroup": "Chest", "equipment": "Machine", "defaultSets": 3, "defaultRepsMin": 10, "defaultRepsMax": 15 },
-  { "id": "cable-crossover", "name": "Cable Crossover", "muscleGroup": "Chest", "equipment": "Cable", "defaultSets": 3, "defaultRepsMin": 10, "defaultRepsMax": 15 },
-  { "id": "cable-fly", "name": "Cable Fly", "muscleGroup": "Chest", "equipment": "Cable", "defaultSets": 3, "defaultRepsMin": 10, "defaultRepsMax": 15 },
-  { "id": "push-up", "name": "Push-Up", "muscleGroup": "Chest", "equipment": "Bodyweight", "defaultSets": 3, "defaultRepsMin": 10, "defaultRepsMax": 20 },
-  { "id": "deadlift", "name": "Deadlift", "muscleGroup": "Back", "equipment": "Barbell", "defaultSets": 3, "defaultRepsMin": 3, "defaultRepsMax": 6 },
-  { "id": "barbell-bent-over-row", "name": "Barbell Bent-Over Row", "muscleGroup": "Back", "equipment": "Barbell", "defaultSets": 3, "defaultRepsMin": 6, "defaultRepsMax": 10 },
-  { "id": "pendlay-row", "name": "Pendlay Row", "muscleGroup": "Back", "equipment": "Barbell", "defaultSets": 3, "defaultRepsMin": 5, "defaultRepsMax": 8 },
-  { "id": "dumbbell-row", "name": "Dumbbell Row", "muscleGroup": "Back", "equipment": "Dumbbell", "defaultSets": 3, "defaultRepsMin": 8, "defaultRepsMax": 12 },
-  { "id": "lat-pulldown", "name": "Lat Pulldown", "muscleGroup": "Back", "equipment": "Cable", "defaultSets": 3, "defaultRepsMin": 8, "defaultRepsMax": 12 },
-  { "id": "seated-cable-row", "name": "Seated Cable Row", "muscleGroup": "Back", "equipment": "Cable", "defaultSets": 3, "defaultRepsMin": 8, "defaultRepsMax": 12 },
-  { "id": "straight-arm-pulldown", "name": "Straight-Arm Pulldown", "muscleGroup": "Back", "equipment": "Cable", "defaultSets": 3, "defaultRepsMin": 10, "defaultRepsMax": 15 },
-  { "id": "machine-row", "name": "Machine Row", "muscleGroup": "Back", "equipment": "Machine", "defaultSets": 3, "defaultRepsMin": 8, "defaultRepsMax": 12 },
-  { "id": "pull-up", "name": "Pull-Up", "muscleGroup": "Back", "equipment": "Bodyweight", "defaultSets": 3, "defaultRepsMin": 6, "defaultRepsMax": 12 },
-  { "id": "chin-up", "name": "Chin-Up", "muscleGroup": "Back", "equipment": "Bodyweight", "defaultSets": 3, "defaultRepsMin": 6, "defaultRepsMax": 12 },
-  { "id": "barbell-back-squat", "name": "Barbell Back Squat", "muscleGroup": "Legs", "equipment": "Barbell", "defaultSets": 3, "defaultRepsMin": 5, "defaultRepsMax": 8 },
-  { "id": "barbell-front-squat", "name": "Barbell Front Squat", "muscleGroup": "Legs", "equipment": "Barbell", "defaultSets": 3, "defaultRepsMin": 6, "defaultRepsMax": 10 },
-  { "id": "romanian-deadlift", "name": "Romanian Deadlift", "muscleGroup": "Legs", "equipment": "Barbell", "defaultSets": 3, "defaultRepsMin": 8, "defaultRepsMax": 12 },
-  { "id": "goblet-squat", "name": "Goblet Squat", "muscleGroup": "Legs", "equipment": "Dumbbell", "defaultSets": 3, "defaultRepsMin": 10, "defaultRepsMax": 15 },
-  { "id": "dumbbell-lunge", "name": "Dumbbell Lunge", "muscleGroup": "Legs", "equipment": "Dumbbell", "defaultSets": 3, "defaultRepsMin": 10, "defaultRepsMax": 12 },
-  { "id": "leg-press", "name": "Leg Press", "muscleGroup": "Legs", "equipment": "Machine", "defaultSets": 3, "defaultRepsMin": 10, "defaultRepsMax": 15 },
-  { "id": "leg-extension", "name": "Leg Extension", "muscleGroup": "Legs", "equipment": "Machine", "defaultSets": 3, "defaultRepsMin": 12, "defaultRepsMax": 15 },
-  { "id": "lying-leg-curl", "name": "Lying Leg Curl", "muscleGroup": "Legs", "equipment": "Machine", "defaultSets": 3, "defaultRepsMin": 10, "defaultRepsMax": 15 },
-  { "id": "cable-pull-through", "name": "Cable Pull-Through", "muscleGroup": "Legs", "equipment": "Cable", "defaultSets": 3, "defaultRepsMin": 12, "defaultRepsMax": 15 },
-  { "id": "bodyweight-squat", "name": "Bodyweight Squat", "muscleGroup": "Legs", "equipment": "Bodyweight", "defaultSets": 3, "defaultRepsMin": 15, "defaultRepsMax": 25 },
-  { "id": "overhead-press", "name": "Overhead Press", "muscleGroup": "Shoulders", "equipment": "Barbell", "defaultSets": 3, "defaultRepsMin": 8, "defaultRepsMax": 12 },
-  { "id": "barbell-upright-row", "name": "Barbell Upright Row", "muscleGroup": "Shoulders", "equipment": "Barbell", "defaultSets": 3, "defaultRepsMin": 8, "defaultRepsMax": 12 },
-  { "id": "dumbbell-shoulder-press", "name": "Dumbbell Shoulder Press", "muscleGroup": "Shoulders", "equipment": "Dumbbell", "defaultSets": 3, "defaultRepsMin": 8, "defaultRepsMax": 12 },
-  { "id": "dumbbell-lateral-raise", "name": "Dumbbell Lateral Raise", "muscleGroup": "Shoulders", "equipment": "Dumbbell", "defaultSets": 3, "defaultRepsMin": 12, "defaultRepsMax": 15 },
-  { "id": "dumbbell-front-raise", "name": "Dumbbell Front Raise", "muscleGroup": "Shoulders", "equipment": "Dumbbell", "defaultSets": 3, "defaultRepsMin": 12, "defaultRepsMax": 15 },
-  { "id": "machine-shoulder-press", "name": "Machine Shoulder Press", "muscleGroup": "Shoulders", "equipment": "Machine", "defaultSets": 3, "defaultRepsMin": 8, "defaultRepsMax": 12 },
-  { "id": "reverse-pec-deck", "name": "Reverse Pec Deck", "muscleGroup": "Shoulders", "equipment": "Machine", "defaultSets": 3, "defaultRepsMin": 12, "defaultRepsMax": 15 },
-  { "id": "cable-lateral-raise", "name": "Cable Lateral Raise", "muscleGroup": "Shoulders", "equipment": "Cable", "defaultSets": 3, "defaultRepsMin": 12, "defaultRepsMax": 15 },
-  { "id": "cable-face-pull", "name": "Cable Face Pull", "muscleGroup": "Shoulders", "equipment": "Cable", "defaultSets": 3, "defaultRepsMin": 12, "defaultRepsMax": 20 },
-  { "id": "barbell-curl", "name": "Barbell Curl", "muscleGroup": "Arms", "equipment": "Barbell", "defaultSets": 3, "defaultRepsMin": 8, "defaultRepsMax": 12 },
-  { "id": "close-grip-bench-press", "name": "Close-Grip Bench Press", "muscleGroup": "Arms", "equipment": "Barbell", "defaultSets": 3, "defaultRepsMin": 6, "defaultRepsMax": 10 },
-  { "id": "dumbbell-bicep-curl", "name": "Dumbbell Bicep Curl", "muscleGroup": "Arms", "equipment": "Dumbbell", "defaultSets": 3, "defaultRepsMin": 10, "defaultRepsMax": 15 },
-  { "id": "dumbbell-hammer-curl", "name": "Dumbbell Hammer Curl", "muscleGroup": "Arms", "equipment": "Dumbbell", "defaultSets": 3, "defaultRepsMin": 10, "defaultRepsMax": 15 },
-  { "id": "dumbbell-tricep-extension", "name": "Dumbbell Tricep Extension", "muscleGroup": "Arms", "equipment": "Dumbbell", "defaultSets": 3, "defaultRepsMin": 10, "defaultRepsMax": 15 },
-  { "id": "cable-tricep-pushdown", "name": "Cable Tricep Pushdown", "muscleGroup": "Arms", "equipment": "Cable", "defaultSets": 3, "defaultRepsMin": 10, "defaultRepsMax": 15 },
-  { "id": "cable-bicep-curl", "name": "Cable Bicep Curl", "muscleGroup": "Arms", "equipment": "Cable", "defaultSets": 3, "defaultRepsMin": 10, "defaultRepsMax": 15 },
-  { "id": "machine-preacher-curl", "name": "Machine Preacher Curl", "muscleGroup": "Arms", "equipment": "Machine", "defaultSets": 3, "defaultRepsMin": 10, "defaultRepsMax": 15 },
-  { "id": "tricep-dip", "name": "Tricep Dip", "muscleGroup": "Arms", "equipment": "Bodyweight", "defaultSets": 3, "defaultRepsMin": 8, "defaultRepsMax": 15 },
-  { "id": "cable-crunch", "name": "Cable Crunch", "muscleGroup": "Core", "equipment": "Cable", "defaultSets": 3, "defaultRepsMin": 12, "defaultRepsMax": 20 },
-  { "id": "cable-woodchopper", "name": "Cable Woodchopper", "muscleGroup": "Core", "equipment": "Cable", "defaultSets": 3, "defaultRepsMin": 12, "defaultRepsMax": 15 },
-  { "id": "machine-ab-crunch", "name": "Machine Ab Crunch", "muscleGroup": "Core", "equipment": "Machine", "defaultSets": 3, "defaultRepsMin": 12, "defaultRepsMax": 20 },
-  { "id": "weighted-decline-sit-up", "name": "Weighted Decline Sit-Up", "muscleGroup": "Core", "equipment": "Dumbbell", "defaultSets": 3, "defaultRepsMin": 12, "defaultRepsMax": 20 },
-  { "id": "barbell-rollout", "name": "Barbell Rollout", "muscleGroup": "Core", "equipment": "Barbell", "defaultSets": 3, "defaultRepsMin": 8, "defaultRepsMax": 12 },
-  { "id": "plank", "name": "Plank", "muscleGroup": "Core", "equipment": "Bodyweight", "defaultSets": 3, "defaultRepsMin": 30, "defaultRepsMax": 60 },
-  { "id": "hanging-leg-raise", "name": "Hanging Leg Raise", "muscleGroup": "Core", "equipment": "Bodyweight", "defaultSets": 3, "defaultRepsMin": 10, "defaultRepsMax": 20 },
-  { "id": "russian-twist", "name": "Russian Twist", "muscleGroup": "Core", "equipment": "Dumbbell", "defaultSets": 3, "defaultRepsMin": 15, "defaultRepsMax": 25 }
+  {
+    "id": "barbell-bench-press",
+    "name": "Barbell Bench Press",
+    "muscleGroup": "Chest",
+    "equipment": "Barbell",
+    "defaultSets": 3,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Chest",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Pectoralis Major",
+      "Triceps Brachii",
+      "Anterior Deltoid"
+    ],
+    "proTips": [
+      "Keep your feet flat on the floor.",
+      "Retract your scapula and lock your shoulders back.",
+      "Control the descent to your mid-chest."
+    ],
+    "videoUrl": "https://www.youtube.com/watch?v=rT7DgCrMOhE",
+    "imageUrl": "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b",
+    "warmupType": "Full Progressive Protocol"
+  },
+  {
+    "id": "incline-barbell-press",
+    "name": "Incline Barbell Press",
+    "muscleGroup": "Chest",
+    "equipment": "Barbell",
+    "defaultSets": 3,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10
+  },
+  {
+    "id": "dumbbell-bench-press",
+    "name": "Dumbbell Bench Press",
+    "muscleGroup": "Chest",
+    "equipment": "Dumbbell",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12
+  },
+  {
+    "id": "incline-dumbbell-press",
+    "name": "Incline Dumbbell Press",
+    "muscleGroup": "Chest",
+    "equipment": "Dumbbell",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Advanced",
+    "category": "Chest",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Upper Pectoralis Major",
+      "Anterior Deltoid",
+      "Triceps Brachii"
+    ],
+    "proTips": [
+      "Set the incline angle to 30 degrees to minimize anterior deltoid dominance.",
+      "Press up and slightly inward without clanking the weights."
+    ],
+    "videoUrl": "https://www.youtube.com/watch?v=8iPjxAfa824",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "2-Set Standard Protocol"
+  },
+  {
+    "id": "dumbbell-fly",
+    "name": "Dumbbell Fly",
+    "muscleGroup": "Chest",
+    "equipment": "Dumbbell",
+    "defaultSets": 3,
+    "defaultRepsMin": 10,
+    "defaultRepsMax": 15
+  },
+  {
+    "id": "machine-chest-press",
+    "name": "Machine Chest Press",
+    "muscleGroup": "Chest",
+    "equipment": "Machine",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12
+  },
+  {
+    "id": "pec-deck-machine",
+    "name": "Pec Deck Machine",
+    "muscleGroup": "Chest",
+    "equipment": "Machine",
+    "defaultSets": 3,
+    "defaultRepsMin": 10,
+    "defaultRepsMax": 15
+  },
+  {
+    "id": "cable-crossover",
+    "name": "Cable Crossover",
+    "muscleGroup": "Chest",
+    "equipment": "Cable",
+    "defaultSets": 3,
+    "defaultRepsMin": 10,
+    "defaultRepsMax": 15,
+    "difficulty": "Intermediate",
+    "category": "Chest",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Sternal Pectoralis Major",
+      "Serratus Anterior"
+    ],
+    "proTips": [
+      "Maintain a slight bend in your elbows throughout.",
+      "Squeeze the handles together at the peak contraction like hugging a tree."
+    ],
+    "videoUrl": "https://www.youtube.com/watch?v=W796-0Xf4pU",
+    "imageUrl": "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5",
+    "warmupType": "1-Set Direct Protocol"
+  },
+  {
+    "id": "cable-fly",
+    "name": "Cable Fly",
+    "muscleGroup": "Chest",
+    "equipment": "Cable",
+    "defaultSets": 3,
+    "defaultRepsMin": 10,
+    "defaultRepsMax": 15
+  },
+  {
+    "id": "push-up",
+    "name": "Push-Up",
+    "muscleGroup": "Chest",
+    "equipment": "Bodyweight",
+    "defaultSets": 3,
+    "defaultRepsMin": 10,
+    "defaultRepsMax": 20
+  },
+  {
+    "id": "deadlift",
+    "name": "Deadlift",
+    "muscleGroup": "Back",
+    "equipment": "Barbell",
+    "defaultSets": 3,
+    "defaultRepsMin": 3,
+    "defaultRepsMax": 6,
+    "difficulty": "Advanced",
+    "category": "Back",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Latissimus Dorsi",
+      "Erector Spinae",
+      "Gluteus Maximus",
+      "Hamstrings"
+    ],
+    "proTips": [
+      "Keep the bar scraping your shins.",
+      "Brace your core using the Valsalva maneuver.",
+      "Drive through the floor with your heels."
+    ],
+    "videoUrl": "https://www.youtube.com/watch?v=op9kVnSso6Q",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Full Progressive Protocol"
+  },
+  {
+    "id": "barbell-bent-over-row",
+    "name": "Barbell Bent-Over Row",
+    "muscleGroup": "Back",
+    "equipment": "Barbell",
+    "defaultSets": 3,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10
+  },
+  {
+    "id": "pendlay-row",
+    "name": "Pendlay Row",
+    "muscleGroup": "Back",
+    "equipment": "Barbell",
+    "defaultSets": 3,
+    "defaultRepsMin": 5,
+    "defaultRepsMax": 8
+  },
+  {
+    "id": "dumbbell-row",
+    "name": "Dumbbell Row",
+    "muscleGroup": "Back",
+    "equipment": "Dumbbell",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12
+  },
+  {
+    "id": "lat-pulldown",
+    "name": "Lat Pulldown",
+    "muscleGroup": "Back",
+    "equipment": "Cable",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Back",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Latissimus Dorsi",
+      "Teres Major",
+      "Biceps Brachii"
+    ],
+    "proTips": [
+      "Pull down to your upper chest.",
+      "Drive down with your elbows, not your hands.",
+      "Avoid leaning back excessively."
+    ],
+    "videoUrl": "https://www.youtube.com/watch?v=CAwf7n6Luuc",
+    "imageUrl": "https://images.unsplash.com/photo-1605296867304-46d5465a25f1",
+    "warmupType": "2-Set Standard Protocol"
+  },
+  {
+    "id": "seated-cable-row",
+    "name": "Seated Cable Row",
+    "muscleGroup": "Back",
+    "equipment": "Cable",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12
+  },
+  {
+    "id": "straight-arm-pulldown",
+    "name": "Straight-Arm Pulldown",
+    "muscleGroup": "Back",
+    "equipment": "Cable",
+    "defaultSets": 3,
+    "defaultRepsMin": 10,
+    "defaultRepsMax": 15
+  },
+  {
+    "id": "machine-row",
+    "name": "Machine Row",
+    "muscleGroup": "Back",
+    "equipment": "Machine",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12
+  },
+  {
+    "id": "pull-up",
+    "name": "Pull-Up",
+    "muscleGroup": "Back",
+    "equipment": "Bodyweight",
+    "defaultSets": 3,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 12
+  },
+  {
+    "id": "chin-up",
+    "name": "Chin-Up",
+    "muscleGroup": "Back",
+    "equipment": "Bodyweight",
+    "defaultSets": 3,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 12
+  },
+  {
+    "id": "barbell-back-squat",
+    "name": "Barbell Back Squat",
+    "muscleGroup": "Legs",
+    "equipment": "Barbell",
+    "defaultSets": 3,
+    "defaultRepsMin": 5,
+    "defaultRepsMax": 8,
+    "difficulty": "Advanced",
+    "category": "Legs",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Quadriceps",
+      "Gluteus Maximus",
+      "Hamstrings",
+      "Core"
+    ],
+    "proTips": [
+      "Break at hips and knees simultaneously.",
+      "Keep knees tracking over toes.",
+      "Maintain a neutral spine under load."
+    ],
+    "videoUrl": "https://www.youtube.com/watch?v=MVMNk0HiTMc",
+    "imageUrl": "https://images.unsplash.com/photo-1574680096145-d05b474e2155",
+    "warmupType": "Full Progressive Protocol"
+  },
+  {
+    "id": "barbell-front-squat",
+    "name": "Barbell Front Squat",
+    "muscleGroup": "Legs",
+    "equipment": "Barbell",
+    "defaultSets": 3,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10
+  },
+  {
+    "id": "romanian-deadlift",
+    "name": "Romanian Deadlift",
+    "muscleGroup": "Legs",
+    "equipment": "Barbell",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12
+  },
+  {
+    "id": "goblet-squat",
+    "name": "Goblet Squat",
+    "muscleGroup": "Legs",
+    "equipment": "Dumbbell",
+    "defaultSets": 3,
+    "defaultRepsMin": 10,
+    "defaultRepsMax": 15
+  },
+  {
+    "id": "dumbbell-lunge",
+    "name": "Dumbbell Lunge",
+    "muscleGroup": "Legs",
+    "equipment": "Dumbbell",
+    "defaultSets": 3,
+    "defaultRepsMin": 10,
+    "defaultRepsMax": 12
+  },
+  {
+    "id": "leg-press",
+    "name": "Leg Press",
+    "muscleGroup": "Legs",
+    "equipment": "Machine",
+    "defaultSets": 3,
+    "defaultRepsMin": 10,
+    "defaultRepsMax": 15
+  },
+  {
+    "id": "leg-extension",
+    "name": "Leg Extension",
+    "muscleGroup": "Legs",
+    "equipment": "Machine",
+    "defaultSets": 3,
+    "defaultRepsMin": 12,
+    "defaultRepsMax": 15
+  },
+  {
+    "id": "lying-leg-curl",
+    "name": "Lying Leg Curl",
+    "muscleGroup": "Legs",
+    "equipment": "Machine",
+    "defaultSets": 3,
+    "defaultRepsMin": 10,
+    "defaultRepsMax": 15
+  },
+  {
+    "id": "cable-pull-through",
+    "name": "Cable Pull-Through",
+    "muscleGroup": "Legs",
+    "equipment": "Cable",
+    "defaultSets": 3,
+    "defaultRepsMin": 12,
+    "defaultRepsMax": 15
+  },
+  {
+    "id": "bodyweight-squat",
+    "name": "Bodyweight Squat",
+    "muscleGroup": "Legs",
+    "equipment": "Bodyweight",
+    "defaultSets": 3,
+    "defaultRepsMin": 15,
+    "defaultRepsMax": 25
+  },
+  {
+    "id": "overhead-press",
+    "name": "Overhead Press",
+    "muscleGroup": "Shoulders",
+    "equipment": "Barbell",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12
+  },
+  {
+    "id": "barbell-upright-row",
+    "name": "Barbell Upright Row",
+    "muscleGroup": "Shoulders",
+    "equipment": "Barbell",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12
+  },
+  {
+    "id": "dumbbell-shoulder-press",
+    "name": "Dumbbell Shoulder Press",
+    "muscleGroup": "Shoulders",
+    "equipment": "Dumbbell",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Advanced",
+    "category": "Shoulders",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Anterior Deltoid",
+      "Lateral Deltoid",
+      "Triceps Brachii"
+    ],
+    "proTips": [
+      "Do not flare elbows out fully; keep them in the scapular plane.",
+      "Press all the way to lockout without hyperextending lower back."
+    ],
+    "videoUrl": "https://www.youtube.com/watch?v=qEwKCR5JCog",
+    "imageUrl": "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5",
+    "warmupType": "2-Set Standard Protocol"
+  },
+  {
+    "id": "dumbbell-lateral-raise",
+    "name": "Dumbbell Lateral Raise",
+    "muscleGroup": "Shoulders",
+    "equipment": "Dumbbell",
+    "defaultSets": 3,
+    "defaultRepsMin": 12,
+    "defaultRepsMax": 15
+  },
+  {
+    "id": "dumbbell-front-raise",
+    "name": "Dumbbell Front Raise",
+    "muscleGroup": "Shoulders",
+    "equipment": "Dumbbell",
+    "defaultSets": 3,
+    "defaultRepsMin": 12,
+    "defaultRepsMax": 15
+  },
+  {
+    "id": "machine-shoulder-press",
+    "name": "Machine Shoulder Press",
+    "muscleGroup": "Shoulders",
+    "equipment": "Machine",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12
+  },
+  {
+    "id": "reverse-pec-deck",
+    "name": "Reverse Pec Deck",
+    "muscleGroup": "Shoulders",
+    "equipment": "Machine",
+    "defaultSets": 3,
+    "defaultRepsMin": 12,
+    "defaultRepsMax": 15
+  },
+  {
+    "id": "cable-lateral-raise",
+    "name": "Cable Lateral Raise",
+    "muscleGroup": "Shoulders",
+    "equipment": "Cable",
+    "defaultSets": 3,
+    "defaultRepsMin": 12,
+    "defaultRepsMax": 15
+  },
+  {
+    "id": "cable-face-pull",
+    "name": "Cable Face Pull",
+    "muscleGroup": "Shoulders",
+    "equipment": "Cable",
+    "defaultSets": 3,
+    "defaultRepsMin": 12,
+    "defaultRepsMax": 20
+  },
+  {
+    "id": "barbell-curl",
+    "name": "Barbell Curl",
+    "muscleGroup": "Arms",
+    "equipment": "Barbell",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12
+  },
+  {
+    "id": "close-grip-bench-press",
+    "name": "Close-Grip Bench Press",
+    "muscleGroup": "Arms",
+    "equipment": "Barbell",
+    "defaultSets": 3,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10
+  },
+  {
+    "id": "dumbbell-bicep-curl",
+    "name": "Dumbbell Bicep Curl",
+    "muscleGroup": "Arms",
+    "equipment": "Dumbbell",
+    "defaultSets": 3,
+    "defaultRepsMin": 10,
+    "defaultRepsMax": 15,
+    "difficulty": "Advanced",
+    "category": "Arms",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Biceps Brachii",
+      "Brachialis",
+      "Brachioradialis"
+    ],
+    "proTips": [
+      "Keep elbows pinned to your sides.",
+      "Supinate your wrists at the top of the movement for maximum peak contraction."
+    ],
+    "videoUrl": "https://www.youtube.com/watch?v=ykJmrZ5v0oo",
+    "imageUrl": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e",
+    "warmupType": "1-Set Direct Protocol"
+  },
+  {
+    "id": "dumbbell-hammer-curl",
+    "name": "Dumbbell Hammer Curl",
+    "muscleGroup": "Arms",
+    "equipment": "Dumbbell",
+    "defaultSets": 3,
+    "defaultRepsMin": 10,
+    "defaultRepsMax": 15
+  },
+  {
+    "id": "dumbbell-tricep-extension",
+    "name": "Dumbbell Tricep Extension",
+    "muscleGroup": "Arms",
+    "equipment": "Dumbbell",
+    "defaultSets": 3,
+    "defaultRepsMin": 10,
+    "defaultRepsMax": 15
+  },
+  {
+    "id": "cable-tricep-pushdown",
+    "name": "Cable Tricep Pushdown",
+    "muscleGroup": "Arms",
+    "equipment": "Cable",
+    "defaultSets": 3,
+    "defaultRepsMin": 10,
+    "defaultRepsMax": 15
+  },
+  {
+    "id": "cable-bicep-curl",
+    "name": "Cable Bicep Curl",
+    "muscleGroup": "Arms",
+    "equipment": "Cable",
+    "defaultSets": 3,
+    "defaultRepsMin": 10,
+    "defaultRepsMax": 15
+  },
+  {
+    "id": "machine-preacher-curl",
+    "name": "Machine Preacher Curl",
+    "muscleGroup": "Arms",
+    "equipment": "Machine",
+    "defaultSets": 3,
+    "defaultRepsMin": 10,
+    "defaultRepsMax": 15
+  },
+  {
+    "id": "tricep-dip",
+    "name": "Tricep Dip",
+    "muscleGroup": "Arms",
+    "equipment": "Bodyweight",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 15
+  },
+  {
+    "id": "cable-crunch",
+    "name": "Cable Crunch",
+    "muscleGroup": "Core",
+    "equipment": "Cable",
+    "defaultSets": 3,
+    "defaultRepsMin": 12,
+    "defaultRepsMax": 20
+  },
+  {
+    "id": "cable-woodchopper",
+    "name": "Cable Woodchopper",
+    "muscleGroup": "Core",
+    "equipment": "Cable",
+    "defaultSets": 3,
+    "defaultRepsMin": 12,
+    "defaultRepsMax": 15
+  },
+  {
+    "id": "machine-ab-crunch",
+    "name": "Machine Ab Crunch",
+    "muscleGroup": "Core",
+    "equipment": "Machine",
+    "defaultSets": 3,
+    "defaultRepsMin": 12,
+    "defaultRepsMax": 20
+  },
+  {
+    "id": "weighted-decline-sit-up",
+    "name": "Weighted Decline Sit-Up",
+    "muscleGroup": "Core",
+    "equipment": "Dumbbell",
+    "defaultSets": 3,
+    "defaultRepsMin": 12,
+    "defaultRepsMax": 20
+  },
+  {
+    "id": "barbell-rollout",
+    "name": "Barbell Rollout",
+    "muscleGroup": "Core",
+    "equipment": "Barbell",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12
+  },
+  {
+    "id": "plank",
+    "name": "Plank",
+    "muscleGroup": "Core",
+    "equipment": "Bodyweight",
+    "defaultSets": 3,
+    "defaultRepsMin": 30,
+    "defaultRepsMax": 60
+  },
+  {
+    "id": "hanging-leg-raise",
+    "name": "Hanging Leg Raise",
+    "muscleGroup": "Core",
+    "equipment": "Bodyweight",
+    "defaultSets": 3,
+    "defaultRepsMin": 10,
+    "defaultRepsMax": 20
+  },
+  {
+    "id": "russian-twist",
+    "name": "Russian Twist",
+    "muscleGroup": "Core",
+    "equipment": "Dumbbell",
+    "defaultSets": 3,
+    "defaultRepsMin": 15,
+    "defaultRepsMax": 25
+  },
+  {
+    "id": "hanging-knee-raise",
+    "name": "Hanging Knee Raise",
+    "muscleGroup": "Core",
+    "equipment": "Bodyweight",
+    "defaultSets": 3,
+    "defaultRepsMin": 12,
+    "defaultRepsMax": 20,
+    "difficulty": "Beginner",
+    "category": "Core",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Rectus Abdominis",
+      "Iliopsoas"
+    ],
+    "proTips": [
+      "Avoid swinging your torso.",
+      "Initiate the movement by tilting the pelvis upward, not just lifting thighs."
+    ],
+    "videoUrl": "https://www.youtube.com/watch?v=rMvS_N1gXqU",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "No Warmup Required"
+  },
+  {
+    "id": "arm-circles",
+    "name": "Arm Circles",
+    "muscleGroup": "Core",
+    "equipment": "Bodyweight",
+    "defaultSets": 1,
+    "defaultRepsMin": 10,
+    "defaultRepsMax": 15,
+    "difficulty": "Beginner",
+    "category": "Warm-up",
+    "type": "Warm Up",
+    "musclesTargeted": [
+      "Rotator Cuff",
+      "Deltoids"
+    ],
+    "proTips": [
+      "Start with small circles, gradually increasing radius.",
+      "Keep torso fixed to ensure motion stays isolation within shoulders."
+    ],
+    "videoUrl": "https://www.youtube.com/watch?v=140OCTGy994",
+    "imageUrl": "https://images.unsplash.com/photo-1605296867304-46d5465a25f1",
+    "warmupType": "Activation Movement"
+  },
+  {
+    "id": "world-s-greatest-stretch",
+    "name": "World's Greatest Stretch",
+    "muscleGroup": "Core",
+    "equipment": "Bodyweight",
+    "defaultSets": 1,
+    "defaultRepsMin": 10,
+    "defaultRepsMax": 15,
+    "difficulty": "Beginner",
+    "category": "Warm-up",
+    "type": "Warm Up",
+    "musclesTargeted": [
+      "Hip Flexors",
+      "Thoracic Spine",
+      "Hamstrings"
+    ],
+    "proTips": [
+      "Rotate through the upper back, keeping your base hip locked straight.",
+      "Exhale deeply as you reach upward."
+    ],
+    "videoUrl": "https://www.youtube.com/watch?v=-CiDwNInZcw",
+    "imageUrl": "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5",
+    "warmupType": "Mobility Sequence"
+  },
+  {
+    "id": "barbell-incline-variant-11",
+    "name": "Barbell Incline Variant 11",
+    "muscleGroup": "Chest",
+    "equipment": "Barbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Chest",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Upper Pectoralis Major",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Upper Pectoralis Major.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Barbell+Incline+Variant+11",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "barbell-flat-variant-12",
+    "name": "Barbell Flat Variant 12",
+    "muscleGroup": "Chest",
+    "equipment": "Barbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Chest",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Sternal Pectoralis Major",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Sternal Pectoralis Major.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Barbell+Flat+Variant+12",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "barbell-decline-variant-13",
+    "name": "Barbell Decline Variant 13",
+    "muscleGroup": "Chest",
+    "equipment": "Barbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Chest",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Lower Pectoralis Major",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Lower Pectoralis Major.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Barbell+Decline+Variant+13",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "barbell-flye-variant-14",
+    "name": "Barbell Flye Variant 14",
+    "muscleGroup": "Chest",
+    "equipment": "Barbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Chest",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Pectoralis Minor",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Pectoralis Minor.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Barbell+Flye+Variant+14",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "barbell-rows-variant-15",
+    "name": "Barbell Rows Variant 15",
+    "muscleGroup": "Back",
+    "equipment": "Barbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Back",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Latissimus Dorsi",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Latissimus Dorsi.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Barbell+Rows+Variant+15",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "barbell-pulldowns-variant-16",
+    "name": "Barbell Pulldowns Variant 16",
+    "muscleGroup": "Back",
+    "equipment": "Barbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Back",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Teres Major",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Teres Major.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Barbell+Pulldowns+Variant+16",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "barbell-extensions-variant-17",
+    "name": "Barbell Extensions Variant 17",
+    "muscleGroup": "Back",
+    "equipment": "Barbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Back",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Erector Spinae",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Erector Spinae.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Barbell+Extensions+Variant+17",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "barbell-shrugs-variant-18",
+    "name": "Barbell Shrugs Variant 18",
+    "muscleGroup": "Back",
+    "equipment": "Barbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Back",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Trapezius",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Trapezius.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Barbell+Shrugs+Variant+18",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "barbell-press-variant-19",
+    "name": "Barbell Press Variant 19",
+    "muscleGroup": "Legs",
+    "equipment": "Barbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Legs",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Quadriceps",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Quadriceps.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Barbell+Press+Variant+19",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "barbell-deadlifts-variant-20",
+    "name": "Barbell Deadlifts Variant 20",
+    "muscleGroup": "Legs",
+    "equipment": "Barbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Legs",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Hamstrings",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Hamstrings.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Barbell+Deadlifts+Variant+20",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "barbell-squats-variant-21",
+    "name": "Barbell Squats Variant 21",
+    "muscleGroup": "Legs",
+    "equipment": "Barbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Legs",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Gluteus Maximus",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Gluteus Maximus.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Barbell+Squats+Variant+21",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "barbell-raises-variant-22",
+    "name": "Barbell Raises Variant 22",
+    "muscleGroup": "Legs",
+    "equipment": "Barbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Legs",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Gastrocnemius",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Gastrocnemius.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Barbell+Raises+Variant+22",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "barbell-press-variant-23",
+    "name": "Barbell Press Variant 23",
+    "muscleGroup": "Shoulders",
+    "equipment": "Barbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Shoulders",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Anterior Deltoid",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Anterior Deltoid.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Barbell+Press+Variant+23",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "barbell-lateral-raise-variant-24",
+    "name": "Barbell Lateral Raise Variant 24",
+    "muscleGroup": "Shoulders",
+    "equipment": "Barbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Shoulders",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Lateral Deltoid",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Lateral Deltoid.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Barbell+Lateral+Raise+Variant+24",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "barbell-rear-flye-variant-25",
+    "name": "Barbell Rear Flye Variant 25",
+    "muscleGroup": "Shoulders",
+    "equipment": "Barbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Shoulders",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Posterior Deltoid",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Posterior Deltoid.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Barbell+Rear+Flye+Variant+25",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "barbell-curls-variant-26",
+    "name": "Barbell Curls Variant 26",
+    "muscleGroup": "Arms",
+    "equipment": "Barbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Arms",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Biceps Brachii",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Biceps Brachii.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Barbell+Curls+Variant+26",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "barbell-extensions-variant-27",
+    "name": "Barbell Extensions Variant 27",
+    "muscleGroup": "Arms",
+    "equipment": "Barbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Arms",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Triceps Brachii",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Triceps Brachii.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Barbell+Extensions+Variant+27",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "barbell-hammer-curls-variant-28",
+    "name": "Barbell Hammer Curls Variant 28",
+    "muscleGroup": "Arms",
+    "equipment": "Barbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Arms",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Brachioradialis",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Brachioradialis.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Barbell+Hammer+Curls+Variant+28",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "barbell-crunches-variant-29",
+    "name": "Barbell Crunches Variant 29",
+    "muscleGroup": "Core",
+    "equipment": "Barbell",
+    "defaultSets": 3,
+    "defaultRepsMin": 12,
+    "defaultRepsMax": 20,
+    "difficulty": "Beginner",
+    "category": "Core",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Rectus Abdominis",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Rectus Abdominis.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Barbell+Crunches+Variant+29",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "barbell-twists-variant-30",
+    "name": "Barbell Twists Variant 30",
+    "muscleGroup": "Core",
+    "equipment": "Barbell",
+    "defaultSets": 3,
+    "defaultRepsMin": 12,
+    "defaultRepsMax": 20,
+    "difficulty": "Beginner",
+    "category": "Core",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Obliques",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Obliques.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Barbell+Twists+Variant+30",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "barbell-planks-variant-31",
+    "name": "Barbell Planks Variant 31",
+    "muscleGroup": "Core",
+    "equipment": "Barbell",
+    "defaultSets": 3,
+    "defaultRepsMin": 12,
+    "defaultRepsMax": 20,
+    "difficulty": "Beginner",
+    "category": "Core",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Transverse Abdominis",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Transverse Abdominis.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Barbell+Planks+Variant+31",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "dumbbell-incline-variant-32",
+    "name": "Dumbbell Incline Variant 32",
+    "muscleGroup": "Chest",
+    "equipment": "Dumbbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Chest",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Upper Pectoralis Major",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Upper Pectoralis Major.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Dumbbell+Incline+Variant+32",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "dumbbell-flat-variant-33",
+    "name": "Dumbbell Flat Variant 33",
+    "muscleGroup": "Chest",
+    "equipment": "Dumbbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Chest",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Sternal Pectoralis Major",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Sternal Pectoralis Major.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Dumbbell+Flat+Variant+33",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "dumbbell-decline-variant-34",
+    "name": "Dumbbell Decline Variant 34",
+    "muscleGroup": "Chest",
+    "equipment": "Dumbbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Chest",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Lower Pectoralis Major",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Lower Pectoralis Major.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Dumbbell+Decline+Variant+34",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "dumbbell-flye-variant-35",
+    "name": "Dumbbell Flye Variant 35",
+    "muscleGroup": "Chest",
+    "equipment": "Dumbbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Chest",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Pectoralis Minor",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Pectoralis Minor.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Dumbbell+Flye+Variant+35",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "dumbbell-rows-variant-36",
+    "name": "Dumbbell Rows Variant 36",
+    "muscleGroup": "Back",
+    "equipment": "Dumbbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Back",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Latissimus Dorsi",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Latissimus Dorsi.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Dumbbell+Rows+Variant+36",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "dumbbell-pulldowns-variant-37",
+    "name": "Dumbbell Pulldowns Variant 37",
+    "muscleGroup": "Back",
+    "equipment": "Dumbbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Back",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Teres Major",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Teres Major.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Dumbbell+Pulldowns+Variant+37",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "dumbbell-extensions-variant-38",
+    "name": "Dumbbell Extensions Variant 38",
+    "muscleGroup": "Back",
+    "equipment": "Dumbbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Back",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Erector Spinae",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Erector Spinae.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Dumbbell+Extensions+Variant+38",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "dumbbell-shrugs-variant-39",
+    "name": "Dumbbell Shrugs Variant 39",
+    "muscleGroup": "Back",
+    "equipment": "Dumbbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Back",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Trapezius",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Trapezius.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Dumbbell+Shrugs+Variant+39",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "dumbbell-press-variant-40",
+    "name": "Dumbbell Press Variant 40",
+    "muscleGroup": "Legs",
+    "equipment": "Dumbbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Legs",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Quadriceps",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Quadriceps.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Dumbbell+Press+Variant+40",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "dumbbell-deadlifts-variant-41",
+    "name": "Dumbbell Deadlifts Variant 41",
+    "muscleGroup": "Legs",
+    "equipment": "Dumbbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Legs",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Hamstrings",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Hamstrings.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Dumbbell+Deadlifts+Variant+41",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "dumbbell-squats-variant-42",
+    "name": "Dumbbell Squats Variant 42",
+    "muscleGroup": "Legs",
+    "equipment": "Dumbbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Legs",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Gluteus Maximus",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Gluteus Maximus.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Dumbbell+Squats+Variant+42",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "dumbbell-raises-variant-43",
+    "name": "Dumbbell Raises Variant 43",
+    "muscleGroup": "Legs",
+    "equipment": "Dumbbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Legs",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Gastrocnemius",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Gastrocnemius.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Dumbbell+Raises+Variant+43",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "dumbbell-press-variant-44",
+    "name": "Dumbbell Press Variant 44",
+    "muscleGroup": "Shoulders",
+    "equipment": "Dumbbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Shoulders",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Anterior Deltoid",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Anterior Deltoid.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Dumbbell+Press+Variant+44",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "dumbbell-lateral-raise-variant-45",
+    "name": "Dumbbell Lateral Raise Variant 45",
+    "muscleGroup": "Shoulders",
+    "equipment": "Dumbbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Shoulders",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Lateral Deltoid",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Lateral Deltoid.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Dumbbell+Lateral+Raise+Variant+45",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "dumbbell-rear-flye-variant-46",
+    "name": "Dumbbell Rear Flye Variant 46",
+    "muscleGroup": "Shoulders",
+    "equipment": "Dumbbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Shoulders",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Posterior Deltoid",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Posterior Deltoid.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Dumbbell+Rear+Flye+Variant+46",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "dumbbell-curls-variant-47",
+    "name": "Dumbbell Curls Variant 47",
+    "muscleGroup": "Arms",
+    "equipment": "Dumbbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Arms",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Biceps Brachii",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Biceps Brachii.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Dumbbell+Curls+Variant+47",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "dumbbell-extensions-variant-48",
+    "name": "Dumbbell Extensions Variant 48",
+    "muscleGroup": "Arms",
+    "equipment": "Dumbbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Arms",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Triceps Brachii",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Triceps Brachii.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Dumbbell+Extensions+Variant+48",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "dumbbell-hammer-curls-variant-49",
+    "name": "Dumbbell Hammer Curls Variant 49",
+    "muscleGroup": "Arms",
+    "equipment": "Dumbbell",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Arms",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Brachioradialis",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Brachioradialis.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Dumbbell+Hammer+Curls+Variant+49",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "dumbbell-crunches-variant-50",
+    "name": "Dumbbell Crunches Variant 50",
+    "muscleGroup": "Core",
+    "equipment": "Dumbbell",
+    "defaultSets": 3,
+    "defaultRepsMin": 12,
+    "defaultRepsMax": 20,
+    "difficulty": "Beginner",
+    "category": "Core",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Rectus Abdominis",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Rectus Abdominis.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Dumbbell+Crunches+Variant+50",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "dumbbell-twists-variant-51",
+    "name": "Dumbbell Twists Variant 51",
+    "muscleGroup": "Core",
+    "equipment": "Dumbbell",
+    "defaultSets": 3,
+    "defaultRepsMin": 12,
+    "defaultRepsMax": 20,
+    "difficulty": "Beginner",
+    "category": "Core",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Obliques",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Obliques.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Dumbbell+Twists+Variant+51",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "dumbbell-planks-variant-52",
+    "name": "Dumbbell Planks Variant 52",
+    "muscleGroup": "Core",
+    "equipment": "Dumbbell",
+    "defaultSets": 3,
+    "defaultRepsMin": 12,
+    "defaultRepsMax": 20,
+    "difficulty": "Beginner",
+    "category": "Core",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Transverse Abdominis",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Transverse Abdominis.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Dumbbell+Planks+Variant+52",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "cable-incline-variant-53",
+    "name": "Cable Incline Variant 53",
+    "muscleGroup": "Chest",
+    "equipment": "Cable",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Chest",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Upper Pectoralis Major",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Upper Pectoralis Major.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Cable+Incline+Variant+53",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "cable-flat-variant-54",
+    "name": "Cable Flat Variant 54",
+    "muscleGroup": "Chest",
+    "equipment": "Cable",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Chest",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Sternal Pectoralis Major",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Sternal Pectoralis Major.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Cable+Flat+Variant+54",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "cable-decline-variant-55",
+    "name": "Cable Decline Variant 55",
+    "muscleGroup": "Chest",
+    "equipment": "Cable",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Chest",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Lower Pectoralis Major",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Lower Pectoralis Major.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Cable+Decline+Variant+55",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "cable-flye-variant-56",
+    "name": "Cable Flye Variant 56",
+    "muscleGroup": "Chest",
+    "equipment": "Cable",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Chest",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Pectoralis Minor",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Pectoralis Minor.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Cable+Flye+Variant+56",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "cable-rows-variant-57",
+    "name": "Cable Rows Variant 57",
+    "muscleGroup": "Back",
+    "equipment": "Cable",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Back",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Latissimus Dorsi",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Latissimus Dorsi.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Cable+Rows+Variant+57",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "cable-pulldowns-variant-58",
+    "name": "Cable Pulldowns Variant 58",
+    "muscleGroup": "Back",
+    "equipment": "Cable",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Back",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Teres Major",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Teres Major.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Cable+Pulldowns+Variant+58",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "cable-extensions-variant-59",
+    "name": "Cable Extensions Variant 59",
+    "muscleGroup": "Back",
+    "equipment": "Cable",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Back",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Erector Spinae",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Erector Spinae.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Cable+Extensions+Variant+59",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "cable-shrugs-variant-60",
+    "name": "Cable Shrugs Variant 60",
+    "muscleGroup": "Back",
+    "equipment": "Cable",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Back",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Trapezius",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Trapezius.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Cable+Shrugs+Variant+60",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "cable-press-variant-61",
+    "name": "Cable Press Variant 61",
+    "muscleGroup": "Legs",
+    "equipment": "Cable",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Legs",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Quadriceps",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Quadriceps.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Cable+Press+Variant+61",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "cable-deadlifts-variant-62",
+    "name": "Cable Deadlifts Variant 62",
+    "muscleGroup": "Legs",
+    "equipment": "Cable",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Legs",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Hamstrings",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Hamstrings.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Cable+Deadlifts+Variant+62",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "cable-squats-variant-63",
+    "name": "Cable Squats Variant 63",
+    "muscleGroup": "Legs",
+    "equipment": "Cable",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Legs",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Gluteus Maximus",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Gluteus Maximus.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Cable+Squats+Variant+63",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "cable-raises-variant-64",
+    "name": "Cable Raises Variant 64",
+    "muscleGroup": "Legs",
+    "equipment": "Cable",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Legs",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Gastrocnemius",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Gastrocnemius.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Cable+Raises+Variant+64",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "cable-press-variant-65",
+    "name": "Cable Press Variant 65",
+    "muscleGroup": "Shoulders",
+    "equipment": "Cable",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Shoulders",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Anterior Deltoid",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Anterior Deltoid.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Cable+Press+Variant+65",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "cable-lateral-raise-variant-66",
+    "name": "Cable Lateral Raise Variant 66",
+    "muscleGroup": "Shoulders",
+    "equipment": "Cable",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Shoulders",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Lateral Deltoid",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Lateral Deltoid.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Cable+Lateral+Raise+Variant+66",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "cable-rear-flye-variant-67",
+    "name": "Cable Rear Flye Variant 67",
+    "muscleGroup": "Shoulders",
+    "equipment": "Cable",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Shoulders",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Posterior Deltoid",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Posterior Deltoid.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Cable+Rear+Flye+Variant+67",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "cable-curls-variant-68",
+    "name": "Cable Curls Variant 68",
+    "muscleGroup": "Arms",
+    "equipment": "Cable",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Arms",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Biceps Brachii",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Biceps Brachii.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Cable+Curls+Variant+68",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "cable-extensions-variant-69",
+    "name": "Cable Extensions Variant 69",
+    "muscleGroup": "Arms",
+    "equipment": "Cable",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Arms",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Triceps Brachii",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Triceps Brachii.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Cable+Extensions+Variant+69",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "cable-hammer-curls-variant-70",
+    "name": "Cable Hammer Curls Variant 70",
+    "muscleGroup": "Arms",
+    "equipment": "Cable",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Arms",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Brachioradialis",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Brachioradialis.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Cable+Hammer+Curls+Variant+70",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "cable-crunches-variant-71",
+    "name": "Cable Crunches Variant 71",
+    "muscleGroup": "Core",
+    "equipment": "Cable",
+    "defaultSets": 3,
+    "defaultRepsMin": 12,
+    "defaultRepsMax": 20,
+    "difficulty": "Beginner",
+    "category": "Core",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Rectus Abdominis",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Rectus Abdominis.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Cable+Crunches+Variant+71",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "cable-twists-variant-72",
+    "name": "Cable Twists Variant 72",
+    "muscleGroup": "Core",
+    "equipment": "Cable",
+    "defaultSets": 3,
+    "defaultRepsMin": 12,
+    "defaultRepsMax": 20,
+    "difficulty": "Beginner",
+    "category": "Core",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Obliques",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Obliques.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Cable+Twists+Variant+72",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "cable-planks-variant-73",
+    "name": "Cable Planks Variant 73",
+    "muscleGroup": "Core",
+    "equipment": "Cable",
+    "defaultSets": 3,
+    "defaultRepsMin": 12,
+    "defaultRepsMax": 20,
+    "difficulty": "Beginner",
+    "category": "Core",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Transverse Abdominis",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Transverse Abdominis.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Cable+Planks+Variant+73",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "machine-incline-variant-74",
+    "name": "Machine Incline Variant 74",
+    "muscleGroup": "Chest",
+    "equipment": "Machine",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Chest",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Upper Pectoralis Major",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Upper Pectoralis Major.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Machine+Incline+Variant+74",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "machine-flat-variant-75",
+    "name": "Machine Flat Variant 75",
+    "muscleGroup": "Chest",
+    "equipment": "Machine",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Chest",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Sternal Pectoralis Major",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Sternal Pectoralis Major.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Machine+Flat+Variant+75",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "machine-decline-variant-76",
+    "name": "Machine Decline Variant 76",
+    "muscleGroup": "Chest",
+    "equipment": "Machine",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Chest",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Lower Pectoralis Major",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Lower Pectoralis Major.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Machine+Decline+Variant+76",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "machine-flye-variant-77",
+    "name": "Machine Flye Variant 77",
+    "muscleGroup": "Chest",
+    "equipment": "Machine",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Chest",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Pectoralis Minor",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Pectoralis Minor.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Machine+Flye+Variant+77",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "machine-rows-variant-78",
+    "name": "Machine Rows Variant 78",
+    "muscleGroup": "Back",
+    "equipment": "Machine",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Back",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Latissimus Dorsi",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Latissimus Dorsi.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Machine+Rows+Variant+78",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "machine-pulldowns-variant-79",
+    "name": "Machine Pulldowns Variant 79",
+    "muscleGroup": "Back",
+    "equipment": "Machine",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Back",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Teres Major",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Teres Major.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Machine+Pulldowns+Variant+79",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "machine-extensions-variant-80",
+    "name": "Machine Extensions Variant 80",
+    "muscleGroup": "Back",
+    "equipment": "Machine",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Back",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Erector Spinae",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Erector Spinae.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Machine+Extensions+Variant+80",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "machine-shrugs-variant-81",
+    "name": "Machine Shrugs Variant 81",
+    "muscleGroup": "Back",
+    "equipment": "Machine",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Back",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Trapezius",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Trapezius.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Machine+Shrugs+Variant+81",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "machine-press-variant-82",
+    "name": "Machine Press Variant 82",
+    "muscleGroup": "Legs",
+    "equipment": "Machine",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Legs",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Quadriceps",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Quadriceps.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Machine+Press+Variant+82",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "machine-deadlifts-variant-83",
+    "name": "Machine Deadlifts Variant 83",
+    "muscleGroup": "Legs",
+    "equipment": "Machine",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Legs",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Hamstrings",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Hamstrings.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Machine+Deadlifts+Variant+83",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "machine-squats-variant-84",
+    "name": "Machine Squats Variant 84",
+    "muscleGroup": "Legs",
+    "equipment": "Machine",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Legs",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Gluteus Maximus",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Gluteus Maximus.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Machine+Squats+Variant+84",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "machine-raises-variant-85",
+    "name": "Machine Raises Variant 85",
+    "muscleGroup": "Legs",
+    "equipment": "Machine",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Legs",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Gastrocnemius",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Gastrocnemius.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Machine+Raises+Variant+85",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "machine-press-variant-86",
+    "name": "Machine Press Variant 86",
+    "muscleGroup": "Shoulders",
+    "equipment": "Machine",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Shoulders",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Anterior Deltoid",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Anterior Deltoid.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Machine+Press+Variant+86",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "machine-lateral-raise-variant-87",
+    "name": "Machine Lateral Raise Variant 87",
+    "muscleGroup": "Shoulders",
+    "equipment": "Machine",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Shoulders",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Lateral Deltoid",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Lateral Deltoid.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Machine+Lateral+Raise+Variant+87",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "machine-rear-flye-variant-88",
+    "name": "Machine Rear Flye Variant 88",
+    "muscleGroup": "Shoulders",
+    "equipment": "Machine",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Shoulders",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Posterior Deltoid",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Posterior Deltoid.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Machine+Rear+Flye+Variant+88",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "machine-curls-variant-89",
+    "name": "Machine Curls Variant 89",
+    "muscleGroup": "Arms",
+    "equipment": "Machine",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Arms",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Biceps Brachii",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Biceps Brachii.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Machine+Curls+Variant+89",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "machine-extensions-variant-90",
+    "name": "Machine Extensions Variant 90",
+    "muscleGroup": "Arms",
+    "equipment": "Machine",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Arms",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Triceps Brachii",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Triceps Brachii.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Machine+Extensions+Variant+90",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "machine-hammer-curls-variant-91",
+    "name": "Machine Hammer Curls Variant 91",
+    "muscleGroup": "Arms",
+    "equipment": "Machine",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Arms",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Brachioradialis",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Brachioradialis.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Machine+Hammer+Curls+Variant+91",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "machine-crunches-variant-92",
+    "name": "Machine Crunches Variant 92",
+    "muscleGroup": "Core",
+    "equipment": "Machine",
+    "defaultSets": 3,
+    "defaultRepsMin": 12,
+    "defaultRepsMax": 20,
+    "difficulty": "Beginner",
+    "category": "Core",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Rectus Abdominis",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Rectus Abdominis.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Machine+Crunches+Variant+92",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "machine-twists-variant-93",
+    "name": "Machine Twists Variant 93",
+    "muscleGroup": "Core",
+    "equipment": "Machine",
+    "defaultSets": 3,
+    "defaultRepsMin": 12,
+    "defaultRepsMax": 20,
+    "difficulty": "Beginner",
+    "category": "Core",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Obliques",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Obliques.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Machine+Twists+Variant+93",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "machine-planks-variant-94",
+    "name": "Machine Planks Variant 94",
+    "muscleGroup": "Core",
+    "equipment": "Machine",
+    "defaultSets": 3,
+    "defaultRepsMin": 12,
+    "defaultRepsMax": 20,
+    "difficulty": "Beginner",
+    "category": "Core",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Transverse Abdominis",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Transverse Abdominis.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Machine+Planks+Variant+94",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "smith-machine-incline-variant-95",
+    "name": "Smith Machine Incline Variant 95",
+    "muscleGroup": "Chest",
+    "equipment": "Smith",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Chest",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Upper Pectoralis Major",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Upper Pectoralis Major.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Smith+Machine+Incline+Variant+95",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "smith-machine-flat-variant-96",
+    "name": "Smith Machine Flat Variant 96",
+    "muscleGroup": "Chest",
+    "equipment": "Smith",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Chest",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Sternal Pectoralis Major",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Sternal Pectoralis Major.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Smith+Machine+Flat+Variant+96",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "smith-machine-decline-variant-97",
+    "name": "Smith Machine Decline Variant 97",
+    "muscleGroup": "Chest",
+    "equipment": "Smith",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Chest",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Lower Pectoralis Major",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Lower Pectoralis Major.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Smith+Machine+Decline+Variant+97",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "smith-machine-flye-variant-98",
+    "name": "Smith Machine Flye Variant 98",
+    "muscleGroup": "Chest",
+    "equipment": "Smith",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Chest",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Pectoralis Minor",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Pectoralis Minor.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Smith+Machine+Flye+Variant+98",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "smith-machine-rows-variant-99",
+    "name": "Smith Machine Rows Variant 99",
+    "muscleGroup": "Back",
+    "equipment": "Smith",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Back",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Latissimus Dorsi",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Latissimus Dorsi.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Smith+Machine+Rows+Variant+99",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "smith-machine-pulldowns-variant-100",
+    "name": "Smith Machine Pulldowns Variant 100",
+    "muscleGroup": "Back",
+    "equipment": "Smith",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Back",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Teres Major",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Teres Major.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Smith+Machine+Pulldowns+Variant+100",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "smith-machine-extensions-variant-101",
+    "name": "Smith Machine Extensions Variant 101",
+    "muscleGroup": "Back",
+    "equipment": "Smith",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Back",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Erector Spinae",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Erector Spinae.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Smith+Machine+Extensions+Variant+101",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "smith-machine-shrugs-variant-102",
+    "name": "Smith Machine Shrugs Variant 102",
+    "muscleGroup": "Back",
+    "equipment": "Smith",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Back",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Trapezius",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Trapezius.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Smith+Machine+Shrugs+Variant+102",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "smith-machine-press-variant-103",
+    "name": "Smith Machine Press Variant 103",
+    "muscleGroup": "Legs",
+    "equipment": "Smith",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Legs",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Quadriceps",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Quadriceps.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Smith+Machine+Press+Variant+103",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "smith-machine-deadlifts-variant-104",
+    "name": "Smith Machine Deadlifts Variant 104",
+    "muscleGroup": "Legs",
+    "equipment": "Smith",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Legs",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Hamstrings",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Hamstrings.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Smith+Machine+Deadlifts+Variant+104",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "smith-machine-squats-variant-105",
+    "name": "Smith Machine Squats Variant 105",
+    "muscleGroup": "Legs",
+    "equipment": "Smith",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Legs",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Gluteus Maximus",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Gluteus Maximus.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Smith+Machine+Squats+Variant+105",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "smith-machine-raises-variant-106",
+    "name": "Smith Machine Raises Variant 106",
+    "muscleGroup": "Legs",
+    "equipment": "Smith",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Legs",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Gastrocnemius",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Gastrocnemius.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Smith+Machine+Raises+Variant+106",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "smith-machine-press-variant-107",
+    "name": "Smith Machine Press Variant 107",
+    "muscleGroup": "Shoulders",
+    "equipment": "Smith",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Shoulders",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Anterior Deltoid",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Anterior Deltoid.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Smith+Machine+Press+Variant+107",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "smith-machine-lateral-raise-variant-108",
+    "name": "Smith Machine Lateral Raise Variant 108",
+    "muscleGroup": "Shoulders",
+    "equipment": "Smith",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Shoulders",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Lateral Deltoid",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Lateral Deltoid.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Smith+Machine+Lateral+Raise+Variant+108",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "smith-machine-rear-flye-variant-109",
+    "name": "Smith Machine Rear Flye Variant 109",
+    "muscleGroup": "Shoulders",
+    "equipment": "Smith",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Shoulders",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Posterior Deltoid",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Posterior Deltoid.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Smith+Machine+Rear+Flye+Variant+109",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "smith-machine-curls-variant-110",
+    "name": "Smith Machine Curls Variant 110",
+    "muscleGroup": "Arms",
+    "equipment": "Smith",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Arms",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Biceps Brachii",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Biceps Brachii.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Smith+Machine+Curls+Variant+110",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "smith-machine-extensions-variant-111",
+    "name": "Smith Machine Extensions Variant 111",
+    "muscleGroup": "Arms",
+    "equipment": "Smith",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Arms",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Triceps Brachii",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Triceps Brachii.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Smith+Machine+Extensions+Variant+111",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "smith-machine-hammer-curls-variant-112",
+    "name": "Smith Machine Hammer Curls Variant 112",
+    "muscleGroup": "Arms",
+    "equipment": "Smith",
+    "defaultSets": 3,
+    "defaultRepsMin": 8,
+    "defaultRepsMax": 12,
+    "difficulty": "Intermediate",
+    "category": "Arms",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Brachioradialis",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Brachioradialis.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Smith+Machine+Hammer+Curls+Variant+112",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "smith-machine-crunches-variant-113",
+    "name": "Smith Machine Crunches Variant 113",
+    "muscleGroup": "Core",
+    "equipment": "Smith",
+    "defaultSets": 3,
+    "defaultRepsMin": 12,
+    "defaultRepsMax": 20,
+    "difficulty": "Beginner",
+    "category": "Core",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Rectus Abdominis",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Rectus Abdominis.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Smith+Machine+Crunches+Variant+113",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "smith-machine-twists-variant-114",
+    "name": "Smith Machine Twists Variant 114",
+    "muscleGroup": "Core",
+    "equipment": "Smith",
+    "defaultSets": 3,
+    "defaultRepsMin": 12,
+    "defaultRepsMax": 20,
+    "difficulty": "Beginner",
+    "category": "Core",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Obliques",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Obliques.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Smith+Machine+Twists+Variant+114",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "smith-machine-planks-variant-115",
+    "name": "Smith Machine Planks Variant 115",
+    "muscleGroup": "Core",
+    "equipment": "Smith",
+    "defaultSets": 3,
+    "defaultRepsMin": 12,
+    "defaultRepsMax": 20,
+    "difficulty": "Beginner",
+    "category": "Core",
+    "type": "Machine",
+    "musclesTargeted": [
+      "Transverse Abdominis",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Transverse Abdominis.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Smith+Machine+Planks+Variant+115",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "bodyweight-incline-variant-116",
+    "name": "Bodyweight Incline Variant 116",
+    "muscleGroup": "Chest",
+    "equipment": "Bodyweight",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Chest",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Upper Pectoralis Major",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Upper Pectoralis Major.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Bodyweight+Incline+Variant+116",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "bodyweight-flat-variant-117",
+    "name": "Bodyweight Flat Variant 117",
+    "muscleGroup": "Chest",
+    "equipment": "Bodyweight",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Chest",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Sternal Pectoralis Major",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Sternal Pectoralis Major.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Bodyweight+Flat+Variant+117",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "bodyweight-decline-variant-118",
+    "name": "Bodyweight Decline Variant 118",
+    "muscleGroup": "Chest",
+    "equipment": "Bodyweight",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Chest",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Lower Pectoralis Major",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Lower Pectoralis Major.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Bodyweight+Decline+Variant+118",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "bodyweight-flye-variant-119",
+    "name": "Bodyweight Flye Variant 119",
+    "muscleGroup": "Chest",
+    "equipment": "Bodyweight",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Chest",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Pectoralis Minor",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Pectoralis Minor.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Bodyweight+Flye+Variant+119",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "bodyweight-rows-variant-120",
+    "name": "Bodyweight Rows Variant 120",
+    "muscleGroup": "Back",
+    "equipment": "Bodyweight",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Back",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Latissimus Dorsi",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Latissimus Dorsi.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Bodyweight+Rows+Variant+120",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "bodyweight-pulldowns-variant-121",
+    "name": "Bodyweight Pulldowns Variant 121",
+    "muscleGroup": "Back",
+    "equipment": "Bodyweight",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Back",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Teres Major",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Teres Major.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Bodyweight+Pulldowns+Variant+121",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "bodyweight-extensions-variant-122",
+    "name": "Bodyweight Extensions Variant 122",
+    "muscleGroup": "Back",
+    "equipment": "Bodyweight",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Back",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Erector Spinae",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Erector Spinae.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Bodyweight+Extensions+Variant+122",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "bodyweight-shrugs-variant-123",
+    "name": "Bodyweight Shrugs Variant 123",
+    "muscleGroup": "Back",
+    "equipment": "Bodyweight",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Back",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Trapezius",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Trapezius.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Bodyweight+Shrugs+Variant+123",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "bodyweight-press-variant-124",
+    "name": "Bodyweight Press Variant 124",
+    "muscleGroup": "Legs",
+    "equipment": "Bodyweight",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Legs",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Quadriceps",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Quadriceps.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Bodyweight+Press+Variant+124",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "bodyweight-deadlifts-variant-125",
+    "name": "Bodyweight Deadlifts Variant 125",
+    "muscleGroup": "Legs",
+    "equipment": "Bodyweight",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Legs",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Hamstrings",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Hamstrings.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Bodyweight+Deadlifts+Variant+125",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "bodyweight-squats-variant-126",
+    "name": "Bodyweight Squats Variant 126",
+    "muscleGroup": "Legs",
+    "equipment": "Bodyweight",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Legs",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Gluteus Maximus",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Gluteus Maximus.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Bodyweight+Squats+Variant+126",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "bodyweight-raises-variant-127",
+    "name": "Bodyweight Raises Variant 127",
+    "muscleGroup": "Legs",
+    "equipment": "Bodyweight",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Legs",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Gastrocnemius",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Gastrocnemius.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Bodyweight+Raises+Variant+127",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "bodyweight-press-variant-128",
+    "name": "Bodyweight Press Variant 128",
+    "muscleGroup": "Shoulders",
+    "equipment": "Bodyweight",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Shoulders",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Anterior Deltoid",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Anterior Deltoid.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Bodyweight+Press+Variant+128",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "bodyweight-lateral-raise-variant-129",
+    "name": "Bodyweight Lateral Raise Variant 129",
+    "muscleGroup": "Shoulders",
+    "equipment": "Bodyweight",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Shoulders",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Lateral Deltoid",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Lateral Deltoid.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Bodyweight+Lateral+Raise+Variant+129",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "bodyweight-rear-flye-variant-130",
+    "name": "Bodyweight Rear Flye Variant 130",
+    "muscleGroup": "Shoulders",
+    "equipment": "Bodyweight",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Shoulders",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Posterior Deltoid",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Posterior Deltoid.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Bodyweight+Rear+Flye+Variant+130",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "bodyweight-curls-variant-131",
+    "name": "Bodyweight Curls Variant 131",
+    "muscleGroup": "Arms",
+    "equipment": "Bodyweight",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Arms",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Biceps Brachii",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Biceps Brachii.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Bodyweight+Curls+Variant+131",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "bodyweight-extensions-variant-132",
+    "name": "Bodyweight Extensions Variant 132",
+    "muscleGroup": "Arms",
+    "equipment": "Bodyweight",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Arms",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Triceps Brachii",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Triceps Brachii.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Bodyweight+Extensions+Variant+132",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "bodyweight-hammer-curls-variant-133",
+    "name": "Bodyweight Hammer Curls Variant 133",
+    "muscleGroup": "Arms",
+    "equipment": "Bodyweight",
+    "defaultSets": 4,
+    "defaultRepsMin": 6,
+    "defaultRepsMax": 10,
+    "difficulty": "Advanced",
+    "category": "Arms",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Brachioradialis",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Brachioradialis.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Bodyweight+Hammer+Curls+Variant+133",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "bodyweight-crunches-variant-134",
+    "name": "Bodyweight Crunches Variant 134",
+    "muscleGroup": "Core",
+    "equipment": "Bodyweight",
+    "defaultSets": 3,
+    "defaultRepsMin": 12,
+    "defaultRepsMax": 20,
+    "difficulty": "Beginner",
+    "category": "Core",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Rectus Abdominis",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Rectus Abdominis.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Bodyweight+Crunches+Variant+134",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "bodyweight-twists-variant-135",
+    "name": "Bodyweight Twists Variant 135",
+    "muscleGroup": "Core",
+    "equipment": "Bodyweight",
+    "defaultSets": 3,
+    "defaultRepsMin": 12,
+    "defaultRepsMax": 20,
+    "difficulty": "Beginner",
+    "category": "Core",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Obliques",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Obliques.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Bodyweight+Twists+Variant+135",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  },
+  {
+    "id": "bodyweight-planks-variant-136",
+    "name": "Bodyweight Planks Variant 136",
+    "muscleGroup": "Core",
+    "equipment": "Bodyweight",
+    "defaultSets": 3,
+    "defaultRepsMin": 12,
+    "defaultRepsMax": 20,
+    "difficulty": "Beginner",
+    "category": "Core",
+    "type": "Compound",
+    "musclesTargeted": [
+      "Transverse Abdominis",
+      "Stabilizer Matrix"
+    ],
+    "proTips": [
+      "Keep structural alignment and focus directly on loading the Transverse Abdominis.",
+      "Maintain tight control during the eccentric phase to ensure full physical adaptation."
+    ],
+    "videoUrl": "https://www.youtube.com/results?search_query=Bodyweight+Planks+Variant+136",
+    "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd",
+    "warmupType": "Standard Automated Ramp"
+  }
 ]

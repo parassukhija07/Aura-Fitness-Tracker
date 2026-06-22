@@ -10,6 +10,10 @@ export const SetTypeSchema = z.enum([
 ]);
 
 // ─── Catalog ─────────────────────────────────────────────────────────────────
+export const EquipmentSchema = z.enum([
+  'Barbell', 'Dumbbell', 'Machine', 'Cable', 'Smith', 'Bodyweight',
+]);
+
 export const ExerciseSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -17,6 +21,17 @@ export const ExerciseSchema = z.object({
   defaultSets: z.number(),
   defaultRepsMin: z.number(),
   defaultRepsMax: z.number(),
+  equipment: EquipmentSchema.default('Barbell'),
+  custom: z.boolean().optional(),
+  formTips: z.string().optional(),
+  imageUrl: z.string().optional(),
+  videoUrl: z.string().optional(),
+  difficulty: z.enum(['Beginner', 'Intermediate', 'Advanced']).optional(),
+  category: z.string().optional(),
+  type: z.string().optional(),
+  musclesTargeted: z.array(z.string()).optional(),
+  proTips: z.array(z.string()).optional(),
+  warmupType: z.string().optional(),
 });
 
 export const ProgramExerciseSchema = z.object({

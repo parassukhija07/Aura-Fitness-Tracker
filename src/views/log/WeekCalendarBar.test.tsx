@@ -96,23 +96,29 @@ test('clicking the already-active date does NOT fire triggerSelection', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Failure case — week-nav buttons do NOT fire triggerSelection
+// Header jump button — "Next week" advances the week without a haptic
 // ---------------------------------------------------------------------------
 
-test('clicking Previous week nav button does NOT fire triggerSelection', () => {
-  const { onWeekChange } = renderBar();
-
-  fireEvent.click(screen.getByRole('button', { name: /previous week/i }));
-
-  expect(triggerSelection).not.toHaveBeenCalled();
-  expect(onWeekChange).toHaveBeenCalledWith(-1);
-});
-
-test('clicking Next week nav button does NOT fire triggerSelection', () => {
+test('clicking the "Next week" jump button does NOT fire triggerSelection', () => {
   const { onWeekChange } = renderBar();
 
   fireEvent.click(screen.getByRole('button', { name: /next week/i }));
 
   expect(triggerSelection).not.toHaveBeenCalled();
   expect(onWeekChange).toHaveBeenCalledWith(1);
+});
+
+// ---------------------------------------------------------------------------
+// Header jump button — when viewing another day, the jump button returns to today
+// ---------------------------------------------------------------------------
+
+test('clicking the "Today" jump button calls onReturnToToday', () => {
+  const onReturnToToday = jest.fn();
+  // viewing a future date this week => showReturnToToday true, offset 0 => label "Today"
+  renderBar(new Date('2026-06-17T12:00:00.000Z'), 0, true, onReturnToToday);
+
+  fireEvent.click(screen.getByRole('button', { name: /today/i }));
+
+  expect(triggerSelection).not.toHaveBeenCalled();
+  expect(onReturnToToday).toHaveBeenCalledTimes(1);
 });

@@ -11,8 +11,8 @@ import type { UserPlan, WorkoutProgram, Exercise } from '../../types/workout';
 // ---------------------------------------------------------------------------
 
 const EXERCISES: Exercise[] = [
-  { id: 'squat',  name: 'Back Squat',  muscleGroup: 'Legs',  defaultSets: 3, defaultRepsMin: 5, defaultRepsMax: 8 },
-  { id: 'bench',  name: 'Bench Press', muscleGroup: 'Chest', defaultSets: 3, defaultRepsMin: 6, defaultRepsMax: 10 },
+  { id: 'squat',  name: 'Back Squat',  muscleGroup: 'Legs',  defaultSets: 3, defaultRepsMin: 5, defaultRepsMax: 8,  equipment: 'Barbell' },
+  { id: 'bench',  name: 'Bench Press', muscleGroup: 'Chest', defaultSets: 3, defaultRepsMin: 6, defaultRepsMax: 10, equipment: 'Barbell' },
 ];
 
 const getExerciseById = (id: string): Exercise | undefined =>

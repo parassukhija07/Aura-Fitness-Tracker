@@ -1,5 +1,16 @@
 import type { LoggedSet, SessionExercise } from '../../types/workout';
 import { useWorkoutDataStore } from '../../store/workoutDataStore';
+import { useUserPreferencesStore } from '../../store/userPreferencesStore';
+import { formatWeight } from '../../utils/units';
+
+/**
+ * Format a canonical-kg weight for embedding in generated progression copy.
+ * Reads the current weight unit directly (non-reactive) — these strings are
+ * produced inside pure suggestion logic, not a React render.
+ */
+function w(kg: number): string {
+  return formatWeight(kg, useUserPreferencesStore.getState().weightUnit);
+}
 
 export interface SetRef {
   weight: number;
@@ -59,6 +70,120 @@ export function getTodaysTarget(exercise: SessionExercise): TargetSuggestion | n
   return {
     plusWeight: { weight: lastPr.weight + 2.5, reps: lastPr.reps },
     plusRep: { weight: lastPr.weight, reps: lastPr.reps + 1 },
+  };
+}
+
+// ── Progressive overload engine ────────────────────────────────────────────
+
+export type ProgressionAction = 'increase-load' | 'add-rep' | 'hold' | 'deload' | 'first-time';
+
+export interface ProgressionSuggestion {
+  action: ProgressionAction;
+  /** Recommended target for the top working set next session. */
+  weight: number;
+  reps: number;
+  /** Short, human rationale shown in the UI. */
+  reason: string;
+}
+
+/** The most recent completed session's sets for an exercise (chronologically latest). */
+export function lastSessionSets(exerciseId: string): SetRef[] | null {
+  const history = useWorkoutDataStore.getState().completedWorkouts;
+  let latest: { date: string; sets: SetRef[] } | null = null;
+  for (const workout of history) {
+    for (const ex of workout.exercises) {
+      if (ex.exerciseId !== exerciseId) continue;
+      const sets = ex.sets
+        .filter((s) => s.weight > 0 || s.reps > 0)
+        .map((s) => ({ weight: s.weight, reps: s.reps }));
+      if (sets.length === 0) continue;
+      if (latest === null || workout.date > latest.date) {
+        latest = { date: workout.date, sets };
+      }
+    }
+  }
+  return latest ? latest.sets : null;
+}
+
+// Smallest sensible load jump for an exercise, based on equipment & muscle group.
+function loadIncrement(exerciseId: string): number {
+  const ex = useWorkoutDataStore.getState().getExerciseById(exerciseId);
+  if (!ex) return 2.5;
+  // Big compound lower-body / posterior-chain barbell work tolerates larger jumps.
+  const bigLift =
+    ex.equipment === 'Barbell' && (ex.muscleGroup === 'Legs' || ex.muscleGroup === 'Back');
+  if (bigLift) return 5;
+  if (ex.equipment === 'Bodyweight') return 0; // progress via reps, not load
+  return 2.5;
+}
+
+/**
+ * Double-progression overload recommendation derived from the LAST session's
+ * performance for this exercise, evaluated against the catalog rep range.
+ *
+ * - All sets hit the top of the range  → add load (reset reps to range bottom)
+ * - Hit at least the range bottom       → keep load, add a rep (double progression)
+ * - Fell below the range bottom         → hold (repeat) or deload after a stall
+ * - No history                          → first-time target from catalog defaults
+ */
+export function suggestProgression(exercise: SessionExercise): ProgressionSuggestion {
+  const cat = useWorkoutDataStore.getState().getExerciseById(exercise.exerciseId);
+  const repsMin = cat?.defaultRepsMin ?? 8;
+  const repsMax = cat?.defaultRepsMax ?? 12;
+  const inc = loadIncrement(exercise.exerciseId);
+
+  const last = lastSessionSets(exercise.exerciseId);
+  if (last === null || last.length === 0) {
+    const startWeight = bestCompletedSet(exercise.sets)?.weight ?? 0;
+    return {
+      action: 'first-time',
+      weight: startWeight,
+      reps: repsMin,
+      reason: 'First time logging this — aim for the lower end of the range and build from there.',
+    };
+  }
+
+  // Use the heaviest set as the working reference; analyze reps at that load.
+  const topWeight = last.reduce((m, s) => Math.max(m, s.weight), 0);
+  const setsAtTop = last.filter((s) => s.weight === topWeight);
+  const minRepsAtTop = setsAtTop.reduce((m, s) => Math.min(m, s.reps), Infinity);
+  const allHitTop = minRepsAtTop >= repsMax;
+  const hitRange = minRepsAtTop >= repsMin;
+
+  if (allHitTop && inc > 0) {
+    return {
+      action: 'increase-load',
+      weight: topWeight + inc,
+      reps: repsMin,
+      reason: `You completed ${repsMax}+ reps on every set at ${w(topWeight)} last time — add ${w(inc)} and reset to ${repsMin} reps.`,
+    };
+  }
+
+  if (allHitTop && inc === 0) {
+    // bodyweight: progress reps
+    return {
+      action: 'add-rep',
+      weight: topWeight,
+      reps: minRepsAtTop + 1,
+      reason: `Topped the rep range last session — push for ${minRepsAtTop + 1} reps this time.`,
+    };
+  }
+
+  if (hitRange) {
+    return {
+      action: 'add-rep',
+      weight: topWeight,
+      reps: Math.min(repsMax, minRepsAtTop + 1),
+      reason: `Stay at ${w(topWeight)} and add a rep — work up to ${repsMax} before adding load.`,
+    };
+  }
+
+  // Fell short of the range bottom last time → repeat to consolidate.
+  return {
+    action: 'hold',
+    weight: topWeight,
+    reps: repsMin,
+    reason: `You came up short at ${w(topWeight)} last time — repeat it and nail ${repsMin} solid reps before progressing.`,
   };
 }
 

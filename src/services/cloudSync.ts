@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { useWorkoutDataStore } from '../store/workoutDataStore';
 import { useStatsDataStore } from '../store/statsDataStore';
@@ -76,4 +76,13 @@ export async function restoreFromCloud(uid: string): Promise<boolean> {
   }
 
   return true;
+}
+
+/**
+ * Permanently deletes the user's cloud backup document (users/{uid}).
+ * Local on-device data is unaffected. Supports the GDPR "right to erasure"
+ * for the cloud copy.
+ */
+export async function deleteCloudBackup(uid: string): Promise<void> {
+  await deleteDoc(doc(db, 'users', uid));
 }

@@ -525,6 +525,51 @@ test('removeExerciseFromSession — out-of-bounds index is a no-op', () => {
   expect(useWorkoutDataStore.getState().activeSession!.exercises.length).toBe(1);
 });
 
+// ---------------------------------------------------------------------------
+// reorderSessionExercise tests
+// ---------------------------------------------------------------------------
+
+function threeExercises(): SessionExercise[] {
+  return [
+    { exerciseId: 'a', exerciseName: 'A', muscleGroup: 'Chest', defaultSets: 3, sets: [] },
+    { exerciseId: 'b', exerciseName: 'B', muscleGroup: 'Back', defaultSets: 3, sets: [] },
+    { exerciseId: 'c', exerciseName: 'C', muscleGroup: 'Legs', defaultSets: 3, sets: [] },
+  ];
+}
+
+test('reorderSessionExercise — moves an exercise to a later index', () => {
+  useWorkoutDataStore.getState().startSession(PROGRAM_BENCH, threeExercises());
+  useWorkoutDataStore.getState().reorderSessionExercise(0, 2);
+  const names = useWorkoutDataStore.getState().activeSession!.exercises.map((e) => e.exerciseName);
+  expect(names).toEqual(['B', 'C', 'A']);
+});
+
+test('reorderSessionExercise — moves an exercise to an earlier index', () => {
+  useWorkoutDataStore.getState().startSession(PROGRAM_BENCH, threeExercises());
+  useWorkoutDataStore.getState().reorderSessionExercise(2, 0);
+  const names = useWorkoutDataStore.getState().activeSession!.exercises.map((e) => e.exerciseName);
+  expect(names).toEqual(['C', 'A', 'B']);
+});
+
+test('reorderSessionExercise — same from/to index is a no-op', () => {
+  useWorkoutDataStore.getState().startSession(PROGRAM_BENCH, threeExercises());
+  useWorkoutDataStore.getState().reorderSessionExercise(1, 1);
+  const names = useWorkoutDataStore.getState().activeSession!.exercises.map((e) => e.exerciseName);
+  expect(names).toEqual(['A', 'B', 'C']);
+});
+
+test('reorderSessionExercise — out-of-bounds index is a no-op', () => {
+  useWorkoutDataStore.getState().startSession(PROGRAM_BENCH, threeExercises());
+  useWorkoutDataStore.getState().reorderSessionExercise(0, 9);
+  const names = useWorkoutDataStore.getState().activeSession!.exercises.map((e) => e.exerciseName);
+  expect(names).toEqual(['A', 'B', 'C']);
+});
+
+test('reorderSessionExercise — no active session does not throw', () => {
+  useWorkoutDataStore.setState({ activeSession: null });
+  expect(() => useWorkoutDataStore.getState().reorderSessionExercise(0, 1)).not.toThrow();
+});
+
 test('removeExerciseFromSession — dissolves superset when only 1 member remains after removal', () => {
   const exA: SessionExercise = {
     exerciseId: 'ex-a', exerciseName: 'Ex A', muscleGroup: 'Chest',
@@ -728,4 +773,171 @@ test('replaceExerciseInWorkout — unknown workoutId is a no-op', () => {
   expect(() => useWorkoutDataStore.getState().replaceExerciseInWorkout('nonexistent', 0, {
     exerciseId: 'deadlift', exerciseName: 'Deadlift', targetSets: 4, targetReps: '3',
   })).not.toThrow();
+});
+
+// ---------------------------------------------------------------------------
+// Gap A — applyPlanEdit tests
+// ---------------------------------------------------------------------------
+
+const EDIT_EXERCISES: CustomWorkoutExercise[] = [
+  { exerciseId: 'deadlift', exerciseName: 'Deadlift', targetSets: 4, targetReps: '5' },
+];
+
+beforeEach(() => {
+  useWorkoutDataStore.setState({
+    programs: [{ id: 'seed-prog', name: 'Seed Prog', description: '', exercises: [] }],
+    userPrograms: [],
+    userWorkouts: [],
+  });
+});
+
+test('applyPlanEdit today — leaves programs, userPrograms, userWorkouts unchanged', () => {
+  useWorkoutDataStore.setState({
+    programs: [{ id: 'seed-prog', name: 'Seed Prog', description: '', exercises: [{ exerciseId: 'squat', sets: 3, repsMin: 5, repsMax: 8 }] }],
+    userPrograms: [{ id: 'user-prog-1', name: 'User Prog', description: '', exercises: [] }],
+    userWorkouts: [{ id: 'custom-1', name: 'Push Day', exercises: [], createdAt: '2026-01-01T00:00:00.000Z' }],
+  });
+  useWorkoutDataStore.getState().applyPlanEdit('today', {
+    sourceKind: 'program', sourceId: 'seed-prog', exercises: EDIT_EXERCISES,
+  });
+  const { programs, userPrograms, userWorkouts } = useWorkoutDataStore.getState();
+  expect(programs[0].exercises.length).toBe(1);
+  expect(userPrograms.length).toBe(1);
+  expect(userWorkouts.length).toBe(1);
+  // exercises unchanged
+  expect(userPrograms[0].exercises.length).toBe(0);
+  expect(userWorkouts[0].exercises.length).toBe(0);
+});
+
+test('applyPlanEdit permanent + program — does NOT mutate state.programs, creates myplan- entry', () => {
+  const programsBefore = JSON.stringify(useWorkoutDataStore.getState().programs);
+  useWorkoutDataStore.getState().applyPlanEdit('permanent', {
+    sourceKind: 'program', sourceId: 'seed-prog', exercises: EDIT_EXERCISES,
+  });
+  expect(JSON.stringify(useWorkoutDataStore.getState().programs)).toBe(programsBefore);
+  const { userPrograms } = useWorkoutDataStore.getState();
+  const myplan = userPrograms.find((p) => p.id === 'myplan-seed-prog');
+  expect(myplan).toBeDefined();
+  expect(myplan!.exercises.length).toBe(1);
+  expect(myplan!.exercises[0].exerciseId).toBe('deadlift');
+});
+
+test('applyPlanEdit permanent + program — second call updates existing myplan- entry in place', () => {
+  useWorkoutDataStore.getState().applyPlanEdit('permanent', {
+    sourceKind: 'program', sourceId: 'seed-prog', exercises: EDIT_EXERCISES,
+  });
+  useWorkoutDataStore.getState().applyPlanEdit('permanent', {
+    sourceKind: 'program', sourceId: 'seed-prog',
+    exercises: [{ exerciseId: 'bench', exerciseName: 'Bench', targetSets: 3, targetReps: '8-12' }],
+  });
+  const { userPrograms } = useWorkoutDataStore.getState();
+  expect(userPrograms.filter((p) => p.id === 'myplan-seed-prog').length).toBe(1);
+  expect(userPrograms.find((p) => p.id === 'myplan-seed-prog')!.exercises[0].exerciseId).toBe('bench');
+});
+
+test('applyPlanEdit permanent + userProgram — overwrites exercises, does not touch programs', () => {
+  useWorkoutDataStore.setState({
+    programs: [{ id: 'seed-prog', name: 'Seed Prog', description: '', exercises: [] }],
+    userPrograms: [{ id: 'user-prog-1', name: 'User Prog', description: '', exercises: [] }],
+    userWorkouts: [],
+  });
+  useWorkoutDataStore.getState().applyPlanEdit('permanent', {
+    sourceKind: 'userProgram', sourceId: 'user-prog-1', exercises: EDIT_EXERCISES,
+  });
+  const { userPrograms, programs } = useWorkoutDataStore.getState();
+  expect(programs[0].exercises.length).toBe(0); // seed unchanged
+  expect(userPrograms.find((p) => p.id === 'user-prog-1')!.exercises.length).toBe(1);
+  expect(userPrograms.find((p) => p.id === 'user-prog-1')!.exercises[0].exerciseId).toBe('deadlift');
+});
+
+test('applyPlanEdit permanent + userWorkout — overwrites exercises in the custom workout', () => {
+  useWorkoutDataStore.setState({
+    userWorkouts: [{ id: 'custom-wk-1', name: 'Push', exercises: [], createdAt: '2026-01-01T00:00:00.000Z' }],
+    userPrograms: [],
+    programs: [],
+  });
+  useWorkoutDataStore.getState().applyPlanEdit('permanent', {
+    sourceKind: 'userWorkout', sourceId: 'custom-wk-1', exercises: EDIT_EXERCISES,
+  });
+  const w = useWorkoutDataStore.getState().userWorkouts.find((x) => x.id === 'custom-wk-1')!;
+  expect(w.exercises.length).toBe(1);
+  expect(w.exercises[0].exerciseId).toBe('deadlift');
+});
+
+test('applyPlanEdit permanent + invalid sourceId — does not throw and leaves state unchanged', () => {
+  expect(() =>
+    useWorkoutDataStore.getState().applyPlanEdit('permanent', {
+      sourceKind: 'userWorkout', sourceId: 'does-not-exist', exercises: EDIT_EXERCISES,
+    })
+  ).not.toThrow();
+  expect(useWorkoutDataStore.getState().userWorkouts.length).toBe(0);
+});
+
+// ---------------------------------------------------------------------------
+// Gap B — addCatalogProgramToMyPlans max-3 guard
+// ---------------------------------------------------------------------------
+
+const makeCatalogProgram = (id: string) => ({
+  id, name: `Prog ${id}`, description: '', goal: 'Strength' as const, difficulty: 'Beginner' as const,
+  durationWeeks: 4, workoutsPerWeek: 3, equipment: [] as string[], workouts: [],
+});
+
+beforeEach(() => {
+  useWorkoutDataStore.setState({ userPrograms: [] });
+});
+
+test('addCatalogProgramToMyPlans — returns empty string when 3 myplan- entries already exist', () => {
+  useWorkoutDataStore.getState().addCatalogProgramToMyPlans(makeCatalogProgram('p1'));
+  useWorkoutDataStore.getState().addCatalogProgramToMyPlans(makeCatalogProgram('p2'));
+  useWorkoutDataStore.getState().addCatalogProgramToMyPlans(makeCatalogProgram('p3'));
+  expect(useWorkoutDataStore.getState().userPrograms.length).toBe(3);
+  const result = useWorkoutDataStore.getState().addCatalogProgramToMyPlans(makeCatalogProgram('p4'));
+  expect(result).toBe('');
+  expect(useWorkoutDataStore.getState().userPrograms.length).toBe(3);
+});
+
+test('addCatalogProgramToMyPlans — returns existing id when already added (idempotent)', () => {
+  const id1 = useWorkoutDataStore.getState().addCatalogProgramToMyPlans(makeCatalogProgram('dup'));
+  const id2 = useWorkoutDataStore.getState().addCatalogProgramToMyPlans(makeCatalogProgram('dup'));
+  expect(id1).toBe(id2);
+  expect(useWorkoutDataStore.getState().userPrograms.length).toBe(1);
+});
+
+// ---------------------------------------------------------------------------
+// Gap C — updateWorkoutExercises round-trip + rest fields
+// ---------------------------------------------------------------------------
+
+beforeEach(() => {
+  useWorkoutDataStore.setState({ userWorkouts: [] });
+});
+
+test('updateWorkoutExercises — overwrites exercises on the matching workout', () => {
+  const id = useWorkoutDataStore.getState().createWorkout('Legs Day');
+  useWorkoutDataStore.getState().updateWorkoutExercises(id, [
+    { exerciseId: 'squat', exerciseName: 'Squat', targetSets: 4, targetReps: '5', restBetweenSetsSec: 120 },
+  ]);
+  const w = useWorkoutDataStore.getState().userWorkouts.find((x) => x.id === id)!;
+  expect(w.exercises.length).toBe(1);
+  expect(w.exercises[0].exerciseId).toBe('squat');
+  expect(w.exercises[0].restBetweenSetsSec).toBe(120);
+});
+
+test('updateWorkoutExercises — sets restBetweenExercisesSec on the workout when provided', () => {
+  const id = useWorkoutDataStore.getState().createWorkout('Legs Day');
+  useWorkoutDataStore.getState().updateWorkoutExercises(id, [], 90);
+  const w = useWorkoutDataStore.getState().userWorkouts.find((x) => x.id === id)!;
+  expect(w.restBetweenExercisesSec).toBe(90);
+});
+
+test('updateWorkoutExercises — restBetweenExercisesSec stays undefined when not provided', () => {
+  const id = useWorkoutDataStore.getState().createWorkout('Legs Day');
+  useWorkoutDataStore.getState().updateWorkoutExercises(id, []);
+  const w = useWorkoutDataStore.getState().userWorkouts.find((x) => x.id === id)!;
+  expect(w.restBetweenExercisesSec).toBeUndefined();
+});
+
+test('updateWorkoutExercises — unknown workoutId does not throw', () => {
+  expect(() =>
+    useWorkoutDataStore.getState().updateWorkoutExercises('does-not-exist', [])
+  ).not.toThrow();
 });

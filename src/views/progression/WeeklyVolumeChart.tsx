@@ -1,52 +1,40 @@
-import {
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  Cell,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-} from 'recharts';
 import type { CompletedSession } from '../../store/statsDataStore';
 import { getWeeklyMuscleVolume } from './statsDerivations';
+import { useUnits } from '../../utils/units';
 
 interface Props {
   sessions: CompletedSession[];
 }
 
+/**
+ * "This week · muscle focus" — horizontal bars of relative training volume
+ * per muscle group (PROG-01). Bars are normalized to the busiest group.
+ */
 export default function WeeklyVolumeChart({ sessions }: Props) {
+  const { weightFromKg, weightSuffix } = useUnits();
   const data = getWeeklyMuscleVolume(sessions);
 
   if (data.every((d) => d.volume === 0)) {
     return <p className="stats-empty">No volume logged this week yet.</p>;
   }
 
+  const ranked = [...data]
+    .filter((d) => d.volume > 0)
+    .sort((a, b) => b.volume - a.volume);
+  const max = ranked[0]?.volume ?? 1;
+
   return (
-    <div className="stats-chart">
-      <ResponsiveContainer width="100%" height={220}>
-        <BarChart data={data} margin={{ top: 8, right: 8, left: -8, bottom: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
-          <XAxis
-            dataKey="muscleGroup"
-            tick={{ fontSize: 11, fill: 'var(--color-text-muted)' }}
-            axisLine={false}
-            tickLine={false}
-          />
-          <YAxis
-            tick={{ fontSize: 11, fill: 'var(--color-text-muted)' }}
-            axisLine={false}
-            tickLine={false}
-            width={40}
-          />
-          <Tooltip cursor={{ fill: 'var(--color-border)' }} />
-          <Bar dataKey="volume" radius={[4, 4, 0, 0]}>
-            {data.map((d) => (
-              <Cell key={d.muscleGroup} fill="var(--color-primary)" />
-            ))}
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
+    <div className="card card-pad muscle-focus">
+      {ranked.map((d) => (
+        <div key={d.muscleGroup} className="mbar-row">
+          <div className="mbar-lab">{d.muscleGroup}</div>
+          <div className="mbar">
+            <i style={{ width: `${Math.max(6, (d.volume / max) * 100)}%` }} />
+          </div>
+          <div className="mbar-pct">{Math.round(weightFromKg(d.volume)).toLocaleString('en-US')}</div>
+        </div>
+      ))}
+      <div className="muscle-focus__caption">volume ({weightSuffix}) per muscle group</div>
     </div>
   );
 }

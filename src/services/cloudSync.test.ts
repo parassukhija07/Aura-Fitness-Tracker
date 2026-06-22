@@ -14,6 +14,7 @@ jest.mock('firebase/firestore', () => ({
   doc: jest.fn((_db, ...path: string[]) => ({ path: path.join('/') })),
   setDoc: jest.fn(() => Promise.resolve()),
   getDoc: jest.fn(),
+  deleteDoc: jest.fn(() => Promise.resolve()),
 }));
 
 // Mock the firebase lib so importing ../lib/firebase does not init the real app.
@@ -21,14 +22,20 @@ jest.mock('../lib/firebase', () => ({
   db: {},
 }));
 
-import { setDoc, getDoc, doc } from 'firebase/firestore';
-import { backupToCloud, restoreFromCloud } from './cloudSync';
+import { setDoc, getDoc, doc, deleteDoc } from 'firebase/firestore';
+import { backupToCloud, restoreFromCloud, deleteCloudBackup } from './cloudSync';
 import { useWorkoutDataStore } from '../store/workoutDataStore';
 import { useStatsDataStore } from '../store/statsDataStore';
 import { useBodyDataStore } from '../store/bodyDataStore';
 
 describe('cloudSync', () => {
   beforeEach(() => jest.clearAllMocks());
+
+  test('deleteCloudBackup deletes the users/{uid} document', async () => {
+    await deleteCloudBackup('user-123');
+    expect(doc).toHaveBeenCalledWith({}, 'users', 'user-123');
+    expect(deleteDoc).toHaveBeenCalledTimes(1);
+  });
 
   test('backupToCloud writes a JSON-safe doc to users/{uid}', async () => {
     await backupToCloud('user-123');

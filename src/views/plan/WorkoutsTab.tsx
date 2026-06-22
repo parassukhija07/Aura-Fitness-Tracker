@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { pageTransition } from '../../utils/motion';
 import { useWorkoutDataStore } from '../../store/workoutDataStore';
@@ -6,6 +6,7 @@ import WorkoutBuilderView from './WorkoutBuilderView';
 import WorkoutDetailView from './WorkoutDetailView';
 import { SEED_CATALOG_WORKOUTS } from '../../data/seedWorkouts';
 import type { CatalogWorkout } from '../../types/workout';
+import { SearchIcon, ChevronRightIcon } from '../../components/icons/AuraIcons';
 import './plan.css';
 
 const WORKOUT_FILTERS = [
@@ -14,16 +15,22 @@ const WORKOUT_FILTERS = [
 ] as const;
 type WorkoutFilter = typeof WORKOUT_FILTERS[number];
 
-export default function WorkoutsTab() {
+interface WorkoutsTabProps {
+  createSignal?: number;
+}
+
+export default function WorkoutsTab({ createSignal }: WorkoutsTabProps) {
   const [isBuilding, setIsBuilding] = useState(false);
   const [selectedWorkout, setSelectedWorkout] = useState<CatalogWorkout | null>(null);
   const [query, setQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState<WorkoutFilter>('All');
 
-  const getActiveProgram = useWorkoutDataStore((s) => s.getActiveProgram);
-  const getExerciseById = useWorkoutDataStore((s) => s.getExerciseById);
   const userWorkouts = useWorkoutDataStore((s) => s.userWorkouts);
-  const activeProgram = getActiveProgram();
+
+  useEffect(() => {
+    if (createSignal == null || createSignal === 0) return;
+    setIsBuilding(true);
+  }, [createSignal]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -48,19 +55,18 @@ export default function WorkoutsTab() {
 
   return (
     <motion.div className="exercises-tab" {...pageTransition}>
-      <button type="button" className="workout-builder-fab" onClick={() => setIsBuilding(true)}>
-        Create Workout
-      </button>
-
       <div className="exercises-tab__search">
-        <input
-          type="text"
-          className="exercises-tab__search-input"
-          placeholder="Search workouts"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          aria-label="Search workouts"
-        />
+        <div className="exercises-tab__search-wrap">
+          <span className="exercises-tab__search-icon"><SearchIcon size={16} /></span>
+          <input
+            type="text"
+            className="exercises-tab__search-input"
+            placeholder="Search workouts"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            aria-label="Search workouts"
+          />
+        </div>
       </div>
 
       <div className="exercises-tab__chips" role="tablist">
@@ -80,46 +86,35 @@ export default function WorkoutsTab() {
         ))}
       </div>
 
-      {filtered.length === 0 ? (
+      {filtered.length === 0 && userWorkouts.length === 0 ? (
         <div className="plan-empty">No workouts match your search.</div>
       ) : (
-        <div className="plan-grid">
-          {filtered.map((w) => (
-            <div key={w.id} className="plan-card" onClick={() => setSelectedWorkout(w)} style={{ cursor: 'pointer' }}>
-              <p className="plan-card__name">{w.name}</p>
-              <p className="plan-card__sub">{w.category}</p>
-              <span className="plan-badge">{w.exercises.length} exercises</span>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {userWorkouts.length > 0 && (
-        <div className="plan-list" style={{ marginTop: 16 }}>
+        <div className="lib-list">
           {userWorkouts.map((w) => (
-            <div key={w.id} className="plan-card">
-              <p className="plan-card__name">{w.name}</p>
-              <p className="plan-card__sub">{w.exercises.length} exercise{w.exercises.length !== 1 ? 's' : ''}</p>
+            <div key={w.id} className="lib-card">
+              <span className="lib-thumb" aria-hidden="true" />
+              <span className="lib-card__body">
+                <span className="lib-title">{w.name}</span>
+                <span className="lib-meta">
+                  {w.exercises.length} exercise{w.exercises.length === 1 ? '' : 's'} · Custom
+                </span>
+              </span>
+              <ChevronRightIcon size={18} />
             </div>
           ))}
+          {filtered.map((w) => (
+            <button key={w.id} type="button" className="lib-card" onClick={() => setSelectedWorkout(w)}>
+              <span className="lib-thumb" aria-hidden="true" />
+              <span className="lib-card__body">
+                <span className="lib-title">{w.name}</span>
+                <span className="lib-meta">
+                  {w.exercises.length} exercise{w.exercises.length === 1 ? '' : 's'} · {w.category}
+                </span>
+              </span>
+              <ChevronRightIcon size={18} />
+            </button>
+          ))}
         </div>
-      )}
-
-      {activeProgram != null && activeProgram.exercises.length > 0 && (
-        <>
-          <p className="plan-card__name" style={{ marginTop: 16 }}>{activeProgram.name} — Session</p>
-          <div className="plan-list">
-            {activeProgram.exercises.map((progEx) => {
-              const ex = getExerciseById(progEx.exerciseId);
-              return (
-                <div key={progEx.exerciseId} className="plan-card">
-                  <p className="plan-card__name">{ex ? ex.name : progEx.exerciseId}</p>
-                  <p className="plan-card__sub">{progEx.sets} sets &times; {progEx.repsMin}–{progEx.repsMax} reps</p>
-                </div>
-              );
-            })}
-          </div>
-        </>
       )}
     </motion.div>
   );

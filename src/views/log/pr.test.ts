@@ -18,9 +18,16 @@ jest.mock('../../store/workoutDataStore', () => ({
     getState: jest.fn(() => ({
       get completedWorkouts() { return mockCompletedWorkouts; },
       getExerciseById: (id: string) => {
-        const catalogue: Record<string, { defaultRepsMax: number }> = {
-          'barbell-bench-press': { defaultRepsMax: 10 },
-          'cable-crossover': { defaultRepsMax: 15 },
+        const catalogue: Record<string, {
+          defaultRepsMin?: number;
+          defaultRepsMax: number;
+          equipment?: string;
+          muscleGroup?: string;
+        }> = {
+          'barbell-bench-press': { defaultRepsMin: 6, defaultRepsMax: 10, equipment: 'Barbell', muscleGroup: 'Chest' },
+          'cable-crossover': { defaultRepsMin: 10, defaultRepsMax: 15, equipment: 'Cable', muscleGroup: 'Chest' },
+          'barbell-back-squat': { defaultRepsMin: 5, defaultRepsMax: 8, equipment: 'Barbell', muscleGroup: 'Legs' },
+          'pull-up': { defaultRepsMin: 6, defaultRepsMax: 12, equipment: 'Bodyweight', muscleGroup: 'Back' },
         };
         return catalogue[id];
       },
@@ -40,6 +47,8 @@ import {
   evaluateCelebration,
   isExercisePrAgainstHistory,
   bestSetFromHistory,
+  suggestProgression,
+  lastSessionSets,
 } from './pr';
 import type { LoggedSet, SessionExercise } from '../../types/workout';
 
@@ -336,4 +345,94 @@ test('isExercisePrAgainstHistory returns false when weight ties and reps do not 
   ];
   const ex = makeExercise([makeSet(100, 8, true)]);
   expect(isExercisePrAgainstHistory(ex)).toBe(false);
+});
+
+// ── lastSessionSets ───────────────────────────────────────────────────────────
+
+test('lastSessionSets returns null when no history for the exercise', () => {
+  mockCompletedWorkouts = [];
+  expect(lastSessionSets('barbell-bench-press')).toBeNull();
+});
+
+test('lastSessionSets returns the most recent session by date', () => {
+  mockCompletedWorkouts = [
+    { date: '2026-06-01', exercises: [{ exerciseId: 'barbell-bench-press', sets: [{ weight: 80, reps: 8 }] }] },
+    { date: '2026-06-08', exercises: [{ exerciseId: 'barbell-bench-press', sets: [{ weight: 90, reps: 6 }] }] },
+  ];
+  const sets = lastSessionSets('barbell-bench-press');
+  expect(sets).toEqual([{ weight: 90, reps: 6 }]);
+});
+
+// ── suggestProgression ────────────────────────────────────────────────────────
+
+test('suggestProgression returns first-time when no history', () => {
+  mockCompletedWorkouts = [];
+  const ex = makeExercise([]);
+  const s = suggestProgression(ex);
+  expect(s.action).toBe('first-time');
+  expect(s.reps).toBe(6); // repsMin for bench
+});
+
+test('suggestProgression increases load when all sets hit the top of the range', () => {
+  // bench: range 6-10, barbell chest => +2.5kg
+  mockCompletedWorkouts = [
+    { date: '2026-06-08', exercises: [{ exerciseId: 'barbell-bench-press', sets: [
+      { weight: 80, reps: 10 }, { weight: 80, reps: 10 }, { weight: 80, reps: 11 },
+    ] }] },
+  ];
+  const s = suggestProgression(makeExercise([]));
+  expect(s.action).toBe('increase-load');
+  expect(s.weight).toBe(82.5);
+  expect(s.reps).toBe(6);
+});
+
+test('suggestProgression uses a 5kg jump for big barbell lower-body lifts', () => {
+  // squat: range 5-8, barbell legs => +5kg
+  mockCompletedWorkouts = [
+    { date: '2026-06-08', exercises: [{ exerciseId: 'barbell-back-squat', sets: [
+      { weight: 100, reps: 8 }, { weight: 100, reps: 8 },
+    ] }] },
+  ];
+  const s = suggestProgression(makeExercise([], { exerciseId: 'barbell-back-squat' }));
+  expect(s.action).toBe('increase-load');
+  expect(s.weight).toBe(105);
+});
+
+test('suggestProgression adds a rep (double progression) when within the range but not topped', () => {
+  // bench hit 8 reps (range 6-10) => stay, add a rep
+  mockCompletedWorkouts = [
+    { date: '2026-06-08', exercises: [{ exerciseId: 'barbell-bench-press', sets: [
+      { weight: 80, reps: 8 }, { weight: 80, reps: 8 },
+    ] }] },
+  ];
+  const s = suggestProgression(makeExercise([]));
+  expect(s.action).toBe('add-rep');
+  expect(s.weight).toBe(80);
+  expect(s.reps).toBe(9);
+});
+
+test('suggestProgression holds when last session fell short of the range bottom', () => {
+  // bench only 4 reps (< min 6) => hold and consolidate
+  mockCompletedWorkouts = [
+    { date: '2026-06-08', exercises: [{ exerciseId: 'barbell-bench-press', sets: [
+      { weight: 90, reps: 4 },
+    ] }] },
+  ];
+  const s = suggestProgression(makeExercise([]));
+  expect(s.action).toBe('hold');
+  expect(s.weight).toBe(90);
+  expect(s.reps).toBe(6);
+});
+
+test('suggestProgression progresses bodyweight by reps, not load', () => {
+  // pull-up: range 6-12, bodyweight => topped at 12 => add rep, same (zero) load
+  mockCompletedWorkouts = [
+    { date: '2026-06-08', exercises: [{ exerciseId: 'pull-up', sets: [
+      { weight: 0, reps: 12 }, { weight: 0, reps: 12 },
+    ] }] },
+  ];
+  const s = suggestProgression(makeExercise([], { exerciseId: 'pull-up', muscleGroup: 'Back' }));
+  expect(s.action).toBe('add-rep');
+  expect(s.weight).toBe(0);
+  expect(s.reps).toBe(13);
 });

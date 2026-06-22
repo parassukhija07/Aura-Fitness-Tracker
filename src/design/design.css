@@ -1,0 +1,401 @@
+/* ── Aura Design System — Shared primitive styles ──────────────────── */
+
+/* ── Button ──────────────────────────────────────────────────────────── */
+.aura-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: none;
+  border-radius: var(--r-md);
+  font-family: var(--font);
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.12s, transform 0.08s;
+  white-space: nowrap;
+  text-decoration: none;
+  line-height: 1;
+}
+
+.aura-btn:active:not(:disabled) {
+  opacity: 0.8;
+  transform: scale(0.97);
+}
+
+.aura-btn:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+.aura-btn--lg { height: 52px; padding: 0 20px; font-size: 16px; }
+.aura-btn--md { height: 44px; padding: 0 16px; }
+
+.aura-btn--full { width: 100%; }
+
+.aura-btn--primary {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+.aura-btn--primary:active:not(:disabled) {
+  background: var(--accent-press);
+}
+
+.aura-btn--secondary {
+  background: var(--fill);
+  color: var(--text);
+}
+
+.aura-btn--tinted {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.aura-btn--destructive {
+  background: transparent;
+  color: var(--red);
+}
+
+.aura-btn--text {
+  background: transparent;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* ── Card ────────────────────────────────────────────────────────────── */
+.aura-card {
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.aura-card--elevated {
+  box-shadow: var(--shadow);
+}
+
+.aura-card--padded {
+  padding: 16px;
+}
+
+.aura-card--clickable {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.12s;
+}
+
+.aura-card--clickable:active {
+  opacity: 0.85;
+}
+
+/* ── SegmentedControl ─────────────────────────────────────────────────── */
+.aura-seg {
+  display: flex;
+  background: var(--fill);
+  border-radius: var(--r-pill);
+  padding: 3px;
+  gap: 2px;
+}
+
+.aura-seg__option {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  border-radius: var(--r-pill);
+  border: none;
+  background: transparent;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-2);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+  white-space: nowrap;
+  padding: 0 10px;
+}
+
+.aura-seg__option--active {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ── Chip ─────────────────────────────────────────────────────────────── */
+.aura-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 30px;
+  padding: 0 12px;
+  border-radius: var(--r-pill);
+  border: none;
+  background: var(--fill);
+  color: var(--text-2);
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.12s, color 0.12s;
+  white-space: nowrap;
+}
+
+.aura-chip--selected { background: var(--accent-soft); color: var(--accent); }
+.aura-chip--selected-green { background: oklch(0.70 0.15 150 / 0.12); color: var(--green); }
+.aura-chip--selected-red { background: oklch(0.64 0.19 25 / 0.12); color: var(--red); }
+.aura-chip--selected-blue { background: oklch(0.66 0.14 250 / 0.12); color: var(--blue); }
+.aura-chip--selected-purple { background: oklch(0.62 0.15 300 / 0.12); color: var(--purple); }
+
+/* ── ListRow ─────────────────────────────────────────────────────────── */
+.aura-list-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 10px 16px;
+  background: var(--surface);
+  cursor: default;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.aura-list-row--clickable {
+  cursor: pointer;
+}
+
+.aura-list-row--clickable:active {
+  background: var(--fill);
+}
+
+.aura-list-row__leading {
+  flex-shrink: 0;
+  color: var(--text-2);
+  display: flex;
+  align-items: center;
+}
+
+.aura-list-row__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.aura-list-row__title {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.aura-list-row__title--destructive {
+  color: var(--red);
+}
+
+.aura-list-row__subtitle {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-2);
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.aura-list-row__trailing {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  color: var(--text-3);
+}
+
+.aura-list-row__chevron {
+  color: var(--text-3);
+  flex-shrink: 0;
+}
+
+/* ── Sheet ─────────────────────────────────────────────────────────────── */
+.aura-sheet-scrim {
+  position: fixed;
+  inset: 0;
+  background: var(--scrim);
+  z-index: 200;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.aura-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--surface);
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
+  z-index: 201;
+  display: flex;
+  flex-direction: column;
+  max-height: 92dvh;
+  padding-bottom: env(safe-area-inset-bottom);
+  box-shadow: var(--shadow);
+}
+
+.aura-sheet--large {
+  height: 90dvh;
+}
+
+.aura-sheet__grabber-bar {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  padding: 10px 0 4px;
+}
+
+.aura-sheet__grabber {
+  width: 36px;
+  height: 4px;
+  border-radius: var(--r-pill);
+  background: var(--separator);
+}
+
+.aura-sheet__header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 16px 12px;
+}
+
+.aura-sheet__title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.aura-sheet__close {
+  background: var(--fill);
+  border: none;
+  color: var(--text-2);
+  border-radius: var(--r-pill);
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0;
+}
+
+.aura-sheet__body {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 16px 16px;
+}
+
+/* ── StatTile ─────────────────────────────────────────────────────────── */
+.aura-stat-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.aura-stat-tile__label {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-2);
+}
+
+.aura-stat-tile__value {
+  font-size: 24px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  line-height: 1;
+}
+
+.aura-stat-tile__delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.aura-stat-tile__delta--up { color: var(--green); }
+.aura-stat-tile__delta--down { color: var(--red); }
+
+/* ── MediaPlaceholder ────────────────────────────────────────────────── */
+.aura-media {
+  position: relative;
+  background: var(--fill);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.aura-media__stripes {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 8px,
+    var(--separator) 8px,
+    var(--separator) 9px
+  );
+  opacity: 0.5;
+}
+
+.aura-media__label {
+  position: relative;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-3);
+  text-align: center;
+  padding: 8px;
+  z-index: 1;
+}
+
+.aura-media__play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.aura-media__play-btn {
+  background: var(--surface);
+  border-radius: var(--r-pill);
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow);
+  color: var(--accent);
+}
+
+/* ── ProgressBar ──────────────────────────────────────────────────────── */
+.aura-progress-bar {
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: var(--track);
+  overflow: hidden;
+}
+
+.aura-progress-bar__fill {
+  height: 100%;
+  border-radius: var(--r-pill);
+  background: var(--accent);
+  transition: width 0.3s ease;
+}

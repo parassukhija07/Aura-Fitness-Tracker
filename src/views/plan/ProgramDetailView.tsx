@@ -4,6 +4,7 @@ import { pageTransition } from '../../utils/motion';
 import { useWorkoutDataStore } from '../../store/workoutDataStore';
 import { triggerLightImpact } from '../../utils/haptics';
 import type { CatalogProgram } from '../../types/workout';
+import WorkoutEditorView from './WorkoutEditorView';
 import './programLibrary.css';
 
 interface ProgramDetailViewProps {
@@ -20,12 +21,25 @@ export default function ProgramDetailView({ program, onClose, onAdded }: Program
   const [added, setAdded] = useState(() =>
     userPrograms.some((p) => p.id === `myplan-${program.id}`)
   );
+  const [editingProgramId, setEditingProgramId] = useState<string | null>(null);
 
   function handleAdd() {
     addCatalogProgramToMyPlans(program);
     triggerLightImpact();
     setAdded(true);
     onAdded?.();
+  }
+
+  if (editingProgramId !== null) {
+    return (
+      <WorkoutEditorView
+        workoutId={editingProgramId}
+        workoutName={program.name}
+        sourceKind="userProgram"
+        isPlanDerived
+        onClose={() => setEditingProgramId(null)}
+      />
+    );
   }
 
   return (
@@ -64,6 +78,16 @@ export default function ProgramDetailView({ program, onClose, onAdded }: Program
       >
         {added ? 'Added to My Plans ✓' : 'Add to My Plans'}
       </button>
+      {added && (
+        <button
+          type="button"
+          className="prog-lib-detail__add-btn"
+          style={{ marginTop: 8, background: 'var(--surface)', color: 'var(--accent)' }}
+          onClick={() => setEditingProgramId(`myplan-${program.id}`)}
+        >
+          Edit Program Exercises
+        </button>
+      )}
     </motion.div>
   );
 }

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useWorkoutDataStore } from '../../store/workoutDataStore';
 import * as restTimerBus from './restTimerBus';
+import { fireRestComplete } from '../../utils/restAlerts';
 
 export default function RestTimerPill() {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -12,8 +13,16 @@ export default function RestTimerPill() {
     running: false,
   });
 
+  // Track the bus timer's falling edge (running → stopped at 0) to fire alerts.
+  const busWasRunning = useRef(false);
   useEffect(() => {
-    return restTimerBus.subscribe((s) => setBusState(s));
+    return restTimerBus.subscribe((s) => {
+      if (busWasRunning.current && !s.running && s.seconds === 0) {
+        fireRestComplete('Time for your next set.');
+      }
+      busWasRunning.current = s.running;
+      setBusState(s);
+    });
   }, []);
 
   // Inter-exercise rest (driven by store)
@@ -35,6 +44,7 @@ export default function RestTimerPill() {
       if (remaining <= 0) {
         setInterExerciseSeconds(0);
         clearInterExerciseRest();
+        fireRestComplete('Time for your next exercise.');
       } else {
         setInterExerciseSeconds(remaining);
       }

@@ -41,12 +41,16 @@ import ExerciseDetailPage from './ExerciseDetailPage';
 import type { CustomWorkout } from '../../types/workout';
 
 const mockAddExerciseToWorkout = jest.fn();
+const mockAddExerciseToSession = jest.fn();
+const mockReplaceExerciseInWorkout = jest.fn();
 
 const fakeStore = {
   activeSession: null as null | { exerciseIndex: number },
   userPlan: { schedule: ['workout-1', null, null, null, null, null, null], activeProgramId: null } as { schedule: (string | null)[]; activeProgramId: string | null },
   userWorkouts: [{ id: 'workout-1', name: 'Push Day', exercises: [], createdAt: '2026-01-01T00:00:00.000Z' }] as CustomWorkout[],
   addExerciseToWorkout: mockAddExerciseToWorkout,
+  addExerciseToSession: mockAddExerciseToSession,
+  replaceExerciseInWorkout: mockReplaceExerciseInWorkout,
 };
 
 const EXERCISE = {
@@ -66,6 +70,8 @@ beforeEach(() => {
   fakeStore.activeSession = null;
   fakeStore.userPlan = { schedule: ['workout-1', null, null, null, null, null, null], activeProgramId: null };
   fakeStore.userWorkouts = [{ id: 'workout-1', name: 'Push Day', exercises: [], createdAt: '2026-01-01T00:00:00.000Z' }];
+  fakeStore.addExerciseToSession = mockAddExerciseToSession;
+  fakeStore.replaceExerciseInWorkout = mockReplaceExerciseInWorkout;
   window.open = jest.fn();
 });
 
@@ -94,9 +100,9 @@ test('play button opens video URL', () => {
   );
 });
 
-test('pro tips card renders tip text', () => {
+test('pro tip card renders tip text', () => {
   render(<ExerciseDetailPage exercise={EXERCISE} onBack={onBack} />);
-  expect(screen.getByText('Pro Tips')).toBeInTheDocument();
+  expect(screen.getByText('Pro Tip')).toBeInTheDocument();
   expect(screen.getByText(/Keep your back flat/)).toBeInTheDocument();
 });
 
@@ -106,9 +112,12 @@ test('muscle activation bars render for Chest group', () => {
   expect(screen.getByText('Muscle Activation')).toBeInTheDocument();
 });
 
-test('SVG body diagram renders', () => {
-  render(<ExerciseDetailPage exercise={EXERCISE} onBack={onBack} />);
-  expect(document.querySelector('svg')).toBeInTheDocument();
+test('body map SVG renders and MediaPlaceholder label="body map" is gone', () => {
+  const { container } = render(<ExerciseDetailPage exercise={EXERCISE} onBack={onBack} />);
+  // Gap D: BodyMap SVG should be present
+  expect(container.querySelector('svg[aria-label="Body muscle map"]')).toBeInTheDocument();
+  // The old MediaPlaceholder text "body map" must no longer be present
+  expect(screen.queryByText('body map')).toBeNull();
 });
 
 test('back button calls onBack', () => {
@@ -132,18 +141,18 @@ test('toast shown when active session exists on "Add to Today"', () => {
   fakeStore.activeSession = { exerciseIndex: 0 };
   render(<ExerciseDetailPage exercise={EXERCISE} onBack={onBack} />);
   fireEvent.click(screen.getByRole('button', { name: /add to today/i }));
-  expect(screen.getByRole('status')).toHaveTextContent(/Open the Log tab/);
+  expect(screen.getByRole('status')).toHaveTextContent(/Added to your active workout/);
 });
 
 test('"Add to My Plan" button opens bottom sheet', () => {
   render(<ExerciseDetailPage exercise={EXERCISE} onBack={onBack} />);
-  fireEvent.click(screen.getByRole('button', { name: /^add to my plan$/i }));
+  fireEvent.click(screen.getByRole('button', { name: /^add to a plan$/i }));
   expect(screen.getByRole('button', { name: 'Push Day' })).toBeInTheDocument();
 });
 
 test('selecting a workout shows append/replace options', () => {
   render(<ExerciseDetailPage exercise={EXERCISE} onBack={onBack} />);
-  fireEvent.click(screen.getByRole('button', { name: /add to my plan/i }));
+  fireEvent.click(screen.getByRole('button', { name: /add to a plan/i }));
   fireEvent.click(screen.getByRole('button', { name: 'Push Day' }));
   expect(screen.getByRole('button', { name: /add as new exercise/i })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: /replace an exercise/i })).toBeInTheDocument();
@@ -151,7 +160,7 @@ test('selecting a workout shows append/replace options', () => {
 
 test('clicking "Add as New Exercise" calls addExerciseToWorkout and shows toast', () => {
   render(<ExerciseDetailPage exercise={EXERCISE} onBack={onBack} />);
-  fireEvent.click(screen.getByRole('button', { name: /add to my plan/i }));
+  fireEvent.click(screen.getByRole('button', { name: /add to a plan/i }));
   fireEvent.click(screen.getByRole('button', { name: 'Push Day' }));
   fireEvent.click(screen.getByRole('button', { name: /add as new exercise/i }));
   expect(mockAddExerciseToWorkout).toHaveBeenCalledWith('workout-1', expect.objectContaining({
@@ -166,6 +175,6 @@ test('clicking "Add as New Exercise" calls addExerciseToWorkout and shows toast'
 test('shows empty state when no plan workouts scheduled', () => {
   fakeStore.userPlan = { schedule: [null, null, null, null, null, null, null], activeProgramId: null };
   render(<ExerciseDetailPage exercise={EXERCISE} onBack={onBack} />);
-  fireEvent.click(screen.getByRole('button', { name: /add to my plan/i }));
+  fireEvent.click(screen.getByRole('button', { name: /add to a plan/i }));
   expect(screen.getByText(/No editable workouts/)).toBeInTheDocument();
 });

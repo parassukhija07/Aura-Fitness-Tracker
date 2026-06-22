@@ -16,23 +16,23 @@ const daysInCurrentMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 const priorMonthDate = new Date(currentYear, currentMonth - 1, 1);
 const priorMonthLabel = priorMonthDate.toLocaleString('en-US', { month: 'long', year: 'numeric' });
 
-test('renders one cell per day of the current month', () => {
+test('renders one day cell per day of the current month', () => {
   const { container } = render(<ConsistencyHeatmap completedDates={[]} />);
-  expect(container.querySelectorAll('.heatmap__cell').length).toBe(daysInCurrentMonth);
+  expect(container.querySelectorAll('.heatmap__day').length).toBe(daysInCurrentMonth);
 });
 
-test('marks completed dates in the current month as active', () => {
+test('marks completed dates in the current month at full intensity', () => {
   const { container } = render(
     <ConsistencyHeatmap completedDates={[firstOfMonthKey]} />
   );
-  expect(container.querySelectorAll('.heatmap__cell--active').length).toBe(1);
+  expect(container.querySelectorAll('.heatmap__day.heatmap__cell--l4').length).toBe(1);
 });
 
 test('marks partial dates as medium intensity', () => {
   const { container } = render(
     <ConsistencyHeatmap completedDates={[]} partialDates={[firstOfMonthKey]} />
   );
-  expect(container.querySelectorAll('.heatmap__cell--partial').length).toBe(1);
+  expect(container.querySelectorAll('.heatmap__day.heatmap__cell--l2').length).toBe(1);
 });
 
 test('next button is disabled on the current month', () => {

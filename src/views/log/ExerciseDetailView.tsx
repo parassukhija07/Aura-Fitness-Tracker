@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useWorkoutDataStore } from '../../store/workoutDataStore';
+import { useUserPreferencesStore } from '../../store/userPreferencesStore';
 import type { SessionExercise } from '../../types/workout';
 import { triggerSuccess } from '../../utils/haptics';
 import { getEquipment, getTip } from './exerciseMeta';
@@ -30,6 +31,7 @@ export default function ExerciseDetailView({
   const updateSetNote = useWorkoutDataStore((s) => s.updateSetNote);
   const stripEmptySets = useWorkoutDataStore((s) => s.stripEmptySets);
   const startInterExerciseRest = useWorkoutDataStore((s) => s.startInterExerciseRest);
+  const showPrsDuringWorkout = useUserPreferencesStore((s) => s.showPrsDuringWorkout);
 
   const [celebration, setCelebration] = useState<ReturnType<typeof evaluateCelebration> | null>(null);
   const [expandedNotes, setExpandedNotes] = useState<Record<number, boolean>>({});
@@ -97,7 +99,7 @@ export default function ExerciseDetailView({
 
       {/* Info cards */}
       <div className="awd-detail__cards">
-        <LastPrCard exercise={exercise} />
+        {showPrsDuringWorkout && <LastPrCard exercise={exercise} />}
         <TargetCard exercise={exercise} />
       </div>
 

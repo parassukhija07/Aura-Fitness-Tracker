@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { pageTransition } from '../../utils/motion';
 import { useWorkoutDataStore } from '../../store/workoutDataStore';
@@ -6,17 +6,27 @@ import ProgramBuilderView from './ProgramBuilderView';
 import ProgramDetailView from './ProgramDetailView';
 import { SEED_CATALOG_PROGRAMS } from '../../data/seedPrograms';
 import type { CatalogProgram } from '../../types/workout';
+import { SearchIcon, ChevronRightIcon, CheckIcon } from '../../components/icons/AuraIcons';
 import './plan.css';
 
 const GOAL_FILTERS = ['All', 'Strength', 'Hypertrophy', 'Endurance', 'Fat Loss'] as const;
 type GoalFilter = typeof GOAL_FILTERS[number];
 
-export default function ProgramsTab() {
+interface ProgramsTabProps {
+  createSignal?: number;
+}
+
+export default function ProgramsTab({ createSignal }: ProgramsTabProps) {
   const userPrograms = useWorkoutDataStore((s) => s.userPrograms);
   const [isBuilding, setIsBuilding] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState<CatalogProgram | null>(null);
   const [query, setQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState<GoalFilter>('All');
+
+  useEffect(() => {
+    if (createSignal == null || createSignal === 0) return;
+    setIsBuilding(true);
+  }, [createSignal]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -26,6 +36,8 @@ export default function ProgramsTab() {
       return goalOk && nameOk;
     });
   }, [query, activeFilter]);
+
+  const addedIds = new Set(userPrograms.map((p) => p.id));
 
   if (isBuilding) return <ProgramBuilderView onClose={() => setIsBuilding(false)} />;
   if (selectedProgram != null) {
@@ -39,19 +51,18 @@ export default function ProgramsTab() {
 
   return (
     <motion.div className="exercises-tab" {...pageTransition}>
-      <button type="button" className="workout-builder-fab" onClick={() => setIsBuilding(true)}>
-        Create New Program
-      </button>
-
       <div className="exercises-tab__search">
-        <input
-          type="text"
-          className="exercises-tab__search-input"
-          placeholder="Search programs"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          aria-label="Search programs"
-        />
+        <div className="exercises-tab__search-wrap">
+          <span className="exercises-tab__search-icon"><SearchIcon size={16} /></span>
+          <input
+            type="text"
+            className="exercises-tab__search-input"
+            placeholder="Search programs"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            aria-label="Search programs"
+          />
+        </div>
       </div>
 
       <div className="exercises-tab__chips" role="tablist">
@@ -74,31 +85,22 @@ export default function ProgramsTab() {
       {filtered.length === 0 ? (
         <div className="plan-empty">No programs match your search.</div>
       ) : (
-        <div className="plan-grid">
+        <div className="lib-list">
           {filtered.map((p) => (
-            <div key={p.id} className="plan-card" onClick={() => setSelectedProgram(p)} style={{ cursor: 'pointer' }}>
-              <p className="plan-card__name">{p.name}</p>
-              <p className="plan-card__sub">{p.description}</p>
-              <span className="plan-badge">{p.goal}</span>
-              <span className="plan-badge" style={{ marginLeft: 4 }}>{p.workouts.length} workouts</span>
-            </div>
+            <button key={p.id} type="button" className="lib-card" onClick={() => setSelectedProgram(p)}>
+              <span className="lib-thumb" aria-hidden="true" />
+              <span className="lib-card__body">
+                <span className="lib-title">{p.name}</span>
+                <span className="lib-meta">{p.workouts.length} workouts · {p.goal}</span>
+              </span>
+              {addedIds.has(p.id) ? (
+                <span className="lib-card__added"><CheckIcon size={12} /> Added</span>
+              ) : (
+                <ChevronRightIcon size={18} />
+              )}
+            </button>
           ))}
         </div>
-      )}
-
-      {userPrograms.length > 0 && (
-        <>
-          <p className="plan-card__name" style={{ marginTop: 16 }}>My Plans</p>
-          <div className="plan-grid">
-            {userPrograms.map((program) => (
-              <div key={program.id} className="plan-card">
-                <p className="plan-card__name">{program.name}</p>
-                <p className="plan-card__sub">{program.description}</p>
-                <span className="plan-badge">{program.exercises.length} exercises</span>
-              </div>
-            ))}
-          </div>
-        </>
       )}
     </motion.div>
   );

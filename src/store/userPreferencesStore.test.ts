@@ -318,3 +318,63 @@ test('toggling autoRestTimer does not affect autoPlayVideo', () => {
   useUserPreferencesStore.getState().toggleAutoRestTimer();
   expect(useUserPreferencesStore.getState().autoPlayVideo).toBe(false);
 });
+
+// ---------------------------------------------------------------------------
+// Gap F — targetWeightKg default / set / migration
+// ---------------------------------------------------------------------------
+
+test('targetWeightKg defaults to null', () => {
+  useUserPreferencesStore.getState().resetPreferences();
+  expect(useUserPreferencesStore.getState().targetWeightKg).toBeNull();
+});
+
+test('setTargetWeight stores a numeric value', () => {
+  useUserPreferencesStore.getState().setTargetWeight(75);
+  expect(useUserPreferencesStore.getState().targetWeightKg).toBe(75);
+});
+
+test('setTargetWeight accepts null to clear', () => {
+  useUserPreferencesStore.getState().setTargetWeight(75);
+  useUserPreferencesStore.getState().setTargetWeight(null);
+  expect(useUserPreferencesStore.getState().targetWeightKg).toBeNull();
+});
+
+test('resetPreferences resets targetWeightKg to null', () => {
+  useUserPreferencesStore.getState().setTargetWeight(90);
+  useUserPreferencesStore.getState().resetPreferences();
+  expect(useUserPreferencesStore.getState().targetWeightKg).toBeNull();
+});
+
+test('migration v4→v5: backfills targetWeightKg=null and avatarDataUrl=null', () => {
+  const v4State = { darkMode: true, calendarStartOnMonday: true, appleHealthEnabled: false, googleHealthEnabled: false };
+  const result = migrate(v4State, 4) as Record<string, unknown>;
+  expect(result.targetWeightKg).toBeNull();
+  expect(result.avatarDataUrl).toBeNull();
+});
+
+// ---------------------------------------------------------------------------
+// Gap G — avatarDataUrl default / set / migration
+// ---------------------------------------------------------------------------
+
+test('avatarDataUrl defaults to null', () => {
+  useUserPreferencesStore.getState().resetPreferences();
+  expect(useUserPreferencesStore.getState().avatarDataUrl).toBeNull();
+});
+
+test('setAvatar stores a data URL string', () => {
+  const dataUrl = 'data:image/jpeg;base64,/9j/abc123';
+  useUserPreferencesStore.getState().setAvatar(dataUrl);
+  expect(useUserPreferencesStore.getState().avatarDataUrl).toBe(dataUrl);
+});
+
+test('setAvatar accepts null to clear', () => {
+  useUserPreferencesStore.getState().setAvatar('data:image/jpeg;base64,abc');
+  useUserPreferencesStore.getState().setAvatar(null);
+  expect(useUserPreferencesStore.getState().avatarDataUrl).toBeNull();
+});
+
+test('resetPreferences resets avatarDataUrl to null', () => {
+  useUserPreferencesStore.getState().setAvatar('data:image/jpeg;base64,abc');
+  useUserPreferencesStore.getState().resetPreferences();
+  expect(useUserPreferencesStore.getState().avatarDataUrl).toBeNull();
+});

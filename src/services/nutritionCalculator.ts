@@ -1,7 +1,7 @@
 export type Sex = 'male' | 'female';
 export type ActivityLevel = 'sedentary' | 'light' | 'moderate' | 'active' | 'very_active';
-export type Goal = 'fat_loss' | 'maintenance' | 'muscle_gain';
-export type Split = 'balanced' | 'high_protein' | 'low_carb' | 'keto';
+export type Goal = 'fat_loss' | 'maintenance' | 'lean_gain' | 'muscle_gain';
+export type Split = 'balanced' | 'high_protein' | 'high_carb' | 'keto';
 
 export interface BmrInput {
   sex: Sex;
@@ -29,7 +29,8 @@ export const ACTIVITY_MULTIPLIERS: Record<ActivityLevel, number> = {
 export const GOAL_CALORIE_DELTA: Record<Goal, number> = {
   fat_loss: -500,
   maintenance: 0,
-  muscle_gain: 300,
+  lean_gain: 250,
+  muscle_gain: 400,
 };
 
 // [protein, carbs, fats] as fraction of total calories. EACH ROW MUST SUM TO 1.0.
@@ -37,7 +38,7 @@ export const GOAL_CALORIE_DELTA: Record<Goal, number> = {
 export const SPLIT_RATIOS: Record<Split, { protein: number; carbs: number; fats: number }> = {
   balanced:     { protein: 0.30, carbs: 0.40, fats: 0.30 },
   high_protein: { protein: 0.40, carbs: 0.35, fats: 0.25 },
-  low_carb:     { protein: 0.35, carbs: 0.20, fats: 0.45 },
+  high_carb:    { protein: 0.25, carbs: 0.55, fats: 0.20 },
   keto:         { protein: 0.25, carbs: 0.05, fats: 0.70 },
 };
 

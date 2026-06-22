@@ -1,8 +1,9 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { pageTransition } from '../../utils/motion';
-import exercisesData from '../../data/exercises.json';
+import { useWorkoutDataStore } from '../../store/workoutDataStore';
 import ExerciseDetailPage from './ExerciseDetailPage';
+import CreateExerciseSheet from './CreateExerciseSheet';
 import { Chip } from '../../design';
 import { MediaPlaceholder } from '../../design';
 import { SearchIcon } from '../../components/icons/AuraIcons';
@@ -12,12 +13,11 @@ type CatalogExercise = {
   id: string;
   name: string;
   muscleGroup: 'Chest' | 'Back' | 'Legs' | 'Shoulders' | 'Arms' | 'Core';
-  equipment: 'Barbell' | 'Dumbbell' | 'Machine' | 'Cable' | 'Bodyweight';
+  equipment: 'Barbell' | 'Dumbbell' | 'Machine' | 'Cable' | 'Smith' | 'Bodyweight';
   defaultSets: number;
   defaultRepsMin: number;
   defaultRepsMax: number;
 };
-const CATALOG = exercisesData as CatalogExercise[];
 
 const BODY_FILTERS = ['All', 'Chest', 'Back', 'Legs', 'Shoulders', 'Arms', 'Core'] as const;
 const EQUIP_FILTERS = ['All', 'Cable', 'Barbell', 'Dumbbell', 'Smith', 'Machine', 'Bodyweight'] as const;
@@ -25,11 +25,26 @@ const EQUIP_FILTERS = ['All', 'Cable', 'Barbell', 'Dumbbell', 'Smith', 'Machine'
 type BodyFilter = typeof BODY_FILTERS[number];
 type EquipFilter = typeof EQUIP_FILTERS[number];
 
-export default function ExercisesTab() {
+interface ExercisesTabProps {
+  createSignal?: number;
+}
+
+export default function ExercisesTab({ createSignal }: ExercisesTabProps) {
+  const storeExercises = useWorkoutDataStore((s) => s.exercises);
+
   const [query, setQuery] = useState('');
   const [bodyFilter, setBodyFilter] = useState<BodyFilter>('All');
   const [equipFilter, setEquipFilter] = useState<EquipFilter>('All');
   const [selectedExercise, setSelectedExercise] = useState<CatalogExercise | null>(null);
+  const [createOpen, setCreateOpen] = useState(false);
+
+  useEffect(() => {
+    if (createSignal == null || createSignal === 0) return;
+    setCreateOpen(true);
+  }, [createSignal]);
+
+  // Cast store exercises to CatalogExercise (they now include equipment)
+  const CATALOG = storeExercises as CatalogExercise[];
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -39,7 +54,7 @@ export default function ExercisesTab() {
       const nameOk = q === '' || ex.name.toLowerCase().includes(q);
       return groupOk && equipOk && nameOk;
     });
-  }, [query, bodyFilter, equipFilter]);
+  }, [CATALOG, query, bodyFilter, equipFilter]);
 
   if (selectedExercise != null) {
     return (
@@ -102,6 +117,12 @@ export default function ExercisesTab() {
           ))}
         </div>
       )}
+
+      <CreateExerciseSheet
+        open={createOpen}
+        onClose={() => setCreateOpen(false)}
+        onCreated={() => setCreateOpen(false)}
+      />
     </motion.div>
   );
 }
